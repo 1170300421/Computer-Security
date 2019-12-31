@@ -1,0 +1,1404 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0047)http://bbs.chinaunix.net/thread-607206-1-1.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+<title>Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 -  ChinaUnix.net </title>
+<meta name="google-site-verification" content="OJoEeACa37Td5C_TevGy7D9GrG9Pe407duCwm81ra6g">
+<meta name="keywords" content="Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 -  ChinaUnix.net">
+<meta name="description" content="刚一个朋友在QQ上问起Linux 下 ssh chroot 实现的问题，
+经过研究实现，在这里把步骤写下来希望能对大家起 - Linux论坛 ChinaUnix.netLinux论坛 刚一个朋友在QQ上问起Linux 下 ssh chroot 实现的问题，经过研究实现，在这里把步骤写下来希望能对大家起到抛砖引玉的做用&amp;nbsp;&amp;nbsp;实现步骤如下：&amp;n ... Linux,Freebsd,Solaris,Sco,HP-UX,IBM-AIX,cisco,oracle,java,cgi,mysql,perl,Apache,proFTP,Sendmail,Qmail,DNS,Squid,Rsync,SSL">
+<meta name="generator" content="Discuz! 7.2">
+<meta name="author" content="Discuz! Team and Comsenz UI Team">
+<meta name="copyright" content="2001-2009 Comsenz Inc.">
+<meta name="MSSmartTagsPreventParsing" content="True">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<meta http-equiv="Refresh" content="3600">
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<link rel="archives" title="ChinaUnix.net" href="http://bbs.chinaunix.net/archiver/">
+<link rel="stylesheet" type="text/css" href="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/style_7_common.css"><link rel="stylesheet" type="text/css" href="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/scriptstyle_7_viewthread.css">
+<script type="text/javascript" async="" src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/ga.js"></script><script type="text/javascript">var STYLEID = '7', IMGDIR = 'images/default', VERHASH = 'eqi', charset = 'gbk', discuz_uid = 0, cookiedomain = 'chinaunix.net', cookiepath = '/', attackevasive = '0', disallowfloat = 'login|register|newthread|reply|viewvote|tradeorder|activity|debate|nav|usergroups|task', creditnotice = '', gid = parseInt('57'), fid = parseInt('4'), tid = parseInt('607206')</script>
+<script src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/common.js" type="text/javascript"></script>
+</head><body id="viewthread" onkeydown="if(event.keyCode==27) return false;"><link href="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/jiathis_share.css" rel="stylesheet" type="text/css"><iframe style="position: absolute; opacity: 0; display: none; " frameborder="0"></iframe><div id="ckepop" style="position: absolute; z-index: 1e+009; top: 50%; left: 50%; overflow-x: auto; overflow-y: auto; display: none; "></div><div id="ckepop" style="position: absolute; z-index: 1e+009; display: none; overflow-x: auto; overflow-y: auto; "></div><iframe style="display: none; " frameborder="0" src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/jiathis_utility.htm"></iframe>
+
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+
+<div id="header">
+<div id="myprompt_menu" style="display:none" class="promptmenu">
+<div class="promptcontent">
+<ul class="s_clear"><li style="display:none"><a id="prompt_pm" href="http://bbs.chinaunix.net/pm.php?filter=newpm" target="_blank">私人消息 (0)</a></li><li style="display:none"><a id="prompt_announcepm" href="http://bbs.chinaunix.net/pm.php?filter=announcepm" target="_blank">公共消息 (0)</a></li><li style="display:none"><a id="prompt_systempm" href="http://bbs.chinaunix.net/notice.php?filter=systempm" target="_blank">系统消息 (0)</a></li><li style="display:none"><a id="prompt_friend" href="http://bbs.chinaunix.net/notice.php?filter=friend" target="_blank">好友消息 (0)</a></li><li style="display:none"><a id="prompt_threads" href="http://bbs.chinaunix.net/notice.php?filter=threads" target="_blank">帖子消息 (0)</a></li></ul>
+</div>
+</div>
+</div>
+
+<!--栏目条-->
+<style type="text/css">
+A.title1:link {font-size:14px;font-family:arial;font-weight:bold;text-decoration:none;color:#ffffff;}
+A.title1:visited {font-size:14px;font-family:arial;font-weight:bold;text-decoration:none;color:#ffffff;}
+A.title1:active {font-size:14px;font-family:arial;font-weight:bold;text-decoration:none;color:#ffffff;}
+A.title1:hover {font-size:14px;font-family:arial;font-weight:bold;text-decoration:none;color:#ffffff;}
+A.title2:link {text-decoration:none;color:#000000;font-size:12px}
+A.title2:visited {text-decoration:none;color:#000000;font-size:12px}
+A.title2:active {text-decoration:none;color:#ff0000;font-size:12px}
+A.title2:hover {text-decoration:none;color:#ff0000;font-size:12px}
+</style>
+<center>
+<table width="98%" border="0" cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff">
+<tbody><tr><td height="1" colspan="2" bgcolor="#000000"></tr>
+<tr><td height="2" colspan="2"></tr>
+<tr><td width="150" height="18" bgcolor="#9898ba" align="center"><a href="http://bbs.chinaunix.net/" class="title1">bbs.ChinaUnix.net</a></td>
+<td width="*" align="right">
+<table border="0" cellspacing="0" cellpadding="0">
+
+<tbody><tr align="center"><td align="right">
+<a href="http://www.chinaunix.net/" class="title2">首页</a> |
+<a href="http://bbs.chinaunix.net/" class="title2">论坛</a>
+<a href="http://my.chinaunix.net/" class="title2" target="_blank" style="color:red">微博</a> 
+<a href="http://blog.chinaunix.net/" class="title2" target="_blank">博客</a>
+<a href="http://hi.chinaunix.net/" class="title2" target="_blank" style="color:red">空间</a>
+<a href="http://book.chinaunix.net/" class="title2" target="_blank">读书</a>
+<a href="http://job.chinaunix.net/" class="title2" target="_blank">人才</a>
+<a href="http://selftest.chinaunix.net/" class="title2" target="_blank">自测</a> | 
+
+<a href="http://news.chinaunix.net/" class="title2" target="_blank">新闻</a>
+<a href="http://linux.chinaunix.net/" class="title2" target="_blank" style="color:red">Linux</a> 
+<a href="http://aix.chinaunix.net/" class="title2" target="_blank" style="color:red">AIX</a>
+<a href="http://win.chinaunix.net/" class="title2" target="_blank" style="color:blue">Windows</a>
+<a href="http://stor.chinaunix.net/" class="title2" target="_blank">存储</a>
+<a href="http://net.chinaunix.net/" class="title2" target="_blank">网络</a> | 
+<a href="http://wiki.chinaunix.net/" class="title2" target="_blank">Wiki</a>&nbsp;  
+<a href="http://fanqiang.chinaunix.net/" class="title2" target="_blank" style="color:red">资料</a>
+<a href="http://man.chinaunix.net/" class="title2" target="_blank">手册</a>
+<a href="http://download.chinaunix.net/" class="title2" target="_blank">下载</a> | 
+<a href="http://search.chinaunix.net/" class="title2" target="_blank">搜索</a>
+</td></tr>
+</tbody></table></td></tr>
+<tr><td height="2" colspan="2"></tr>
+<tr><td height="1" colspan="2" bgcolor="#000000"></tr>
+</tbody></table>
+<!--------->
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="98%">
+<tbody><tr><td align="left">
+<a href="http://bbs.chinaunix.net/"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/logo.gif" alt="ChinaUnix.net" border="0"></a>
+</td><td align="center" height="85">
+<iframe src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/iframe.htm" width="760" height="80" frameborder="0" scrolling="no"></iframe></td></tr>
+<tr><form name="toplogin" action="http://bbs.chinaunix.net/logging.php?action=login" method="post"></form><td align="left" height="28" background="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/bg_menu_top.gif" colspan="2">
+&nbsp;
+<!--
+<input type="hidden" name="referer" value="">
+会员:<INPUT tabIndex=20 maxLength=40 size=10 name=username>
+密码:<INPUT tabIndex=21 type=password size=10 name=password>
+-->
+<input type="submit" value="登录" name="loginsubmit">
+<a href="http://bbs.chinaunix.net/register.php">免费注册</a>
+| <a href="http://bbs.chinaunix.net/member.php?action=lostpasswd">忘记密码</a>
+| <a href="http://bbs.chinaunix.net/logging.php?action=login">会员登录</a>
+&nbsp;<a href="http://search.chinaunix.net/" target="_blank">搜索</a>&nbsp;
+&nbsp;<a href="http://bbs.chinaunix.net/faq.php">帮助</a>&nbsp;
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="910">
+<tbody><tr><td height="1"></tr>
+</tbody></table>
+</td></tr>
+</tbody></table>
+<div style="margin-top:10px"></div>
+<div class="ad_text" id="ad_text">
+<table summary="Text Ad" cellpadding="0" cellspacing="1"><tbody><tr><td width="100%"><div align="left">
+<a target="_blank" href="http://bbs.chinaunix.net/thread-3624024-1-1.html" style="color:blue"><b>
+H3C新一代多功能防火墙有奖问答</b></a> |<a target="_blank" href="http://bbs.chinaunix.net/thread-3619218-1-1.html" style="color:red"><b>
+自动化运维案例分享讨论之一（有奖）</b></a> | <a href="http://topic.it168.com/game/cuzice/" target="_blank" style="color:green"><b>CU自测平台近期有奖自测活动汇总</b></a>| <a href="http://www.now.cn/?now_1920_it168" target="_blank" style="color:#8E236B"><b>买域名送域名 海外主机免备案</b></a>  </div></td></tr>
+</tbody></table>
+</div>
+<div class="maintable"><script language="javascript">
+<!--
+function showexif(obj){
+try{
+if(document.getElementById(obj).style.display=="none"){
+document.getElementById(obj).style.display="block";
+}else{
+document.getElementById(obj).style.display="none";
+}
+}catch(e){
+}
+}
+//-->
+</script>
+
+
+<script src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/viewthread.js" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(1);var imagemaxwidth = '%700';var aimgcount = new Array();</script>
+
+
+<div class="subtable" style="width:98%">
+
+<div style="float:right">
+<div class="p_bar"><a class="p_curpage">1</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_num">2</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_redirect">??</a></div></div>
+</div>
+
+<div class="subtable" style="padding-left:10px;">
+<table>
+<tbody><tr>
+<td>
+<a href="http://www.chinaunix.net/">首页</a> ? 
+<a href="http://bbs.chinaunix.net/index.php">论坛</a>
+ 
+<!-- &raquo; <a href="listthread.php" style="color:#FF0000">汇总贴列表</a> --> 
+ ? <a href="http://bbs.chinaunix.net/forum-4-1.html">Linux论坛</a> ? 			
+</td>
+</tr>
+</tbody></table>
+</div>
+ 
+<div style="font-size:18px;color:#000;font-weight:bold;float:left;margin:5px 0 10px 10px">
+<b>[保留]</b>
+ 
+<span>Redhat EL4 下实现ssh chroot 登陆</span>
+</div>
+
+<div class="subtable" style="padding:5px 5px 5px 10px">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="98%" align="center">
+<tbody><tr>
+<td nowrap="">
+<span id="newspecial" prompt="post_newthread" onmouseover="$(&#39;newspecial&#39;).id = &#39;newspecialtmp&#39;;this.id = &#39;newspecial&#39;;showMenu({&#39;ctrlid&#39;:this.id})">
+<a href="http://bbs.chinaunix.net/post.php?action=newthread&fid=4&extra=page%3D1" onclick="showWindow(&#39;newthread&#39;, this.href);return false;"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/new_topic.gif" border="0" alt=""></a> </span>
+<a href="http://bbs.chinaunix.net/post.php?action=reply&fid=4&tid=607206&extra=page%3D1"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/new_reply.gif" border="0" alt=""></a>&nbsp;
+</td>
+<td>
+<span style="font-weight: normal">
+<!-- [<a href="viewthread.php?action=printable&amp;tid=607206" target="_blank">打印</a>] --> 
+[<a href="http://bbs.chinaunix.net/thread-607206-1-1.html#" onclick="showDialog($(&#39;favoritewin&#39;).innerHTML, &#39;info&#39;, &#39;收藏/关注&#39;)">收藏</a>]	
+[<a href="http://bbs.chinaunix.net/archiver/?tid-607206.html" target="_blank">本帖文本页</a>]
+[<a href="http://bbs.chinaunix.net/thread-607206-1-1.html#" onclick="showDialog($(&#39;sharewin&#39;).innerHTML, &#39;info&#39;, &#39;分享&#39;)" style="color:blue">推荐此主题给朋友</a>] 
+</span>
+</td>
+<td nowrap="" align="right">
+<select onchange="if(this.options[this.selectedIndex].value != &#39;&#39;) {
+window.location=(&#39;forumdisplay.php?fid=&#39;+this.options[this.selectedIndex].value+&#39;&amp;sid=93GU9T&#39;) }">
+<option value="">版块跳转</option>
+<optgroup label="--Linux操作系统"><option value="216">新手园地</option><option value="269">&nbsp; &nbsp; &nbsp; 硬件问题</option><option value="217">Linux系统管理</option><option value="218">Linux网络问题</option><option value="223">Linux环境编程</option><option value="271">Linux桌面系统</option><option value="221">国产Linux</option></optgroup><optgroup label="--Unix操作系统"><option value="5">BSD</option><option value="127">&nbsp; &nbsp; &nbsp; BSD文档中心</option><option value="9">AIX</option><option value="193">&nbsp; &nbsp; &nbsp; 新手入门</option><option value="124">&nbsp; &nbsp; &nbsp; AIX文档中心</option><option value="189">&nbsp; &nbsp; &nbsp; 资源下载</option><option value="188">&nbsp; &nbsp; &nbsp; Power高级应用</option><option value="187">&nbsp; &nbsp; &nbsp; IBM存储</option><option value="10">AS400</option><option value="6">Solaris</option><option value="128">&nbsp; &nbsp; &nbsp; Solaris文档中心</option><option value="8">HP-UX</option><option value="129">&nbsp; &nbsp; &nbsp; HP文档中心</option><option value="7">SCO UNIX</option><option value="130">&nbsp; &nbsp; &nbsp; SCO文档中心</option><option value="118">互操作专区</option><option value="12">IRIX</option><option value="11">Tru64 UNIX</option><option value="41">Mac OS X</option></optgroup><optgroup label="--IT运维架构"><option value="141">门户网站运维</option><option value="233">集群和高可用</option><option value="232">服务器应用</option><option value="235">监控和防护</option><option value="283">虚拟化技术</option><option value="185">架构设计</option><option value="285">行业应用和管理</option></optgroup><optgroup label="--IT基础设施"><option value="45">服务器及硬件技术</option><option value="184">&nbsp; &nbsp; &nbsp; 服务器资源下载</option><option value="180">云计算</option><option value="181">&nbsp; &nbsp; &nbsp; 云计算文档中心</option><option value="182">&nbsp; &nbsp; &nbsp; 云计算业界</option><option value="183">&nbsp; &nbsp; &nbsp; 云计算资源下载</option><option value="34">存储备份</option><option value="125">&nbsp; &nbsp; &nbsp; 存储文档中心</option><option value="126">&nbsp; &nbsp; &nbsp; 存储业界</option><option value="145">&nbsp; &nbsp; &nbsp; 存储资源下载</option><option value="194">&nbsp; &nbsp; &nbsp; Symantec技术交流区</option><option value="29">安全技术</option><option value="30">网络技术</option><option value="131">&nbsp; &nbsp; &nbsp; 网络技术文档中心</option></optgroup><optgroup label="--程序设计"><option value="23">C/C++</option><option value="84">&nbsp; &nbsp; &nbsp; GUI编程</option><option value="142">&nbsp; &nbsp; &nbsp; Functional编程</option><option value="224">内核源码</option><option value="220">&nbsp; &nbsp; &nbsp; 内核问题</option><option value="222">移动开发</option><option value="265">&nbsp; &nbsp; &nbsp; 移动开发技术资料</option><option value="24">Shell</option><option value="25">Perl</option><option value="26">Java</option><option value="133">&nbsp; &nbsp; &nbsp; Java文档中心</option><option value="27">PHP</option><option value="135">&nbsp; &nbsp; &nbsp; php文档中心</option><option value="55">Python</option><option value="132">&nbsp; &nbsp; &nbsp; Python文档中心</option><option value="116">Ruby</option><option value="226">CPU与编译器</option><option value="225">嵌入式开发</option><option value="227">驱动开发</option><option value="80">Web开发</option><option value="100">VoIP开发技术</option></optgroup><optgroup label="--数据库技术"><option value="17">MySQL</option><option value="136">&nbsp; &nbsp; &nbsp; MySQL文档中心</option><option value="21">Sybase</option><option value="19">Oracle</option><option value="18">PostgreSQL</option><option value="22">DB2</option><option value="20">Informix</option><option value="140">数据仓库与数据挖掘</option><option value="292">NoSQL技术</option></optgroup><optgroup label="--综合交流区"><option value="46">IT业界新闻与评论</option><option value="32">IT职业生涯</option><option value="293">&nbsp; &nbsp; &nbsp; 猎头招聘</option><option value="82">IT图书与评论</option><option value="156">&nbsp; &nbsp; &nbsp; CU技术图书大系</option><option value="247">&nbsp; &nbsp; &nbsp; Linux书友会</option><option value="54">二手交易</option><option value="249">下载共享</option><option value="250">Linux文档专区</option><option value="53">IT培训与认证</option><option value="295">&nbsp; &nbsp; &nbsp; 培训交流</option><option value="191">&nbsp; &nbsp; &nbsp; 认证培训</option></optgroup><optgroup label="--休闲生活"><option value="31">清茶斋</option><option value="115">投资理财</option><option value="39">运动地带</option><option value="40">快乐数码摄影</option><option value="168">&nbsp; &nbsp; &nbsp; 摄影器材</option><option value="134">&nbsp; &nbsp; &nbsp; 摄影比赛专区</option><option value="121">IT爱车族</option><option value="96">旅游天下</option></optgroup><optgroup label="--站务及频道"><option value="2">站务交流</option><option value="51">博客SNS站务交流区</option><option value="123">CU活动专区</option><option value="207">&nbsp; &nbsp; &nbsp; Power活动专区</option><option value="169">&nbsp; &nbsp; &nbsp; 拍卖交流区</option></optgroup></select>
+<select onchange="if(this.options[this.selectedIndex].value != &#39;&#39;)
+window.location=(&#39;forumdisplay.php?fid=&#39;+this.options[this.selectedIndex].value+&#39;&amp;sid=93GU9T&#39;)">
+<option value="">最近访问的版块</option>
+</select>
+</td>
+</tr>
+</tbody></table>
+</div>
+
+<div id="wrap" class="wrap s_clear threadfix">
+<div class="forumcontrol" style="display:none">
+<table cellspacing="0" cellpadding="0">
+<tbody><tr>
+<td class="modaction">
+</td>
+<td align="right">
+<div class="p_bar"><a class="p_curpage">1</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_num">2</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_redirect">??</a></div><span class="pageback"><a href="http://bbs.chinaunix.net/forum-4-1.html">返回列表</a></span>
+<span class="postbtn" id="newspecial" prompt="post_newthread" onmouseover="$(&#39;newspecial&#39;).id = &#39;newspecialtmp&#39;;this.id = &#39;newspecial&#39;;showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://bbs.chinaunix.net/post.php?action=newthread&fid=4" onclick="showWindow(&#39;newthread&#39;, this.href);return false;">发帖</a></span>
+</td>
+</tr>
+</tbody></table>
+</div>
+
+
+<div id="postlist" class="mainbox viewthread">
+
+<table cellspacing="0" cellpadding="4" width="98%" border="0" bordercolor="#000000" style="border-collapse: collapse;border-left: 1px solid #000000;border-top: 1px solid #000000;border-right: 1px solid #000000; padding: 1">
+<tbody><tr class="header">
+<td width="80%">
+<font style="color:#fff">阅读</font>&nbsp;&nbsp;4914&nbsp;&nbsp; 
+<font style="color:#fff">回复</font>&nbsp;&nbsp;18</td>
+<td align="right" style="color:#fff">
+<!-- JiaThis Button BEGIN -->
+<div id="ckepop">
+<a href="http://www.jiathis.com/share/?uid=1514483" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank">分享到：</a>
+<a class="jiathis_button_tsina" title="分享到新浪微博"><span class="jiathis_txt jtico jtico_tsina"></span></a>
+<a class="jiathis_button_qzone" title="分享到QQ空间"><span class="jiathis_txt jtico jtico_qzone"></span></a>
+<a class="jiathis_button_kaixin001" title="分享到开心网"><span class="jiathis_txt jtico jtico_kaixin001"></span></a>
+<a class="jiathis_button_douban" title="分享到豆瓣"><span class="jiathis_txt jtico jtico_douban"></span></a>
+<a class="jiathis_button_renren" title="分享到人人网"><span class="jiathis_txt jtico jtico_renren"></span></a>
+<a class="jiathis_button_twitter" title="分享到Twitter"><span class="jiathis_txt jtico jtico_twitter"></span></a>
+<a class="jiathis_button_fb" title="分享到Facebook"><span class="jiathis_txt jtico jtico_fb"></span></a>
+</div>
+<script src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/jia.js" type="text/javascript" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+</td>
+</tr>
+</tbody></table><div id="post_4058122"><table id="pid4058122" summary="pid4058122" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#F0F3FA">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#F0F3FA">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=511701" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">compnik</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4058122" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4058122_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" onclick="hideMenu(&#39;userinfo4058122&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=511701&buddysubmit=yes" target="_blank" id="ajax_buddy_0" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank">compnik</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>511701&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>积分</dt><dd>1023&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>30&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=511701" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4058122&#39;)"><a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=12" target="_blank">精灵王</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips4.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=title&bbs=1&forums=all" target="_blank"><u>35</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=511701" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=511701" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div id="threadstamp"></div><div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+<a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&extra=page%3D1&ordertype=1" class="left">[倒序看帖]</a>
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4058122" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/viewthread.php?tid=607206&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>1</em>楼</a>
+
+<em id="authorposton4058122">发表于 2005-09-07 00:37</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=511701" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_0"></div><div id="ad_thread3_0"></div><div id="ad_thread4_0"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage firstpost">
+<div id="threadtitle">
+</div>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4058122">刚一个朋友在QQ上问起Linux 下 ssh chroot 实现的问题，<br>
+经过研究实现，在这里把步骤写下来希望能对大家起到抛砖引玉的做用&nbsp;&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/icon_smile.gif" smilieid="31" border="0" alt=""><br>
+<br>
+实现步骤如下：<br>
+&nbsp; &nbsp;&nbsp;&nbsp;1.创建<span href="tag.php?name=%D3%C3%BB%A7" onclick="tagshow(event)" class="t_tag">用户</span>abc ,主目录为/home/abc<br>
+<br>
+&nbsp; &nbsp;&nbsp;&nbsp;2.用root用户建立目录 /var/chroot ,&nbsp;&nbsp;/var/chroot/lib, /var/chroot/bin,/var/chroot/etc,/var/chroot/home/abc<br>
+<br>
+&nbsp; &nbsp;&nbsp;&nbsp;3. 把/lib 下 libc.so.6,ld-<span href="tag.php?name=linux" onclick="tagshow(event)" class="t_tag">linux</span>.so.2,libdl.so.2,libtermcap.so.2(为ldd /bin/bash的结果) 拷贝到 /var/chroot/lib下<br>
+&nbsp; &nbsp;&nbsp;&nbsp;4. tail -1 /etc/passwd &gt;;/var/chroot/etc/passwd<br>
+&nbsp; &nbsp;&nbsp; &nbsp;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;5. 修改/etc/pam.d/sshd 在末尾加上一句<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; session&nbsp; &nbsp;required&nbsp; &nbsp; pam_chroot.so<br>
+&nbsp; &nbsp;&nbsp;&nbsp;6.修改/etc/security/chroot.conf<br>
+&nbsp; &nbsp;&nbsp; &nbsp; 增加 一行 abc&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;/var/chroot&nbsp;&nbsp;保存后，使用abc 通过ssh 登录即可</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4058122"></div>
+<div class="useraction">
+</div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#F0F3FA">
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_0"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF"><!--//div id="ad_interthread"></div//--></td>
+</tr>
+</tbody></table>
+</div><div id="post_4059677"><table id="pid4059677" summary="pid4059677" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#FAFBFC">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#FAFBFC">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=20173712" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">sainux</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4059677" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4059677_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=20173712" onclick="hideMenu(&#39;userinfo4059677&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=20173712&buddysubmit=yes" target="_blank" id="ajax_buddy_1" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-20173712.html" target="_blank">sainux</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>20173712&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=sainux&st=post&bbs=1&forums=all" target="_blank"><u>33</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=sainux&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>积分</dt><dd>18&nbsp;</dd><dt>可用积分</dt><dd>18 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>10&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>塔克拉玛干&nbsp;</dd><dt>在线时间</dt><dd>0 小时&nbsp;</dd><dt>注册时间</dt><dd>2004-07-29&nbsp;</dd><dt>最后登录</dt><dd>2006-12-06&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=20173712" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-20173712.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4059677&#39;)"><a href="http://bbs.chinaunix.net/space-uid-20173712.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/12_avatar_middle.jpg" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=10" target="_blank">侠客</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips1.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=sainux&st=post&bbs=1&forums=all" target="_blank"><u>33</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=sainux&st=title&bbs=1&forums=all" target="_blank"><u>8</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=sainux&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>可用积分</dt><dd>18 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>塔克拉玛干&nbsp;</dd><dt>在线时间</dt><dd>0 小时&nbsp;</dd><dt>注册时间</dt><dd>2004-07-29&nbsp;</dd><dt>最后登录</dt><dd>2006-12-06&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=20173712" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=20173712" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=20173712" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4059677" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4059677&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>2</em>楼</a>
+
+<em id="authorposton4059677">发表于 2005-09-07 12:04</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=20173712" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_1"></div><div id="ad_thread3_1"></div><div id="ad_thread4_1"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4059677">让你熬到那么晚真是不好意思~~~~<br>
+今天早上我按照你给的步骤试了，从Windows下的SSH终端登录，输入密码后显示没有/bin/bash文件，cp了个bash文件到/chroot/bin后可以登录了。<br>
+但是用SSH file transfer输入密码后提示Failed to open a secure file transfer session. 问题应该出在哪里呢? 怎么才能让file transfer可以正常使用呢?</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4059677"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#FAFBFC">
+<div class="signatures" style="max-height:200px;maxHeightIE:200px;">__________________________________<br>为人民服务！！</div>
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_1"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4060158"><table id="pid4060158" summary="pid4060158" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#F0F3FA">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#F0F3FA">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=511701" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">compnik</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4060158" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4060158_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" onclick="hideMenu(&#39;userinfo4060158&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=511701&buddysubmit=yes" target="_blank" id="ajax_buddy_2" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank">compnik</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>511701&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>积分</dt><dd>1023&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>30&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=511701" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4060158&#39;)"><a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=12" target="_blank">精灵王</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips4.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=title&bbs=1&forums=all" target="_blank"><u>35</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=511701" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=511701" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4060158" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4060158&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>3</em>楼</a>
+
+<em id="authorposton4060158">发表于 2005-09-07 13:35</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=511701" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_2"></div><div id="ad_thread3_2"></div><div id="ad_thread4_2"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4060158">是要把bash拷过去的，我忘写了，你要 chown abc /var/chroot/home/abc 的</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4060158"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#F0F3FA">
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_2"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4060379"><table id="pid4060379" summary="pid4060379" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#FAFBFC">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#FAFBFC">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=511701" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">compnik</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4060379" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4060379_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" onclick="hideMenu(&#39;userinfo4060379&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=511701&buddysubmit=yes" target="_blank" id="ajax_buddy_3" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank">compnik</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>511701&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>积分</dt><dd>1023&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>30&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=511701" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4060379&#39;)"><a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=12" target="_blank">精灵王</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips4.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=title&bbs=1&forums=all" target="_blank"><u>35</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=511701" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=511701" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4060379" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4060379&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>4</em>楼</a>
+
+<em id="authorposton4060379">发表于 2005-09-07 14:19</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=511701" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_3"></div><div id="ad_thread3_3"></div><div id="ad_thread4_3"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4060379">mkdir -p /var/chroot/usr/libexec/openssh<br>
+cp /usr/libexec/openssh/sftp-server /var/chroot/usr/libexec/openssh<br>
+find /lib/ -maxdepth 1 \( -type f -o -type l \) -exec ln {} /var/chroot/lib \;<br>
+find /usr/lib/ -maxdepth 1 \( -type f -o -type l \) -exec ln {} /var/chroot/lib \;</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4060379"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#FAFBFC">
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_3"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4065391"><table id="pid4065391" summary="pid4065391" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#F0F3FA">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#F0F3FA">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=71867" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">hmkart</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4065391" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4065391_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" onclick="hideMenu(&#39;userinfo4065391&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=71867&buddysubmit=yes" target="_blank" id="ajax_buddy_4" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank">hmkart</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>71867&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>积分</dt><dd>491&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>20&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=71867" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4065391&#39;)"><a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/67_avatar_middle.jpg" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=11" target="_blank">风云使者</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips5.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=title&bbs=1&forums=all" target="_blank"><u>50</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=71867" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=71867" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4065391" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4065391&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>5</em>楼</a>
+
+<em id="authorposton4065391">发表于 2005-09-08 13:34</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=71867" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_4"></div><div id="ad_thread3_4"></div><div id="ad_thread4_4"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4065391">ssh 服务是否需要 重起呢? <br>
+就5步就可以吗?<br>
+没成功呀</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4065391"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#F0F3FA">
+<div class="signatures" style="max-height:200px;maxHeightIE:200px;">__________________________________<br>美好的东西最好是在它最好的时候结束它，这样留在心中的永远都是最好的，<br>
+<br>
+如果等到它不好的时候再结束，连心中美好的印象都没了，岂不可惜!</div>
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_4"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4065422"><table id="pid4065422" summary="pid4065422" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#FAFBFC">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#FAFBFC">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=71867" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">hmkart</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4065422" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4065422_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" onclick="hideMenu(&#39;userinfo4065422&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=71867&buddysubmit=yes" target="_blank" id="ajax_buddy_5" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank">hmkart</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>71867&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>积分</dt><dd>491&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>20&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=71867" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4065422&#39;)"><a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/67_avatar_middle.jpg" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=11" target="_blank">风云使者</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips5.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=title&bbs=1&forums=all" target="_blank"><u>50</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=71867" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=71867" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4065422" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4065422&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>6</em>楼</a>
+
+<em id="authorposton4065422">发表于 2005-09-08 13:39</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=71867" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_5"></div><div id="ad_thread3_5"></div><div id="ad_thread4_5"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4065422">mkdir -p /var/chroot<br>
+ mkdir -p /var/chroot/bin <br>
+ mkdir -p /var/chroot/lib<br>
+ mkdir -p /var/chroot/etc<br>
+ mkdir -p /var/chroot/home/carter<br>
+[root@train lib]# tail -1 /etc/pam.d/sshd <br>
+session&nbsp; &nbsp; required&nbsp; &nbsp;&nbsp;&nbsp;pam_chroot.so<br>
+cp ld-linux.so.2 libdl.so.2 libtermcap.so.2 libc.so.6 /var/chroot/lib/<br>
+cp /bin/bash /var/chroot/bin/<br>
+tail -1 /etc/passwd &gt;; /var/chroot/etc/passwd<br>
+[root@train lib]# tail -1 /etc/security/chroot.conf <br>
+carter&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;/var/chroot<br>
+[root@train lib]# cat /var/chroot/etc/passwd <br>
+carter<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/icon_mad.gif" smilieid="48" border="0" alt="">:503:503::/home/carter:/bin/bash<br>
+<br>
+ssh carter@127.0.0.1<br>
+可是登陆目录没有变化呀.</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4065422"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#FAFBFC">
+<div class="signatures" style="max-height:200px;maxHeightIE:200px;">__________________________________<br>美好的东西最好是在它最好的时候结束它，这样留在心中的永远都是最好的，<br>
+<br>
+如果等到它不好的时候再结束，连心中美好的印象都没了，岂不可惜!</div>
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_5"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4065721"><table id="pid4065721" summary="pid4065721" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#F0F3FA">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#F0F3FA">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=71867" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">hmkart</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4065721" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4065721_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" onclick="hideMenu(&#39;userinfo4065721&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=71867&buddysubmit=yes" target="_blank" id="ajax_buddy_6" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank">hmkart</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>71867&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>积分</dt><dd>491&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>20&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=71867" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4065721&#39;)"><a href="http://bbs.chinaunix.net/space-uid-71867.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/67_avatar_middle.jpg" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=11" target="_blank">风云使者</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips5.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=post&bbs=1&forums=all" target="_blank"><u>673</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=title&bbs=1&forums=all" target="_blank"><u>50</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=hmkart&st=titlejh&bbs=1&forums=all" target="_blank"><u>0</u></a>&nbsp;</dd><dt>可用积分</dt><dd>491 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>西北&nbsp;</dd><dt>在线时间</dt><dd>78 小时&nbsp;</dd><dt>注册时间</dt><dd>2002-06-20&nbsp;</dd><dt>最后登录</dt><dd>2011-07-23&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=71867" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=71867" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=71867" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4065721" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4065721&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>7</em>楼</a>
+
+<em id="authorposton4065721">发表于 2005-09-08 14:17</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=71867" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_6"></div><div id="ad_thread3_6"></div><div id="ad_thread4_6"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4065721">http://www.layangan.com/asfik/writings/chroot-login-sshd.html<br>
+按这文章也没好.<br>
+<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/icon_sad.gif" smilieid="34" border="0" alt=""></td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4065721"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#F0F3FA">
+<div class="signatures" style="max-height:200px;maxHeightIE:200px;">__________________________________<br>美好的东西最好是在它最好的时候结束它，这样留在心中的永远都是最好的，<br>
+<br>
+如果等到它不好的时候再结束，连心中美好的印象都没了，岂不可惜!</div>
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_6"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4068867"><table id="pid4068867" summary="pid4068867" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#FAFBFC">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#FAFBFC">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=511701" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">compnik</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4068867" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4068867_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" onclick="hideMenu(&#39;userinfo4068867&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=511701&buddysubmit=yes" target="_blank" id="ajax_buddy_7" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank">compnik</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>511701&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>积分</dt><dd>1023&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>30&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=511701" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4068867&#39;)"><a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=12" target="_blank">精灵王</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips4.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=title&bbs=1&forums=all" target="_blank"><u>35</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=511701" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=511701" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4068867" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4068867&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>8</em>楼</a>
+
+<em id="authorposton4068867">发表于 2005-09-09 09:21</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=511701" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_7"></div><div id="ad_thread3_7"></div><div id="ad_thread4_7"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4068867">查看一下你的权限，/var/chroot的</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4068867"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#FAFBFC">
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_7"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4069257"><table id="pid4069257" summary="pid4069257" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#F0F3FA">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#F0F3FA">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=20099692" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">missing-cn</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4069257" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4069257_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=20099692" onclick="hideMenu(&#39;userinfo4069257&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=20099692&buddysubmit=yes" target="_blank" id="ajax_buddy_8" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-20099692.html" target="_blank">missing-cn</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>20099692&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=missing-cn&st=post&bbs=1&forums=all" target="_blank"><u>1155</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=missing-cn&st=titlejh&bbs=1&forums=all" target="_blank"><u>4</u></a>&nbsp;</dd><dt>积分</dt><dd>941&nbsp;</dd><dt>可用积分</dt><dd>941 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>20&nbsp;</dd><dt>在线时间</dt><dd>461 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-09-23&nbsp;</dd><dt>最后登录</dt><dd>2011-12-04&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=20099692" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-20099692.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4069257&#39;)"><a href="http://bbs.chinaunix.net/space-uid-20099692.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=30" target="_blank">天使</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips6.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=missing-cn&st=post&bbs=1&forums=all" target="_blank"><u>1155</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=missing-cn&st=title&bbs=1&forums=all" target="_blank"><u>60</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=missing-cn&st=titlejh&bbs=1&forums=all" target="_blank"><u>4</u></a>&nbsp;</dd><dt>可用积分</dt><dd>941 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>在线时间</dt><dd>461 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-09-23&nbsp;</dd><dt>最后登录</dt><dd>2011-12-04&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=20099692" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=20099692" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=20099692" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4069257" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4069257&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>9</em>楼</a>
+
+<em id="authorposton4069257">发表于 2005-09-09 10:15</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=20099692" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_8"></div><div id="ad_thread3_8"></div><div id="ad_thread4_8"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4069257">这样做的意思是什么？ssh登录之后只能在自己的Home目录活动？</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4069257"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#F0F3FA">
+<div class="signatures" style="max-height:200px;maxHeightIE:200px;">__________________________________<br>经验分享～<a href="http://missing.cublog.cn/" target="_blank">http://missing.cublog.cn</a></div>
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_8"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div><div id="post_4070233"><table id="pid4070233" summary="pid4070233" cellspacing="0" cellpadding="0">
+<tbody><tr var="" bgcolor="#FAFBFC">
+<td width="18%" class="postauthor" rowspan="2" var="" bgcolor="#FAFBFC">
+<div class="postinfo">
+<a target="_blank" href="http://bbs.chinaunix.net/space.php?uid=511701" style="margin-left: 20px; font-weight: 800">
+				
+<font face="Fixedsys">compnik</font></a>
+	
+	
+</div>
+	
+<div class="popupmenu_popup userinfopanel" id="userinfo4070233" style="display: none; position: absolute;margin-top: -11px;">
+<div class="popavatar">
+<div id="userinfo4070233_ma"></div>
+<ul class="profile_side">
+<li class="pm"><a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" onclick="hideMenu(&#39;userinfo4070233&#39;);showWindow(&#39;sendpm&#39;, this.href);return false;" title="发短消息">发短消息</a></li>
+<li class="buddy"><a href="http://bbs.chinaunix.net/my.php?item=buddylist&newbuddyid=511701&buddysubmit=yes" target="_blank" id="ajax_buddy_9" title="加为好友" onclick="ajaxmenu(this, 3000);doane(event);">加为好友</a></li>
+</ul>
+</div>
+<div class="popuserinfo">
+<p>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank">compnik</a>
+<em>当前离线
+</em>
+</p>
+
+<dl class="s_clear"><dt>UID</dt><dd>511701&nbsp;</dd><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>积分</dt><dd>1023&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>信誉积分</dt><dd>100 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:)</dd><dt>空间积分</dt><dd>0 &nbsp;</dd><dt>阅读权限</dt><dd>30&nbsp;</dd><dt>性别</dt><dd>男&nbsp;</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl>
+<div class="imicons">
+<a href="http://blog.chinaunix.net/space.php?uid=511701" target="_blank" title="个人空间"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/home.gif" alt="个人空间"></a>
+<a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank" title="查看详细资料"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/userinfo.gif" alt="查看详细资料"></a>
+</div>
+<div id="avatarfeed"><span id="threadsortswait"></span></div>
+</div>
+</div>
+ <div>
+<div class="avatar" onmouseover="showauthor(this, &#39;userinfo4070233&#39;)"><a href="http://bbs.chinaunix.net/space-uid-511701.html" target="_blank"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/noavatar_middle.gif" onerror="this.onerror=null;this.src=&#39;http://bbs.chinaunix.net/uc_server/images/noavatar_middle.gif&#39;"></a></div>
+<p><em><a href="http://bbs.chinaunix.net/faq.php?action=grouppermission&searchgroupid=12" target="_blank">精灵王</a></em></p>
+</div>
+<p>&nbsp;<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pips4.gif">&nbsp;</p>
+<dl class="profile s_clear"><dt>帖子</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=post&bbs=1&forums=all" target="_blank"><u>355</u></a>&nbsp;</dd><dt>主题</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=title&bbs=1&forums=all" target="_blank"><u>35</u></a>&nbsp;</dd><dt>精华</dt><dd><a href="http://s.chinaunix.net/bbs.php?q=&username=compnik&st=titlejh&bbs=1&forums=all" target="_blank"><u>6</u></a>&nbsp;</dd><dt>可用积分</dt><dd>1023 &nbsp;</dd><dt>专家积分</dt><dd style="width:110px;">0 (本版:0)</dd><dt>来自</dt><dd>北京&nbsp;</dd><dt>在线时间</dt><dd>82 小时&nbsp;</dd><dt>注册时间</dt><dd>2003-03-01&nbsp;</dd><dt>最后登录</dt><dd>2011-09-30&nbsp;</dd></dl><p>状态：<font color="#999999">...当前离线...</font></p>
+  
+<p>
+[<a href="http://my.chinaunix.net/space.php?uid=511701" target="_blank" alt="进入此会员的CU微博" style="color:blue"><b>微博</b></a>]
+[<a href="http://blog.chinaunix.net/dir.php?uid=511701" target="_blank" alt="进入此会员的CU博客"><b>博客</b></a>]
+[<a href="http://bbs.chinaunix.net/pm.php?action=new&uid=511701" target="_blank" alt="给此会员发送站内短信"><b>短信</b></a>] 
+</p>
+
+</td>
+<td class="postcontent postbody">
+<div class="postinfo">
+<strong>
+<em>
+<a href="javascript:;" onclick="scrollTo(0,0);"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/top.gif" border="0" alt="顶部"></a>
+
+	
+</em>
+</strong>
+<div class="posterinfo">
+<div class="pagecontrol">
+</div>
+<div class="authorinfo">
+<a title="复制本帖链接" id="postnum4070233" href="javascript:;" onclick="setCopy(&#39;http://bbs.chinaunix.net/redirect.php?goto=findpost&amp;ptid=607206&amp;pid=4070233&#39;, &#39;帖子地址已经复制到剪贴板&#39;)"><em>10</em>楼</a>
+
+<em id="authorposton4070233">发表于 2005-09-09 12:57</em>
+ | <a href="http://bbs.chinaunix.net/viewthread.php?tid=607206&page=1&authorid=511701" rel="nofollow">只看该作者</a>
+</div>
+</div>
+</div>
+<hr class="top_hr">
+<div class="defaultpost">
+<div id="ad_thread2_9"></div><div id="ad_thread3_9"></div><div id="ad_thread4_9"></div>
+
+<div class="postact s_clear" style="float:right">
+<p>
+</p>
+</div>
+
+<div class="postmessage ">
+<h2>Redhat EL4 下实现ssh chroot 登陆</h2>
+<div class="t_msgfontfix">
+<table cellspacing="0" cellpadding="0"><tbody><tr><td class="t_msgfont" id="postmessage_4070233">应该是只能在chroot的目录里活动, 当然也可以再拷进去一些其它的命令，完成一些需要其它的程序来做个受限的用户了<br>
+<br>
+我那个朋友说是想用sftp来上传文件，偶就顺便研究了一下<br>
+其实对他的需求来说不如用vsftp来做合适一些</td></tr></tbody></table>
+</div>
+
+<div id="post_rate_div_4070233"></div>
+</div>
+
+</div>
+</td></tr>
+<tr><td class="postcontent postbottom" bgcolor="#FAFBFC">
+        <!--//CHINAUNIX	文库推荐内容显示 at 20111118 by cao -->
+                <br>
+<hr class="ad_hr">
+<div class="ad_textlink1" id="ad_thread1_9"><a href="http://bbs.chinaunix.net/thread-3624009-1-1.html" target="_blank" style="color:green"><b>linux中断总结分享（大奖）</b></a>|<a target="_blank" href="http://bbs.chinaunix.net/thread-3588737-1-1.html" style="color:red"><b>
+ChinaUnix活动列表 积分好礼等你拿！</b></a> | <a href="http://bbs.chinaunix.net/thread-3622830-1-1.html" target="_blank" style="color:blue"><b>戴尔智能信息管理关键技术有奖竞答</b></a> |  <a href="http://bbs.chinaunix.net/thread-3612180-1-1.html" target="_blank" style="color:#8E236B"><b>ChinaUnix十年十城技术沙龙启动</b></a> </div></td>
+</tr>
+<tr class="threadad" bgcolor="#FFFFFF" height="2">
+<td class="postauthor" bgcolor="#FFFFFF">
+<td class="adcontent" bgcolor="#FFFFFF">
+</tr>
+</tbody></table>
+</div></div>
+<div id="postlistreply" class="mainbox viewthread"><div id="post_new" class="viewthread_table" style="display: none"></div></div>
+<div class="subtable" style="padding:5px 5px 5px 0px">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="98%" align="center">
+<tbody><tr><td nowrap="">
+<span id="newspecial" prompt="post_newthread" onmouseover="$(&#39;newspecial&#39;).id = &#39;newspecialtmp&#39;;this.id = &#39;newspecial&#39;;showMenu({&#39;ctrlid&#39;:this.id})">
+<a href="http://bbs.chinaunix.net/post.php?action=newthread&fid=4&extra=page%3D1" onclick="showWindow(&#39;newthread&#39;, this.href);return false;"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/new_topic.gif" border="0" alt=""></a> </span>
+
+<a href="http://bbs.chinaunix.net/post.php?action=reply&fid=4&tid=607206&extra=page%3D1"><img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/new_reply.gif" border="0" alt=""></a>&nbsp;
+<a href="http://www.chinaunix.net/">首页</a> ? 
+<a href="http://bbs.chinaunix.net/index.php">论坛</a>
+ 
+<!-- &raquo; <a href="listthread.php" style="color:#FF0000">汇总贴列表</a> --> 
+ ? <a href="http://bbs.chinaunix.net/forum-4-1.html">Linux论坛</a> ? </td>
+<td nowrap="" align="right">
+<div class="p_bar"><a class="p_curpage">1</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_num">2</a><a href="http://bbs.chinaunix.net/thread-607206-2-1.html" class="p_redirect">??</a></div></td></tr>
+</tbody></table>
+</div>
+
+<form method="post" name="modactions" id="modactions">
+<input type="hidden" name="formhash" value="a77240ed">
+<input type="hidden" name="optgroup">
+<input type="hidden" name="operation">
+<input type="hidden" name="listextra" value="page%3D1">
+</form>
+
+<script type="text/javascript">var tagarray = ['linux','java','php','web','运维','android','服务器','Oracle','招聘','安全','mysql','云计算','Windows','python','微软','安全技术','shell','Ruby','videoserver','sqlserver','perl','ibm','北京','ftp','server','apache','数据库','Sun','工程师','手机开发','软件','pdf','应用程序','上海','solaris','cluster','AIX','培训','Win','互联网','FreeBSD','操作系统','开发','嵌入式','虚拟机','SAP','网络','中间件','软件工程','unix','用户','IIS','认证','jquery','others','dell','小型机','ppt','编程','计算机','求助','VMware','技术','javascript','raid','awk','存储','软件开发','技术论坛','IT技术社区','samba','redhat','内存','信息安全','IBMx86','时间','CentOs','sed','DB2','虚拟化','测试','系统','DNS','文件','iPhone','Virtualization','内核','web开发','CISA','职位','移动开发','2003','Cloud','CISSP','请教','硬盘','解决方案','proxyserver','Novell','socket'];var tagencarray = ['linux','java','php','web','%D4%CB%CE%AC','android','%B7%FE%CE%F1%C6%F7','Oracle','%D5%D0%C6%B8','%B0%B2%C8%AB','mysql','%D4%C6%BC%C6%CB%E3','Windows','python','%CE%A2%C8%ED','%B0%B2%C8%AB%BC%BC%CA%F5','shell','Ruby','videoserver','sqlserver','perl','ibm','%B1%B1%BE%A9','ftp','server','apache','%CA%FD%BE%DD%BF%E2','Sun','%B9%A4%B3%CC%CA%A6','%CA%D6%BB%FA%BF%AA%B7%A2','%C8%ED%BC%FE','pdf','%D3%A6%D3%C3%B3%CC%D0%F2','%C9%CF%BA%A3','solaris','cluster','AIX','%C5%E0%D1%B5','Win','%BB%A5%C1%AA%CD%F8','FreeBSD','%B2%D9%D7%F7%CF%B5%CD%B3','%BF%AA%B7%A2','%C7%B6%C8%EB%CA%BD','%D0%E9%C4%E2%BB%FA','SAP','%CD%F8%C2%E7','%D6%D0%BC%E4%BC%FE','%C8%ED%BC%FE%B9%A4%B3%CC','unix','%D3%C3%BB%A7','IIS','%C8%CF%D6%A4','jquery','others','dell','%D0%A1%D0%CD%BB%FA','ppt','%B1%E0%B3%CC','%BC%C6%CB%E3%BB%FA','%C7%F3%D6%FA','VMware','%BC%BC%CA%F5','javascript','raid','awk','%B4%E6%B4%A2','%C8%ED%BC%FE%BF%AA%B7%A2','%BC%BC%CA%F5%C2%DB%CC%B3','IT%BC%BC%CA%F5%C9%E7%C7%F8','samba','redhat','%C4%DA%B4%E6','%D0%C5%CF%A2%B0%B2%C8%AB','IBMx86','%CA%B1%BC%E4','CentOs','sed','DB2','%D0%E9%C4%E2%BB%AF','%B2%E2%CA%D4','%CF%B5%CD%B3','DNS','%CE%C4%BC%FE','iPhone','Virtualization','%C4%DA%BA%CB','web%BF%AA%B7%A2','CISA','%D6%B0%CE%BB','%D2%C6%B6%AF%BF%AA%B7%A2','2003','Cloud','CISSP','%C7%EB%BD%CC','%D3%B2%C5%CC','%BD%E2%BE%F6%B7%BD%B0%B8','proxyserver','Novell','socket'];parsetag(4058122);</script>
+
+
+
+<table border="0" cellspacing="5" cellpadding="5" style="border-collapse: collapse" width="98%" align="center">
+<tbody><tr><td nowrap="">
+</td><td nowrap="" align="right">
+<select onchange="if(this.options[this.selectedIndex].value != &#39;&#39;) {
+window.location=(&#39;forumdisplay.php?fid=&#39;+this.options[this.selectedIndex].value+&#39;&amp;sid=93GU9T&#39;) }">
+<option value="">版块跳转</option>
+<optgroup label="--Linux操作系统"><option value="216">新手园地</option><option value="269">&nbsp; &nbsp; &nbsp; 硬件问题</option><option value="217">Linux系统管理</option><option value="218">Linux网络问题</option><option value="223">Linux环境编程</option><option value="271">Linux桌面系统</option><option value="221">国产Linux</option></optgroup><optgroup label="--Unix操作系统"><option value="5">BSD</option><option value="127">&nbsp; &nbsp; &nbsp; BSD文档中心</option><option value="9">AIX</option><option value="193">&nbsp; &nbsp; &nbsp; 新手入门</option><option value="124">&nbsp; &nbsp; &nbsp; AIX文档中心</option><option value="189">&nbsp; &nbsp; &nbsp; 资源下载</option><option value="188">&nbsp; &nbsp; &nbsp; Power高级应用</option><option value="187">&nbsp; &nbsp; &nbsp; IBM存储</option><option value="10">AS400</option><option value="6">Solaris</option><option value="128">&nbsp; &nbsp; &nbsp; Solaris文档中心</option><option value="8">HP-UX</option><option value="129">&nbsp; &nbsp; &nbsp; HP文档中心</option><option value="7">SCO UNIX</option><option value="130">&nbsp; &nbsp; &nbsp; SCO文档中心</option><option value="118">互操作专区</option><option value="12">IRIX</option><option value="11">Tru64 UNIX</option><option value="41">Mac OS X</option></optgroup><optgroup label="--IT运维架构"><option value="141">门户网站运维</option><option value="233">集群和高可用</option><option value="232">服务器应用</option><option value="235">监控和防护</option><option value="283">虚拟化技术</option><option value="185">架构设计</option><option value="285">行业应用和管理</option></optgroup><optgroup label="--IT基础设施"><option value="45">服务器及硬件技术</option><option value="184">&nbsp; &nbsp; &nbsp; 服务器资源下载</option><option value="180">云计算</option><option value="181">&nbsp; &nbsp; &nbsp; 云计算文档中心</option><option value="182">&nbsp; &nbsp; &nbsp; 云计算业界</option><option value="183">&nbsp; &nbsp; &nbsp; 云计算资源下载</option><option value="34">存储备份</option><option value="125">&nbsp; &nbsp; &nbsp; 存储文档中心</option><option value="126">&nbsp; &nbsp; &nbsp; 存储业界</option><option value="145">&nbsp; &nbsp; &nbsp; 存储资源下载</option><option value="194">&nbsp; &nbsp; &nbsp; Symantec技术交流区</option><option value="29">安全技术</option><option value="30">网络技术</option><option value="131">&nbsp; &nbsp; &nbsp; 网络技术文档中心</option></optgroup><optgroup label="--程序设计"><option value="23">C/C++</option><option value="84">&nbsp; &nbsp; &nbsp; GUI编程</option><option value="142">&nbsp; &nbsp; &nbsp; Functional编程</option><option value="224">内核源码</option><option value="220">&nbsp; &nbsp; &nbsp; 内核问题</option><option value="222">移动开发</option><option value="265">&nbsp; &nbsp; &nbsp; 移动开发技术资料</option><option value="24">Shell</option><option value="25">Perl</option><option value="26">Java</option><option value="133">&nbsp; &nbsp; &nbsp; Java文档中心</option><option value="27">PHP</option><option value="135">&nbsp; &nbsp; &nbsp; php文档中心</option><option value="55">Python</option><option value="132">&nbsp; &nbsp; &nbsp; Python文档中心</option><option value="116">Ruby</option><option value="226">CPU与编译器</option><option value="225">嵌入式开发</option><option value="227">驱动开发</option><option value="80">Web开发</option><option value="100">VoIP开发技术</option></optgroup><optgroup label="--数据库技术"><option value="17">MySQL</option><option value="136">&nbsp; &nbsp; &nbsp; MySQL文档中心</option><option value="21">Sybase</option><option value="19">Oracle</option><option value="18">PostgreSQL</option><option value="22">DB2</option><option value="20">Informix</option><option value="140">数据仓库与数据挖掘</option><option value="292">NoSQL技术</option></optgroup><optgroup label="--综合交流区"><option value="46">IT业界新闻与评论</option><option value="32">IT职业生涯</option><option value="293">&nbsp; &nbsp; &nbsp; 猎头招聘</option><option value="82">IT图书与评论</option><option value="156">&nbsp; &nbsp; &nbsp; CU技术图书大系</option><option value="247">&nbsp; &nbsp; &nbsp; Linux书友会</option><option value="54">二手交易</option><option value="249">下载共享</option><option value="250">Linux文档专区</option><option value="53">IT培训与认证</option><option value="295">&nbsp; &nbsp; &nbsp; 培训交流</option><option value="191">&nbsp; &nbsp; &nbsp; 认证培训</option></optgroup><optgroup label="--休闲生活"><option value="31">清茶斋</option><option value="115">投资理财</option><option value="39">运动地带</option><option value="40">快乐数码摄影</option><option value="168">&nbsp; &nbsp; &nbsp; 摄影器材</option><option value="134">&nbsp; &nbsp; &nbsp; 摄影比赛专区</option><option value="121">IT爱车族</option><option value="96">旅游天下</option></optgroup><optgroup label="--站务及频道"><option value="2">站务交流</option><option value="51">博客SNS站务交流区</option><option value="123">CU活动专区</option><option value="207">&nbsp; &nbsp; &nbsp; Power活动专区</option><option value="169">&nbsp; &nbsp; &nbsp; 拍卖交流区</option></optgroup></select>
+<select onchange="if(this.options[this.selectedIndex].value != &#39;&#39;)
+window.location=(&#39;forumdisplay.php?fid=&#39;+this.options[this.selectedIndex].value+&#39;&amp;sid=93GU9T&#39;)">
+<option value="">最近访问的版块</option>
+</select>
+</td>
+<td width="100">
+</td></tr>
+</tbody></table>
+
+<div id="favoritewin" style="display: none">
+<h5>
+<a href="javascript:;" onclick="ajaxget(&#39;my.php?item=favorites&amp;tid=607206&#39;, &#39;favorite_msg&#39;);return false;" class="lightlink">[收藏此主题]</a>&nbsp;
+<a href="javascript:;" onclick="ajaxget(&#39;my.php?item=attention&amp;action=add&amp;tid=607206&#39;, &#39;favorite_msg&#39;);return false;" class="lightlink">[关注此主题的新回复]</a>
+</h5>
+<span id="favorite_msg"></span>
+</div>
+
+<div id="sharewin" style="display: none">
+<h5>
+<a href="javascript:;" onclick="setCopy(&#39;Redhat EL4 下实现ssh chroot 登陆\nhttp://bbs.chinaunix.net/viewthread.php?tid=607206&#39;, &#39;帖子地址已经复制到剪贴板&lt;br /&gt;您可以用快捷键 Ctrl + V 粘贴到 QQ、MSN 里。&#39;)" class="lightlink">[通过 QQ、MSN 分享给朋友]</a><br><br>
+</h5>
+</div>
+
+</div><div class="ad_footerbanner" id="ad_footerbanner1"></div>
+
+
+<!----广告 begin------------->
+
+<!----广告 end------------->
+<table bgcolor="#FFFFFF" width="98%" cellpadding="8" cellspacing="0" border="0" align="center">
+<tbody><tr class="outertxt"><td>
+<table cellspacing="0" cellpadding="0" align="center" style="font-size: 11px; font-family: Tahoma, Arial"><tbody><tr>
+<td align="center">
+Copyright ? 2001-2010 ChinaUnix.net All Rights Reserved 
+&nbsp;&nbsp;&nbsp;
+联系我们：<img src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/adminmail.gif" border="0" width="139" height="12">
+
+<p>感谢所有关心和支持过ChinaUnix的朋友们&nbsp;&nbsp;&nbsp;&nbsp;转载本站内容请注明原作者名及出处</p>
+
+ <a href="http://www.it168.com/images/icp.jpg" target="_blank">京ICP证:060528号</a>
+<br>
+北京市公安局海淀分局网监中心备案编号：1101082001 
+</td></tr>
+<tr><td align="center"><br><br>
+<a href="http://bbs.chinaunix.net/member.php?action=clearcookies&formhash=a77240ed">清除 Cookies</a> - <a href="http://www.chinaunix.net/" target="_blank">ChinaUnix</a>
+ - <a href="http://bbs.chinaunix.net/archiver/" target="_blank">Archiver</a> - <a href="http://bbs.chinaunix.net/wap/" target="_blank">WAP</a> - <a href="http://bbs.chinaunix.net/thread-607206-1-1.html#top">TOP</a>
+</td></tr>
+</tbody></table>
+
+<!-- 统计 START -->
+<script src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/pv.js" type="text/javascript"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 35; // 频道类别ID
+    pvTrack.channel = 22; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20237423-2']);
+  _gaq.push(['_setDomainName', '.chinaunix.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> 
+<div style="display:none">
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Redhat EL4 下实现ssh chroot 登陆 - Linux论坛 - ChinaUnix.net_files/h.js" type="text/javascript"></script>
+</div>
+
+<!-- ..统计 END -->
+
+</td></tr></tbody></table></div></center></body></html>

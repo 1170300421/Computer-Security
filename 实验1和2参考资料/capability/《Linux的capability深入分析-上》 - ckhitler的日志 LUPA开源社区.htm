@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0069)http://home.lupaworld.com/home-space-uid-56821-do-blog-id-234956.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xn="http://www.renren.com/2009/xnml" xmlns:og="http://ogp.me/ns#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css"></style>
+
+<title>《Linux的capability深入分析-上》 - ckhitler的日志   LUPA开源社区   </title>
+<meta name="google-site-verification" content="Ae4q3uRfClhb1SWI2yZICMhnCK-4gY8U5q1ZQadJxUQ">
+<meta name="keywords" content="Linux cap capabilities capability">
+<meta name="description" content="一)概述:1)从2.1版开始,Linux内核有了能力(capability)的概念,即它打破了UNIX/LINUX操作系统中超级用户/普通用户的概念,由普通用户也可以做只有超级用 ... ">
+<meta name="generator" content="LUPA">
+<meta name="author" content="LUPA">
+<meta name="copyright" content="2001-2010 LUPA Inc.">
+<meta name="MSSmartTagsPreventParsing" content="True">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<link rel="alternate" type="application/rss+xml" title="LUPA开源资讯" href="http://www.lupaworld.com/myrss.php">	
+<!--<base href="http://home.lupaworld.com/">--><base href="."><link rel="stylesheet" type="text/css" href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/style_3_common.css"><link rel="stylesheet" type="text/css" href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/style_3_home_space.css"><link rel="stylesheet" id="css_extstyle" type="text/css" href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/style.css"><script type="text/javascript">var STYLEID = '3', STATICURL = 'static/', IMGDIR = 'static/image/common', VERHASH = 'Q2H', charset = 'utf-8', discuz_uid = '0', cookiepre = 'l3xP_3b56_', cookiedomain = '.lupaworld.com', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = 'newthread|reply', creditnotice = '1|LUPA币|点', defaultstyle = './template/default/style/t3', REPORTURL = 'aHR0cDovL2hvbWUubHVwYXdvcmxkLmNvbS9ob21lLXNwYWNlLXVpZC01NjgyMS1kby1ibG9nLWlkLTIzNDk1Ni5odG1s', SITEURL = 'http://home.lupaworld.com/';</script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/common.js" type="text/javascript"></script><script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/home.js" type="text/javascript"></script>
+<script type="text/javascript" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/relatedItems.htm"></script><script type="text/javascript" charset="UTF-8" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/dlg.js"></script><script type="text/javascript" charset="UTF-8" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/xwb.js"></script></head><body id="nv_home" class="pg_space" onkeydown="if(event.keyCode==27) return false;"><link href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/jiathis_share.css" rel="stylesheet" type="text/css"><div id="ckepop" style="height: auto; position: absolute; z-index: 1e+008; right: 0px; overflow-x: hidden; overflow-y: hidden; width: 26px; top: 209.9px; "><table cellpadding="0" cellspacing="0"><tbody style="background:transparent"><tr><td style="background:transparent"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/r1.gif" style="cursor:pointer;" onmouseover="$CKE.over()" onclick="$CKE.center(this)"></td><td><div><div class="jiadiv_01"><div style="width:100%;background:#F2F2F2;border-bottom:1px solid #E5E5E5;line-height:200%;padding-left:5px;font-size:12px"><table width="100%"><tbody><tr class="jt_sharetitle"><td align="left" style="text-align:left;line-height:25px;font-size:14px;font-weight:bold;color:#000000;">分享到...</td><td align="right" style="text-align:right;"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/img_exit.gif" border="0" style="opacity:0.5;filter:alpha(opacity=50);margin:0 10px;cursor:pointer;" onclick="$CKE.shareClose();"></td></tr></tbody></table></div><div class="jiadiv_02" style="width:100%;" id="jiathis_sers"><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;copy&#39;);return false;" class="jiatitle"><span class="jtico jtico_copy">复制网址</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;email&#39;);return false;" class="jiatitle"><span class="jtico jtico_email">邮件</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;qzone&#39;);return false;" class="jiatitle"><span class="jtico jtico_qzone">QQ空间</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tsina&#39;);return false;" class="jiatitle"><span class="jtico jtico_tsina">新浪微博</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;msn&#39;);return false;" class="jiatitle"><span class="jtico jtico_msn">MSN</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tqq&#39;);return false;" class="jiatitle"><span class="jtico jtico_tqq">腾讯微博</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;renren&#39;);return false;" class="jiatitle"><span class="jtico jtico_renren">人人网</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;kaixin001&#39;);return false;" class="jiatitle"><span class="jtico jtico_kaixin001">开心网</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;t163&#39;);return false;" class="jiatitle"><span class="jtico jtico_t163">网易微博</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tsohu&#39;);return false;" class="jiatitle"><span class="jtico jtico_tsohu">搜狐微博</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;xiaoyou&#39;);return false;" class="jiatitle"><span class="jtico jtico_xiaoyou">朋友网</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;taobao&#39;);return false;" class="jiatitle"><span class="jtico jtico_taobao">淘江湖</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;baidu&#39;);return false;" class="jiatitle"><span class="jtico jtico_baidu">百度搜藏</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;douban&#39;);return false;" class="jiatitle"><span class="jtico jtico_douban">豆瓣</span></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;ishare&#39;);return false;" class="jiatitle"><span class="jtico jtico_ishare">一键分享</span></a><a href="http://home.lupaworld.com/#" onclick="$CKE.center(this);return false;" class="jiatitle"><span class="jtico jtico_jiathis">查看更多(112)</span></a><div style="clear:both"></div></div><div class="ckepopBottom" style="width:100%;"><div style="float:left;font-size:10px"><a href="http://www.jiathis.com/help/html/what-is-jiathis" class="link_01" style="color:#333333;" target="_blank">这是什么工具?</a></div><div style="float:right;font-size:11px;margin:0 5px 0 0;"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/img_012.gif" align="absmiddle" border="0"><a href="http://www.jiathis.com/" style="color:#333333;padding:0 3px;" class="link_01" target="_blank">JiaThis</a></div><div style="clear:both"></div></div></div></div></td></tr></tbody></table></div><iframe style="position: absolute; display: none; " frameborder="0"></iframe><div id="ckepop" style="height: auto; position: absolute; z-index: 1e+008; display: none; top: 50%; left: 50%; overflow-x: auto; overflow-y: auto; "><div style="border:10px solid #7F7F7F; width:300px;"><div class="jiadiv_01" style="width:300px;"><div style="background:#F2F2F2;line-height:100%;height:30px;overflow:hidden;width:300px;"><table width="100%" style="margin:5px 0 0 0;"><tbody><tr class="jt_sharetitle" style="line-height:20px!important;"><td align="left" style="text-align:left;font-size:12px;">分享到各大网站</td><td align="right"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/img_exit.gif" border="0" style="margin:0 4px;cursor:pointer;" onclick="$CKE.centerClose();"></td></tr></tbody></table></div><div class="searchTxtCont"><div style="background:url(http://v2.jiathis.com/code/images/img_so.gif) no-repeat center;height:30px; width:281px"><input class="searchTxt" name="" type="text" onclick="this.value=&#39;&#39;;this.style.color=&#39;#000&#39;;" value="输入网站名或拼音缩写" onkeyup="$CKE.choose(this)"></div></div><div id="ckelist" class="jiadiv_02"><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;ishare&#39;);return false;" class="jiatitle"><span class="jtico jtico_ishare">一键分享</span><input type="hidden" value="ishare,一键分享,yjfx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;copy&#39;);return false;" class="jiatitle"><span class="jtico jtico_copy">复制网址</span><input type="hidden" value="copy,复制网址,fzwz"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;fav&#39;);return false;" class="jiatitle"><span class="jtico jtico_fav">收藏夹</span><input type="hidden" value="fav,收藏夹,scj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;print&#39;);return false;" class="jiatitle"><span class="jtico jtico_print">打印</span><input type="hidden" value="print,打印,dy"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;email&#39;);return false;" class="jiatitle"><span class="jtico jtico_email">邮件</span><input type="hidden" value="email,邮件,yj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;qzone&#39;);return false;" class="jiatitle"><span class="jtico jtico_qzone">QQ空间</span><input type="hidden" value="qzone,QQ空间,qqkj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tsina&#39;);return false;" class="jiatitle"><span class="jtico jtico_tsina">新浪微博</span><input type="hidden" value="tsina,新浪微博,xlwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tqq&#39;);return false;" class="jiatitle"><span class="jtico jtico_tqq">腾讯微博</span><input type="hidden" value="tqq,腾讯微博,txwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tsohu&#39;);return false;" class="jiatitle"><span class="jtico jtico_tsohu">搜狐微博</span><input type="hidden" value="tsohu,搜狐微博,shwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;t163&#39;);return false;" class="jiatitle"><span class="jtico jtico_t163">网易微博</span><input type="hidden" value="t163,网易微博,wywb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;renren&#39;);return false;" class="jiatitle"><span class="jtico jtico_renren">人人网</span><input type="hidden" value="renren,人人网,rrw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;kaixin001&#39;);return false;" class="jiatitle"><span class="jtico jtico_kaixin001">开心网</span><input type="hidden" value="kaixin001,开心网,kxw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;sohu&#39;);return false;" class="jiatitle"><span class="jtico jtico_sohu">搜狐白社会</span><input type="hidden" value="sohu,搜狐白社会,shbsh"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;taobao&#39;);return false;" class="jiatitle"><span class="jtico jtico_taobao">淘江湖</span><input type="hidden" value="taobao,淘江湖,tjh"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;douban&#39;);return false;" class="jiatitle"><span class="jtico jtico_douban">豆瓣</span><input type="hidden" value="douban,豆瓣,db"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;xiaoyou&#39;);return false;" class="jiatitle"><span class="jtico jtico_xiaoyou">朋友网</span><input type="hidden" value="xiaoyou,朋友网,pyw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;mop&#39;);return false;" class="jiatitle"><span class="jtico jtico_mop">猫扑推客</span><input type="hidden" value="mop,猫扑推客,mptk"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;baidu&#39;);return false;" class="jiatitle"><span class="jtico jtico_baidu">百度搜藏</span><input type="hidden" value="baidu,百度搜藏,bdsc"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tieba&#39;);return false;" class="jiatitle"><span class="jtico jtico_tieba">百度贴吧</span><input type="hidden" value="tieba,百度贴吧,bdtb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tianya&#39;);return false;" class="jiatitle"><span class="jtico jtico_tianya">天涯社区</span><input type="hidden" value="tianya,天涯社区,tysq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;feixin&#39;);return false;" class="jiatitle"><span class="jtico jtico_feixin">飞信</span><input type="hidden" value="feixin,飞信,fx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;qu1&#39;);return false;" class="jiatitle"><span class="jtico jtico_qu1">趣一网</span><input type="hidden" value="qu1,趣一网,qyw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tifeng&#39;);return false;" class="jiatitle"><span class="jtico jtico_tifeng">凤凰微博</span><input type="hidden" value="tifeng,凤凰微博,fhwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;youshi&#39;);return false;" class="jiatitle"><span class="jtico jtico_youshi">优士网</span><input type="hidden" value="youshi,优士网,ysw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;fanfou&#39;);return false;" class="jiatitle"><span class="jtico jtico_fanfou">饭否</span><input type="hidden" value="fanfou,饭否,ff"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;51&#39;);return false;" class="jiatitle"><span class="jtico jtico_51">51社区</span><input type="hidden" value="51,51社区,51sq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;google&#39;);return false;" class="jiatitle"><span class="jtico jtico_google">谷歌</span><input type="hidden" value="google,谷歌,gg"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;buzz&#39;);return false;" class="jiatitle"><span class="jtico jtico_buzz">谷歌Buzz</span><input type="hidden" value="buzz,谷歌Buzz,ggbuzz"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;youdao&#39;);return false;" class="jiatitle"><span class="jtico jtico_youdao">有道书签</span><input type="hidden" value="youdao,有道书签,ydsq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;qq&#39;);return false;" class="jiatitle"><span class="jtico jtico_qq">QQ书签</span><input type="hidden" value="qq,QQ书签,qqsq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;msn&#39;);return false;" class="jiatitle"><span class="jtico jtico_msn">MSN</span><input type="hidden" value="msn,MSN,msn"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;sina&#39;);return false;" class="jiatitle"><span class="jtico jtico_sina">新浪vivi</span><input type="hidden" value="sina,新浪vivi,xlvivi"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;hi&#39;);return false;" class="jiatitle"><span class="jtico jtico_hi">百度空间</span><input type="hidden" value="hi,百度空间,bdkj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;ifensi&#39;);return false;" class="jiatitle"><span class="jtico jtico_ifensi">粉丝网</span><input type="hidden" value="ifensi,粉丝网,fsw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;115&#39;);return false;" class="jiatitle"><span class="jtico jtico_115">115收藏</span><input type="hidden" value="115,115收藏,115sc"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;hexun&#39;);return false;" class="jiatitle"><span class="jtico jtico_hexun">和讯</span><input type="hidden" value="hexun,和讯,hx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;gmail&#39;);return false;" class="jiatitle"><span class="jtico jtico_gmail">Gmail邮箱</span><input type="hidden" value="gmail,Gmail邮箱,gmailyx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;hotmail&#39;);return false;" class="jiatitle"><span class="jtico jtico_hotmail">Hotmail邮箱</span><input type="hidden" value="hotmail,Hotmail邮箱,hotmailyx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;ymail&#39;);return false;" class="jiatitle"><span class="jtico jtico_ymail">Yahoo! mail</span><input type="hidden" value="ymail,Yahoo! mail,yahoo! mail"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;139mail&#39;);return false;" class="jiatitle"><span class="jtico jtico_139mail">139邮箱</span><input type="hidden" value="139mail,139邮箱,139yx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;189mail&#39;);return false;" class="jiatitle"><span class="jtico jtico_189mail">189邮箱</span><input type="hidden" value="189mail,189邮箱,189yx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;i139&#39;);return false;" class="jiatitle"><span class="jtico jtico_i139">手机</span><input type="hidden" value="i139,手机,sj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;189cn&#39;);return false;" class="jiatitle"><span class="jtico jtico_189cn">天翼社区</span><input type="hidden" value="189cn,天翼社区,tysq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;139&#39;);return false;" class="jiatitle"><span class="jtico jtico_139">139说客</span><input type="hidden" value="139,139说客,139sk"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tpeople&#39;);return false;" class="jiatitle"><span class="jtico jtico_tpeople">人民微博</span><input type="hidden" value="tpeople,人民微博,rmwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;cnfol&#39;);return false;" class="jiatitle"><span class="jtico jtico_cnfol">中金微博</span><input type="hidden" value="cnfol,中金微博,zjwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;googlereader&#39;);return false;" class="jiatitle"><span class="jtico jtico_googlereader">谷歌阅读</span><input type="hidden" value="googlereader,谷歌阅读,ggyd"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;translate&#39;);return false;" class="jiatitle"><span class="jtico jtico_translate">谷歌翻译</span><input type="hidden" value="translate,谷歌翻译,ggfy"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tuita&#39;);return false;" class="jiatitle"><span class="jtico jtico_tuita">推他</span><input type="hidden" value="tuita,推他,tt"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;sdonote&#39;);return false;" class="jiatitle"><span class="jtico jtico_sdonote">麦库记事</span><input type="hidden" value="sdonote,麦库记事,mkjs"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;digu&#39;);return false;" class="jiatitle"><span class="jtico jtico_digu">嘀咕网</span><input type="hidden" value="digu,嘀咕网,dgw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;zhuaxia&#39;);return false;" class="jiatitle"><span class="jtico jtico_zhuaxia">抓虾</span><input type="hidden" value="zhuaxia,抓虾,zx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;xianguo&#39;);return false;" class="jiatitle"><span class="jtico jtico_xianguo">鲜果</span><input type="hidden" value="xianguo,鲜果,xg"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;zuosa&#39;);return false;" class="jiatitle"><span class="jtico jtico_zuosa">做啥</span><input type="hidden" value="zuosa,做啥,zs"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;ganniu&#39;);return false;" class="jiatitle"><span class="jtico jtico_ganniu">赶牛网</span><input type="hidden" value="ganniu,赶牛网,gnw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;42qu&#39;);return false;" class="jiatitle"><span class="jtico jtico_42qu">42区</span><input type="hidden" value="42qu,42区,42q"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;woshao&#39;);return false;" class="jiatitle"><span class="jtico jtico_woshao">我烧网</span><input type="hidden" value="woshao,我烧网,wsw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;renjian&#39;);return false;" class="jiatitle"><span class="jtico jtico_renjian">人间网</span><input type="hidden" value="renjian,人间网,rjw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;leihou&#39;);return false;" class="jiatitle"><span class="jtico jtico_leihou">雷猴网</span><input type="hidden" value="leihou,雷猴网,lhw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;thexun&#39;);return false;" class="jiatitle"><span class="jtico jtico_thexun">和讯微博</span><input type="hidden" value="thexun,和讯微博,hxwb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;dream163&#39;);return false;" class="jiatitle"><span class="jtico jtico_dream163">梦幻人生</span><input type="hidden" value="dream163,梦幻人生,mhrs"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;masar&#39;);return false;" class="jiatitle"><span class="jtico jtico_masar">玛撒网</span><input type="hidden" value="masar,玛撒网,msw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;renmaiku&#39;);return false;" class="jiatitle"><span class="jtico jtico_renmaiku">人脉库</span><input type="hidden" value="renmaiku,人脉库,rmk"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;fb&#39;);return false;" class="jiatitle"><span class="jtico jtico_fb">Facebook</span><input type="hidden" value="fb,Facebook,facebook"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;twitter&#39;);return false;" class="jiatitle"><span class="jtico jtico_twitter">Twitter</span><input type="hidden" value="twitter,Twitter,twitter"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tumblr&#39;);return false;" class="jiatitle"><span class="jtico jtico_tumblr">Tumblr</span><input type="hidden" value="tumblr,Tumblr,tumblr"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;reddit&#39;);return false;" class="jiatitle"><span class="jtico jtico_reddit">Reddit</span><input type="hidden" value="reddit,Reddit,reddit"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;instapaper&#39;);return false;" class="jiatitle"><span class="jtico jtico_instapaper">Instapaper</span><input type="hidden" value="instapaper,Instapaper,instapaper"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;readitlater&#39;);return false;" class="jiatitle"><span class="jtico jtico_readitlater">Read It Later</span><input type="hidden" value="readitlater,Read It Later,readitlater"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;diglog&#39;);return false;" class="jiatitle"><span class="jtico jtico_diglog">奇客发现</span><input type="hidden" value="diglog,奇客发现,qkfx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;wealink&#39;);return false;" class="jiatitle"><span class="jtico jtico_wealink">若邻网</span><input type="hidden" value="wealink,若邻网,rlw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;bietiao&#39;);return false;" class="jiatitle"><span class="jtico jtico_bietiao">别挑</span><input type="hidden" value="bietiao,别挑,bt"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;leshou&#39;);return false;" class="jiatitle"><span class="jtico jtico_leshou">乐收</span><input type="hidden" value="leshou,乐收,ls"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;myspacecn&#39;);return false;" class="jiatitle"><span class="jtico jtico_myspacecn">聚友网</span><input type="hidden" value="myspacecn,聚友网,jyw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tongxue&#39;);return false;" class="jiatitle"><span class="jtico jtico_tongxue">同学网</span><input type="hidden" value="tongxue,同学网,txw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;waakee&#39;);return false;" class="jiatitle"><span class="jtico jtico_waakee">挖客网</span><input type="hidden" value="waakee,挖客网,wkw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;cyzone&#39;);return false;" class="jiatitle"><span class="jtico jtico_cyzone">创业邦</span><input type="hidden" value="cyzone,创业邦,cyb"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;99earth&#39;);return false;" class="jiatitle"><span class="jtico jtico_99earth">救救地球</span><input type="hidden" value="99earth,救救地球,jjdq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;chouti&#39;);return false;" class="jiatitle"><span class="jtico jtico_chouti">抽屉网</span><input type="hidden" value="chouti,抽屉网,ctw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;dig24&#39;);return false;" class="jiatitle"><span class="jtico jtico_dig24">递客网</span><input type="hidden" value="dig24,递客网,dkw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;douban9dian&#39;);return false;" class="jiatitle"><span class="jtico jtico_douban9dian">豆瓣9点</span><input type="hidden" value="douban9dian,豆瓣9点,db9d"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;hemidemi&#39;);return false;" class="jiatitle"><span class="jtico jtico_hemidemi">黑米书签</span><input type="hidden" value="hemidemi,黑米书签,hmsq"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;meilishuo&#39;);return false;" class="jiatitle"><span class="jtico jtico_meilishuo">美丽说</span><input type="hidden" value="meilishuo,美丽说,mls"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;mogujie&#39;);return false;" class="jiatitle"><span class="jtico jtico_mogujie">蘑菇街</span><input type="hidden" value="mogujie,蘑菇街,mgj"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;tianji&#39;);return false;" class="jiatitle"><span class="jtico jtico_tianji">天际网</span><input type="hidden" value="tianji,天际网,tjw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;poco&#39;);return false;" class="jiatitle"><span class="jtico jtico_poco">Poco网</span><input type="hidden" value="poco,Poco网,pocow"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;baohe&#39;);return false;" class="jiatitle"><span class="jtico jtico_baohe">宝盒网</span><input type="hidden" value="baohe,宝盒网,bhw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;yijee&#39;);return false;" class="jiatitle"><span class="jtico jtico_yijee">易集网</span><input type="hidden" value="yijee,易集网,yjw"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;pdfonline&#39;);return false;" class="jiatitle"><span class="jtico jtico_pdfonline">Pdf在线转换</span><input type="hidden" value="pdfonline,Pdf在线转换,pdfzxzh"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;printfriendly&#39;);return false;" class="jiatitle"><span class="jtico jtico_printfriendly">友好打印</span><input type="hidden" value="printfriendly,友好打印,yhdy"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;w3c&#39;);return false;" class="jiatitle"><span class="jtico jtico_w3c">W3c验证</span><input type="hidden" value="w3c,W3c验证,w3cyz"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;bitly&#39;);return false;" class="jiatitle"><span class="jtico jtico_bitly">Bit.ly</span><input type="hidden" value="bitly,Bit.ly,bitly"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;digg&#39;);return false;" class="jiatitle"><span class="jtico jtico_digg">Digg</span><input type="hidden" value="digg,Digg,digg"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;mailru&#39;);return false;" class="jiatitle"><span class="jtico jtico_mailru">Mail.ru</span><input type="hidden" value="mailru,Mail.ru,mail.ru"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;diigo&#39;);return false;" class="jiatitle"><span class="jtico jtico_diigo">Diigo</span><input type="hidden" value="diigo,Diigo,diigo"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;evernote&#39;);return false;" class="jiatitle"><span class="jtico jtico_evernote">EverNote</span><input type="hidden" value="evernote,EverNote,evernote"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;friendfeed&#39;);return false;" class="jiatitle"><span class="jtico jtico_friendfeed">FriendFeed</span><input type="hidden" value="friendfeed,FriendFeed,friendfeed"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;myspace&#39;);return false;" class="jiatitle"><span class="jtico jtico_myspace">Myspace</span><input type="hidden" value="myspace,Myspace,myspace"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;linkedin&#39;);return false;" class="jiatitle"><span class="jtico jtico_linkedin">LinkedIn</span><input type="hidden" value="linkedin,LinkedIn,linkedin"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;mixx&#39;);return false;" class="jiatitle"><span class="jtico jtico_mixx">Mixx</span><input type="hidden" value="mixx,Mixx,mixx"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;netlog&#39;);return false;" class="jiatitle"><span class="jtico jtico_netlog">NetLog</span><input type="hidden" value="netlog,NetLog,netlog"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;netvibes&#39;);return false;" class="jiatitle"><span class="jtico jtico_netvibes">Netvibes</span><input type="hidden" value="netvibes,Netvibes,netvibes"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;phonefavs&#39;);return false;" class="jiatitle"><span class="jtico jtico_phonefavs">Phonefavs</span><input type="hidden" value="phonefavs,Phonefavs,phonefavs"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;pingfm&#39;);return false;" class="jiatitle"><span class="jtico jtico_pingfm">Ping.fm</span><input type="hidden" value="pingfm,Ping.fm,ping.fm"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;plaxo&#39;);return false;" class="jiatitle"><span class="jtico jtico_plaxo">Plaxo</span><input type="hidden" value="plaxo,Plaxo,plaxo"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;delicious&#39;);return false;" class="jiatitle"><span class="jtico jtico_delicious">Delicious</span><input type="hidden" value="delicious,Delicious,delicious"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;wong&#39;);return false;" class="jiatitle"><span class="jtico jtico_wong">Mister Wong</span><input type="hidden" value="wong,Mister Wong,misterwong"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;stumbleupon&#39;);return false;" class="jiatitle"><span class="jtico jtico_stumbleupon">Stumbleupon</span><input type="hidden" value="stumbleupon,Stumbleupon,stumbleupon"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;plurk&#39;);return false;" class="jiatitle"><span class="jtico jtico_plurk">Plurk</span><input type="hidden" value="plurk,Plurk,plurk"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;funp&#39;);return false;" class="jiatitle"><span class="jtico jtico_funp">Funp</span><input type="hidden" value="funp,Funp,funp"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;myshare&#39;);return false;" class="jiatitle"><span class="jtico jtico_myshare">Myshare</span><input type="hidden" value="myshare,Myshare,myshare"></a><a href="http://home.lupaworld.com/#" onclick="jiathis_sendto(&#39;fwisp&#39;);return false;" class="jiatitle"><span class="jtico jtico_fwisp">Fwisp</span><input type="hidden" value="fwisp,Fwisp,fwisp"></a><div style="clear:both"></div></div><div class="centerBottom"><div style="float:left;font-size:10px;"><a href="http://www.jiathis.com/help/html/what-is-jiathis" class="link_01" style="color:#333333;" target="_blank">这是什么工具?</a></div><div style="float:right;font-size:11px;margin:0 10px 0 0;"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/img_012.gif" align="absmiddle" border="none">&nbsp;<a href="http://www.jiathis.com/" style="color:#333333;" class="link_01" target="_blank">JiaThis</a></div><div style="clear:both"></div></div></div></div></div><iframe style="display: none; " frameborder="0" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/jiathis_utility.htm"></iframe>
+<div id="append_parent"><div id="ls_questionid_ctrl_menu" class="sltm" style="display: none; width: 131px; "><ul><li class="current">安全提问(未设置请忽略)</li><li>母亲的名字</li><li>爷爷的名字</li><li>父亲出生的城市</li><li>你其中一位老师的名字</li><li>你个人计算机的型号</li><li>你最喜欢的餐馆名称</li><li>驾驶执照最后四位数字</li></ul></div></div><div id="ajaxwaitid"></div>
+<div id="hd">
+<div class="wp">
+<div class="hdc cl">
+<h2><a href="http://home.lupaworld.com/" title="LUPA开源社区"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/logo.png" alt="" border="0"></a></h2>
+
+<form method="post" autocomplete="off" id="lsform" action="http://home.lupaworld.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes" onsubmit="return lsSubmit()">
+<div class="fastlg cl">
+<span id="return_ls" style="display:none"></span>
+<div class="y">
+<p><a href="http://home.lupaworld.com/member.php?mod=luparegister21" onclick="showWindow(&#39;register&#39;, this.href)" class="xi2">注册</a></p>
+<p><a href="http://home.lupaworld.com/member.php?mod=logging&action=login&viewlostpw" onclick="showWindow(&#39;login&#39;, this.href)" class="xi2">找回密码</a></p>
+</div>
+<div class="fastlg_fm y pns">
+<p>
+<label for="ls_username">帐号</label> <input type="text" name="username" id="ls_username" class="px vm" value="UID/用户名/Email" onfocus="if(this.value == &#39;UID/用户名/Email&#39;) this.value = &#39;&#39;;" onblur="if(this.value == &#39;&#39;) this.value = &#39;UID/用户名/Email&#39;;" tabindex="901">
+&nbsp;<input type="checkbox" name="cookietime" id="ls_cookietime" class="pc" value="2592000" tabindex="903"> <label for="ls_cookietime">记住密码</label>
+</p>
+<p>
+<label for="ls_password">密码</label> <input type="password" name="password" id="ls_password" class="px vm" autocomplete="off" tabindex="902" onfocus="lsShowmore()">
+&nbsp;<button type="submit" class="pn vm"><em>登录</em></button>
+</p>
+<input type="hidden" name="quickforward" value="yes">
+<input type="hidden" name="handlekey" value="ls">
+</div>
+
+</div>
+<div id="ls_more" style="display:none">
+<h3>
+<em class="y"><a title="关闭" onclick="display(&#39;ls_more&#39;)" class="flbc" href="javascript:;">关闭</a></em>
+安全验证
+</h3>
+<span class="z"><script type="text/javascript">var ls_sechash = '';</script></span>
+<div class="ftid mtm mbn">
+<select id="ls_questionid" width="131" name="questionid" autocomplete="off" tabindex="905" change="if($(&#39;ls_questionid&#39;).value &gt; 0) {$(&#39;ls_answer&#39;).style.display=&#39;&#39;;$(&#39;ls_answer&#39;).focus();} else {$(&#39;ls_answer&#39;).style.display=&#39;none&#39;;}" selecti="0" style="display: none; ">
+
+
+
+
+
+
+
+
+<option value="0"></select><a href="javascript:;" id="ls_questionid_ctrl" style="width:131px" tabindex="905">安全提问(未设置请忽略)</a>
+<input type="text" name="answer" id="ls_answer" style="display:none" autocomplete="off" size="36" class="px mtn" tabindex="906">
+</div>
+<script type="text/javascript">simulateSelect('ls_questionid')</script>
+</div>
+</form>
+</div>
+
+<div id="qmenu_menu" class="p_pop" style="display: none; zoom: 1;">
+<p class="reg_tip">
+<a href="http://home.lupaworld.com/member.php?mod=luparegister21" onclick="showWindow(&#39;register&#39;, this.href)" class="xi2">注册新用户，开通自己的个人中心</a>
+</p>
+</div>
+
+<div id="nv">
+<a href="javascript:;" id="qmenu" onmouseover="showMenu(this.id)">我的中心</a>
+<ul><li id="mn_N30de" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/portal-topic-topicid-16.html" hidefocus="true">起点</a></li><li id="mn_portal" onmouseover="navShow(&#39;portal&#39;)"><a href="http://www.lupaworld.com/portal.php" hidefocus="true" title="Portal">首页<span>Portal</span></a></li><li id="mn_Nbf61" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/portal-topic-topicid-26.html" hidefocus="true">开源资讯</a></li><li id="mn_N1df1" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/proj.php" hidefocus="true">开源项目</a></li><li id="mn_N6eda" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/portal-topic-topicid-29.html" hidefocus="true">技术辅导</a></li><li id="mn_N8790" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/portal-topic-topicid-28.html" hidefocus="true">社区交流</a></li><li id="mn_N80db" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/portal-topic-topicid-30.html" hidefocus="true">资源共享</a></li><li id="mn_N5d0f" onmouseover="showMenu({&#39;ctrlid&#39;:this.id})"><a href="http://www.lupaworld.com/search-portal.html" hidefocus="true">站内搜索</a></li><li id="mn_N3e7d"><a href="http://www.lupaworld.com/portal-topic-topicid-41.html" hidefocus="true" target="_blank" style="text-decoration: underline;color: blue">参与社区</a></li></ul>
+</div>
+<ul class="p_pop h_pop" id="plugin_menu" style="display: none">  <li><a id="mn_plink_show" href="http://home.lupaworld.com/plugin.php?id=luckypost:show">发帖际遇</a></li>
+   <li><a id="mn_plink_sign" href="http://home.lupaworld.com/plugin.php?id=dsu_paulsign:sign"></a></li>
+ </ul>
+<ul class="p_pop h_pop" id="mn_N30de_menu" style="display: none"><li><a href="http://www.lupaworld.com/portal-topic-topicid-17.html" hidefocus="true">什么是开源</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-18.html" hidefocus="true">学生专区</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-19.html" hidefocus="true">教师专区</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-20.html" hidefocus="true">软件从业者</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-21.html" hidefocus="true">企业和开源</a></li></ul><ul class="p_pop h_pop" id="mn_Nbf61_menu" style="display: none"><li><a href="http://www.lupaworld.com/portal-list-catid-84.html" hidefocus="true">最新消息</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-90.html" hidefocus="true">特约撰稿</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-102.html" hidefocus="true">软件追踪</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-314.html" hidefocus="true">资讯专题</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-321.html" hidefocus="true">解决方案</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-85.html" hidefocus="true">社区公告</a></li><li><a href="http://www.lupaworld.com/portal-list-catid-322.html" hidefocus="true">综合资讯</a></li></ul><ul class="p_pop h_pop" id="mn_N1df1_menu" style="display: none"><li><a href="http://www.lupaworld.com/proj-class-type-tag-sid-24.html" hidefocus="true">开发工具</a></li><li><a href="http://www.lupaworld.com/proj-class-type-tag-sid-137.html" hidefocus="true">网站源码</a></li><li><a href="http://www.lupaworld.com/proj-class-type-tag-sid-42.html" hidefocus="true">插件扩展</a></li><li><a href="http://www.lupaworld.com/proj-class-type-tag-sid-8.html" hidefocus="true">企业应用</a></li></ul><ul class="p_pop h_pop" id="mn_N6eda_menu" style="display: none"><li><a href="http://code.lupaworld.com/" hidefocus="true" title="源码赏析" style="font-weight: bold;">源码赏析</a></li><li><a href="http://www.lupaworld.com/doc.php" hidefocus="true">在线文档阅读</a></li><li><a href="http://www.lupaworld.com/tv.php" hidefocus="true">开源视频</a></li><li><a href="http://www.lupaworld.com/tutorial.php" hidefocus="true">技术文章教程</a></li><li><a href="http://man.lupaworld.com/" hidefocus="true">手册下载</a></li><li><a href="http://wiki.lupaworld.com/index.php/Guide" hidefocus="true">技术学习入门</a></li><li><a href="http://www.lupaworld.com/exam.php" hidefocus="true" style="color: red">LUPA考证练习</a></li></ul><ul class="p_pop h_pop" id="mn_N8790_menu" style="display: none"><li><a href="http://www.lupaworld.com/plugin.php?id=dsu_paulsign:sign" hidefocus="true">每日签到</a></li><li><a href="http://home.lupaworld.com/home.php" hidefocus="true" title="Space">个人中心</a></li><li><a href="http://home.lupaworld.com/home-space-do-blog.html" hidefocus="true">我的日志</a></li><li><a href="http://www.lupaworld.com/home-space-do-doing.html" hidefocus="true">站内微博</a></li><li><a href="http://bbs.lupaworld.com/forum.php" hidefocus="true" title="BBS">论坛列表</a></li><li><a href="http://home.lupaworld.com/group-index.html" hidefocus="true">群组列表</a></li><li><a href="http://www.lupaworld.com/userapp.php" hidefocus="true" title="Manyou">社区娱乐</a></li></ul><ul class="p_pop h_pop" id="mn_N80db_menu" style="display: none"><li><a href="http://mirror.lupaworld.com/" hidefocus="true">Linux镜像</a></li><li><a href="http://linux.lupaworld.com/" hidefocus="true">Linux主题</a></li><li><a href="http://bbs.lupaworld.com/thread-161157-1-1.html" hidefocus="true">源码下载（暂停）</a></li><li><a href="http://mail.lupaworld.com/" hidefocus="true">邮件列表</a></li><li><a href="http://wiki.lupaworld.com/" hidefocus="true">开源维客知识</a></li></ul><ul class="p_pop h_pop" id="mn_N5d0f_menu" style="display: none"><li><a href="http://www.lupaworld.com/misc-faq.html" hidefocus="true" title="Help">社区使用帮助</a></li><li><a href="http://www.lupaworld.com/misc-ranklist.html" hidefocus="true" title="Ranklist">内容排行</a></li></ul><div id="mu" class="cl">
+<ul class="cl " id="snav_mn_portal" style="display:none">
+<li><a href="http://www.lupaworld.com/portal-topic-topicid-23.html" hidefocus="true" style="color: red">Linux专题</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-53.html" hidefocus="true">学生大本营</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-25.html" hidefocus="true">云计算</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-36.html" hidefocus="true">开源浏览器</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-35.html" hidefocus="true">Fedora</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-34.html" hidefocus="true">Ubuntu</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-37.html" hidefocus="true">开源编程</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-38.html" hidefocus="true">Linux内核</a></li><li><a href="http://www.lupaworld.com/portal-topic-topicid-27.html" hidefocus="true">IT职业培训</a></li></ul>
+</div></div>
+</div>
+
+
+<div id="wp" class="wp"><!-- add from jie start-->
+
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shCore.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushJava.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushRuby.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushJScript.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushPhp.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushXml.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushPython.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushCpp.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushCSharp.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushCss.js" type="text/javascript"></script>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shBrushSql.js" type="text/javascript"></script>
+
+<link type="text/css" rel="stylesheet" href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/shCoreDefault.css">
+<script type="text/javascript">
+//SyntaxHighlighter.defaults['gutter']=false;
+SyntaxHighlighter.all();</script>
+
+<!-- add from jie end -->
+
+
+<div id="pt" class="bm cl">
+
+<div id="sc" class="y">
+<form id="scform" method="post" autocomplete="off" onsubmit="searchFocus($(&#39;srchtxt&#39;))" action="http://home.lupaworld.com/search.php?searchsubmit=yes" target="_blank">
+<input type="hidden" name="formhash" value="b967f47c">
+<input type="hidden" name="srchtype" value="title">
+<input type="hidden" name="srhfid" value="0">
+<table cellspacing="0" cellpadding="0">
+<tbody><tr>
+<td><a href="http://www.lupaworld.com/search.php" target="_blank" id="sctype" class="showmenu" onclick="showMenu(this.id);return false;">搜索日志</a></td>
+<td><input type="text" name="srchtxt" id="srchtxt" class="px z" value="请输入搜索内容" autocomplete="off" onfocus="searchFocus(this);" onblur="searchBlur(this);"></td>
+<td><button id="search_submit" name="searchsubmit" type="submit" value="true" class="xw1">搜索</button></td>
+</tr>
+</tbody></table>
+<div id="sctype_menu" class="p_pop cl" style="display: none">
+<ul><li><input type="radio" id="mod_article" class="pr" name="mod" value="portal"><label for="mod_article" title="搜索文章">文章</label></li><li><input type="radio" id="mod_thread" class="pr" name="mod" value="forum"><label for="mod_thread" title="搜索"></label></li><li><input type="radio" id="mod_blog" class="pr" name="mod" value="blog" checked="checked"><label for="mod_blog" title="搜索日志">日志</label></li><li><input type="radio" id="mod_group" class="pr" name="mod" value="group"><label for="mod_group" title="搜索"></label></li><li><input type="radio" id="mod_user" class="pr" name="mod" value="user"><label for="mod_user" title="搜索用户">用户</label></li><li><input type="radio" id="mod_project" class="pr" name="mod" value="project"><label for="mod_project" title="项目">项目</label></li><li><input type="radio" id="mod_doc" class="pr" name="mod" value="doc"><label for="mod_docr" title="文档">文档</label></li></ul>
+</div>
+</form>
+<script type="text/javascript">initSearchmenu();</script>
+</div>
+<div class="z">
+<a href="http://home.lupaworld.com/" class="nvhm" title="首页">LUPA开源社区</a> <em>›</em>
+<a href="http://home.lupaworld.com/home.php">个人中心</a> <em>›</em> 
+<a href="http://home.lupaworld.com/home-space-do-blog.html">日志</a>
+<em>›</em> <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-view-me.html">ckhitler的日志</a>
+</div>
+</div>
+
+<style id="diy_style" type="text/css"></style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+
+<div id="ct" class="ct2_a wp cl">
+<div class="mn">
+<!--[diy=diycontenttop]--><div id="diycontenttop" class="area"></div><!--[/diy]-->
+<div class="bm bw0">
+<div class="ih pbm cl">
+<div class="icn avt"><a href="http://home.lupaworld.com/space-uid-56821.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></div>
+<dl>
+<dt class="ptn">ckhitler</dt>
+<dd>
+<a href="http://home.lupaworld.com/space-uid-56821.html">ckhitler的个人空间</a>
+ <em>›</em> <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-view-me.html">TA的所有日志</a> <em>›</em> <a href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区.htm">查看日志</a></dd>
+</dl>
+</div>
+
+<div class="vw mbm">
+<div class="h pbm">
+<h1 class="ph">
+《Linux的capability深入分析-上》</h1>
+<p class="xg2">
+<strong class="hot">热度 <em>1</em></strong><span class="xg1">已有 414 次阅读</span> 
+<span class="xg1">2011-5-7 10:36</span>
+
+<span class="pipe">|</span><span class="xg1">个人分类:<a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-classid-957-view-me.html">LINUX系统</a></span><span class="pipe">|</span><span class="xg1">系统分类:<a href="http://home.lupaworld.com/home-space-do-blog-view-all-catid-1.html">IT技术</a></span><span class="pipe">|</span><span class="xg1">关键词:Linux cap capabilities capability</span>
+</p>
+</div>
+
+<div id="blog_article" class="d cl"><div>一)概述:</div><div><br></div><div><br></div><div>1)从2.1版开始,Linux内核有了能力(capability)的概念,即它打破了UNIX/LINUX操作系统中超级用户/普通用户的概念,由普通用户也可以做只有超级用户可以完成的工作.</div><div>2)capability可以作用在进程上(受限),也可以作用在程序文件上,它与sudo不同,sudo只针对用户/程序/文件的概述,即sudo可以配置某个用户可以执行某个命令,可以更改某个文件,而capability是让某个程序拥有某种能力,例如:</div><div>capability让/tmp/testkill程序可以kill掉其它进程,但它不能mount设备节点到目录,也不能重启系统,因为我们只指定了它kill的能力,即使程序有问题也不会超出能力范围.</div><div>3)每个进程有三个和能力有关的位图:inheritable(I),permitted(P)和effective(E),对应进程描述符task_struct(include/linux/sched.h)里面的cap_effective, cap_inheritable, cap_permitted,所以我们可以查看/proc/PID/status来查看进程的能力.</div><div>4)cap_effective:当一个进程要进行某个特权操作时,操作系统会检查cap_effective的对应位是否有效,而不再是检查进程的有效UID是否为0.</div><div>例如,如果一个进程要设置系统的时钟,Linux的内核就会检查cap_effective的CAP_SYS_TIME位(第25位)是否有效.</div><div>5)cap_permitted:表示进程能够使用的能力,在cap_permitted中可以包含cap_effective中没有的能力，这些能力是被进程自己临时放弃的,也可以说cap_effective是cap_permitted的一个子集.</div><div>6)cap_inheritable:表示能够被当前进程执行的程序继承的能力.</div><div><br></div><div><br></div><div><br></div><div>二)capability的设定与清除</div><div><br></div><div>我们在下面的程序中给当前的进程设定能力,最后我们清除掉所设定的能力,源程序如下:</div><div>#include &lt;stdio.h&gt;</div><div>#include &lt;stdlib.h&gt;</div><div>#include &lt;string.h&gt;</div><div>#include &lt;sys/types.h&gt;</div><div>#include &lt;unistd.h&gt;</div><div>&nbsp;</div><div>#undef _POSIX_SOURCE</div><div>#include &lt;sys/capability.h&gt;</div><div>&nbsp;</div><div>extern int errno;</div><div>&nbsp;</div><div>&nbsp;</div><div>void whoami(void)</div><div>{</div><div>&nbsp;&nbsp;printf("uid=%i &nbsp;euid=%i &nbsp;gid=%i\n", getuid(), geteuid(), getgid());</div><div>}</div><div>&nbsp;</div><div>void listCaps()</div><div>{</div><div>&nbsp;&nbsp;cap_t caps = cap_get_proc();</div><div>&nbsp;&nbsp;ssize_t y = 0;</div><div>&nbsp;&nbsp;printf("The process %d was give capabilities %s\n",</div><div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; (int) getpid(), cap_to_text(caps, &amp;y));</div><div>&nbsp;&nbsp;fflush(0);</div><div>&nbsp;&nbsp;cap_free(caps);</div><div>}</div><div>&nbsp;</div><div>&nbsp;</div><div>int main(int argc, char **argv)</div><div>{</div><div>&nbsp;&nbsp;int stat;</div><div>&nbsp;&nbsp;whoami();</div><div>&nbsp;&nbsp;stat = setuid(geteuid());</div><div>&nbsp;&nbsp;pid_t parentPid = getpid();</div><div>&nbsp;</div><div>&nbsp;&nbsp;if(!parentPid)</div><div>&nbsp;&nbsp; &nbsp;return 1;</div><div>&nbsp;&nbsp;cap_t caps = cap_init();</div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;&nbsp;cap_value_t capList[5] =</div><div>&nbsp;&nbsp;{ CAP_NET_RAW, CAP_NET_BIND_SERVICE , CAP_SETUID, CAP_SETGID,CAP_SETPCAP } ;</div><div>&nbsp;&nbsp;unsigned num_caps = 5;</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_EFFECTIVE, num_caps, capList, CAP_SET);</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_INHERITABLE, num_caps, capList, CAP_SET);</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_PERMITTED, num_caps, capList, CAP_SET);</div><div>&nbsp;</div><div>&nbsp;&nbsp;if (cap_set_proc(caps)) {</div><div>&nbsp;&nbsp; &nbsp;perror("capset()");</div><div>&nbsp;</div><div>&nbsp;&nbsp; &nbsp;return EXIT_FAILURE;</div><div>&nbsp;&nbsp;}</div><div>&nbsp;&nbsp;listCaps();</div><div><br></div><div><br></div><div>&nbsp;&nbsp;printf("dropping caps\n");</div><div>&nbsp;&nbsp;cap_clear(caps); &nbsp;// resetting caps storage</div><div>&nbsp;</div><div>&nbsp;&nbsp;if (cap_set_proc(caps)) {</div><div>&nbsp;&nbsp; &nbsp;perror("capset()");</div><div>&nbsp;&nbsp; &nbsp;return EXIT_FAILURE;</div><div>&nbsp;&nbsp;}</div><div>&nbsp;&nbsp;listCaps();</div><div><br></div><div>&nbsp;&nbsp;cap_free(caps);</div><div>&nbsp;&nbsp;return 0;</div><div><br></div><div>}</div><div><br></div><div>编译:</div><div>gcc capsettest.c -o capsettest -lcap</div><div><br></div><div>运行:</div><div>./capsettest&nbsp;</div><div>uid=0 &nbsp;euid=0 &nbsp;gid=0</div><div>The process 2383 was give capabilities = cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw+eip</div><div>dropping caps</div><div>The process 2383 was give capabilities =</div><div><br></div><div>注:</div><div>1)我们对该进程增加了5种能力,随后又清除了所有能力.</div><div>2)首先通过cap_init()初始化存放cap能力值的状态,随后通过cap_set_flag函数的调用,将三种位图的能力设置给了变量caps,再通过cap_set_proc(caps)设定当前进程的能力值,通过cap_get_proc()返回当前进程的能力值,最后通过cap_free(caps)释放能力值.</div><div>3)cap_set_flag函数的原型是:</div><div><span class="Apple-tab-span" style="white-space:pre">		</span>int cap_set_flag(cap_t cap_p, cap_flag_t flag, int ncap,const cap_value_t *caps, cap_flag_value_t value);</div><div><br></div><div>我们这里的调用语句是:cap_set_flag(caps, CAP_PERMITTED, num_caps, capList, CAP_SET);</div><div>第一个参数cap_p是存放能力值的变量,是被设定值.这里是caps.</div><div>第二个参数flag是是三种能力位图,这里是CAP_PERMITTED.</div><div>第三个参数ncap是要设定能力的个数,这里是num_caps,也就是5.</div><div>第四个参数*caps是要设定的能力值,这里是capList数组,也就是CAP_NET_RAW, CAP_NET_BIND_SERVICE , CAP_SETUID, CAP_SETGID,CAP_SETPCAP.</div><div>第五个参数value是决定要设定还是清除,这里是CAP_SET.</div><div><br></div><div>4)cap_set_proc函数的原型是:int cap_set_proc(cap_t cap_p);</div><div>cap_set_proc函数通过cap_p中的能力值设定给当前的进程.</div><div><br></div><div>5)cap_get_proc函数的原型是:cap_t cap_get_proc(void);</div><div>cap_get_proc函数返回当前进程的能力值给cap变量.</div><div><br></div><div>6)cap_free函数的原型是:cap_free(caps);</div><div>cap_free函数清理/释放cap变量.</div><div><br></div><div>7)如果我们fork()了子进程,那么子进程继承父进程的所有能力.</div><div><br></div><div>8)不能单独设定CAP_EFFECTIVE,CAP_INHERITABLE位图,必须要和CAP_PERMITTED联用,且CAP_PERMITTED一定要是其它两个位图的超集.</div><div><br></div><div>9)如果两次调用cap_set_proc函数,第二次调用的值力值不能少于或多于第一次调用.如第一次我们授权chown,setuid能力,第二次只能是chown,setuid不能是其它的能力值.</div><div><br></div><div>10)普通用户不能给进程设定能力.</div><div><br></div><div><br></div><div>三)进程的能力掩码:</div><div>我们可以通过下面的程序获取当前进程的掩码,它是通过capget函数来获取指定进程的能力掩码,当然我们也可以用capset来设定掩码,下面获取掩码的体现:</div><div>#undef _POSIX_SOURCE</div><div>#include &lt;stdlib.h&gt;</div><div>#include &lt;stdio.h&gt;</div><div>#include &lt;sys/types.h&gt;</div><div>#include &lt;unistd.h&gt;</div><div>#include &lt;linux/capability.h&gt;</div><div>#include &lt;errno.h&gt;</div><div><br></div><div>int main()</div><div>{</div><div>&nbsp;&nbsp; &nbsp; struct __user_cap_header_struct cap_header_data;</div><div>&nbsp;&nbsp; &nbsp; cap_user_header_t cap_header = &amp;cap_header_data;</div><div><br></div><div>&nbsp;&nbsp; &nbsp; struct __user_cap_data_struct cap_data_data;</div><div>&nbsp;&nbsp; &nbsp; cap_user_data_t cap_data = &amp;cap_data_data;</div><div><br></div><div>&nbsp;&nbsp; &nbsp; cap_header-&gt;pid = getpid();</div><div>&nbsp;&nbsp; &nbsp; cap_header-&gt;version = _LINUX_CAPABILITY_VERSION_1;</div><div><br></div><div>&nbsp;&nbsp; &nbsp; if (capget(cap_header, cap_data) &lt; 0) {</div><div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; perror("Failed capget");</div><div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; exit(1);</div><div>&nbsp;&nbsp; &nbsp; }</div><div>&nbsp;&nbsp; &nbsp; printf("Cap data 0x%x, 0x%x, 0x%x\n", cap_data-&gt;effective,</div><div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; cap_data-&gt;permitted, cap_data-&gt;inheritable);</div><div>}</div><div><br></div><div>gcc capget0.c -o capget0 -lcap</div><div><br></div><div>普通用户:</div><div>./capget0&nbsp;</div><div>Cap data 0x0, 0x0, 0x0</div><div><br></div><div>超级用户:</div><div>/home/test/capget0&nbsp;</div><div>Cap data 0xffffffff, 0xffffffff, 0x0</div><div><br></div><div>这也说明了默认情况下,root运行的进程是什么权限都有,而普通用户则什么权限都没有.</div><div><br></div><div><br></div><div>我们可以将本程序与上面的程序进行整合,如下:</div><div>#include &lt;stdio.h&gt;</div><div>#include &lt;stdlib.h&gt;</div><div>#include &lt;string.h&gt;</div><div>#include &lt;sys/types.h&gt;</div><div>#include &lt;unistd.h&gt;</div><div>&nbsp;</div><div>#undef _POSIX_SOURCE</div><div>#include &lt;sys/capability.h&gt;</div><div>&nbsp;</div><div>extern int errno;</div><div>&nbsp;</div><div>&nbsp;</div><div>void whoami(void)</div><div>{</div><div>&nbsp;&nbsp;printf("uid=%i &nbsp;euid=%i &nbsp;gid=%i\n", getuid(), geteuid(), getgid());</div><div>}</div><div>&nbsp;</div><div>void listCaps()</div><div>{</div><div>&nbsp;&nbsp;cap_t caps = cap_get_proc();</div><div>&nbsp;&nbsp;ssize_t y = 0;</div><div>&nbsp;&nbsp;printf("The process %d was give capabilities %s\n",</div><div>&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; (int) getpid(), cap_to_text(caps, &amp;y));</div><div>&nbsp;&nbsp;fflush(0);</div><div>&nbsp;&nbsp;cap_free(caps);</div><div>}</div><div>&nbsp;</div><div>&nbsp;</div><div>int main(int argc, char **argv)</div><div>{</div><div>&nbsp;&nbsp;int stat;</div><div>&nbsp;&nbsp;whoami();</div><div>&nbsp;&nbsp;stat = setuid(geteuid());</div><div>&nbsp;&nbsp;pid_t parentPid = getpid();</div><div>&nbsp;</div><div>&nbsp;&nbsp;if(!parentPid)</div><div>&nbsp;&nbsp; &nbsp;return 1;</div><div>&nbsp;&nbsp;cap_t caps = cap_init();</div><div>&nbsp;</div><div>&nbsp;&nbsp;cap_value_t capList[5] =</div><div>&nbsp;&nbsp;{ CAP_NET_RAW, CAP_NET_BIND_SERVICE , CAP_SETUID, CAP_SETGID,CAP_SETPCAP } ;</div><div>&nbsp;&nbsp;unsigned num_caps = 5;</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_EFFECTIVE, num_caps, capList, CAP_SET);</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_INHERITABLE, num_caps, capList, CAP_SET);</div><div>&nbsp;&nbsp;cap_set_flag(caps, CAP_PERMITTED, num_caps, capList, CAP_SET);</div><div>&nbsp;</div><div>&nbsp;&nbsp;if (cap_set_proc(caps)) {</div><div>&nbsp;&nbsp; &nbsp;perror("capset()");</div><div>&nbsp;</div><div>&nbsp;&nbsp; &nbsp;return EXIT_FAILURE;</div><div>&nbsp;&nbsp;}</div><div>&nbsp;&nbsp;listCaps();</div><div><br></div><div>&nbsp;&nbsp;cap_free(caps);</div><div><br></div><div>&nbsp;&nbsp;struct __user_cap_header_struct cap_header_data;</div><div>&nbsp;&nbsp;cap_user_header_t cap_header = &amp;cap_header_data;</div><div><br></div><div>&nbsp;&nbsp;struct __user_cap_data_struct cap_data_data;</div><div>&nbsp;&nbsp;cap_user_data_t cap_data = &amp;cap_data_data;</div><div><br></div><div>&nbsp;&nbsp;cap_header-&gt;pid = getpid();</div><div>&nbsp;&nbsp;cap_header-&gt;version = _LINUX_CAPABILITY_VERSION_1;</div><div><br></div><div>&nbsp;&nbsp;if (capget(cap_header, cap_data) &lt; 0) {</div><div>&nbsp;&nbsp; &nbsp; &nbsp;perror("Failed capget");</div><div>&nbsp;&nbsp; &nbsp; &nbsp;exit(1);</div><div>&nbsp;&nbsp;}</div><div>&nbsp;&nbsp;printf("Cap data 0x%x, 0x%x, 0x%x\n", cap_data-&gt;effective,</div><div>&nbsp;&nbsp;cap_data-&gt;permitted, cap_data-&gt;inheritable);</div><div><br></div><div>&nbsp;&nbsp;sleep(60);</div><div>&nbsp;&nbsp;return 0;</div><div><br></div><div>}</div><div>编译并执行:</div><div>gcc capsettest.c -o capsettest -lcap</div><div><br></div><div>./capsettest</div><div>uid=0 &nbsp;euid=0 &nbsp;gid=0</div><div>The process 3101 was give capabilities = cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw+eip</div><div>Cap data 0x25c0, 0x25c0, 0x25c0</div><div><br></div><div>注:0x25c0=10 0101 1100 0000(二进制)</div><div>对映的能力如下:</div><div>cap_setgid=6(位)</div><div>cap_setuid=7(位)</div><div>cap_setpcap=8(位)</div><div>cap_net_bind_service=10(位)</div><div>cap_net_raw=13(位)</div><div><br></div><div>在程序sleep的时候,我们查看一下进程的status,如下:</div><div>cat /proc/`pgrep capsettest`/status</div><div><br></div><div>略</div><div>CapInh: 00000000000025c0</div><div>CapPrm: 00000000000025c0</div><div>CapEff: 00000000000025c0</div><div>CapBnd: ffffffffffffffff</div><div>略</div><div><br></div><div>我们看到进程的status也反映了它的能力状态.</div><div>CapBnd是系统的边界能力,我们无法改变它.</div></div>
+<div id="click_div"><table cellpadding="0" cellspacing="0" class="atd">
+<tbody><tr><td>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=click&op=add&clickid=1&idtype=blogid&id=234956&hash=9636e25f818aeddf932479f07251e3bc&handlekey=clickhandle" id="click_blogid_234956_1" onclick="showWindow(this.id, this.href);doane(event);">
+<img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/luguo.gif" alt=""><br>路过</a>
+</td>
+<td>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=click&op=add&clickid=2&idtype=blogid&id=234956&hash=9636e25f818aeddf932479f07251e3bc&handlekey=clickhandle" id="click_blogid_234956_2" onclick="showWindow(this.id, this.href);doane(event);">
+<img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/leiren.gif" alt=""><br>雷人</a>
+</td>
+<td>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=click&op=add&clickid=3&idtype=blogid&id=234956&hash=9636e25f818aeddf932479f07251e3bc&handlekey=clickhandle" id="click_blogid_234956_3" onclick="showWindow(this.id, this.href);doane(event);">
+<img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/woshou.gif" alt=""><br>握手</a>
+</td>
+<td>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=click&op=add&clickid=4&idtype=blogid&id=234956&hash=9636e25f818aeddf932479f07251e3bc&handlekey=clickhandle" id="click_blogid_234956_4" onclick="showWindow(this.id, this.href);doane(event);">
+<img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/xianhua.gif" alt=""><br>鲜花</a>
+</td>
+<td>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=click&op=add&clickid=5&idtype=blogid&id=234956&hash=9636e25f818aeddf932479f07251e3bc&handlekey=clickhandle" id="click_blogid_234956_5" onclick="showWindow(this.id, this.href);doane(event);">
+<img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/jidan.gif" alt=""><br>鸡蛋</a>
+</td>
+</tr>
+</tbody></table>
+<script type="text/javascript">
+function errorhandle_clickhandle(message, values) {
+if(values['id']) {
+showCreditPrompt();
+show_click(values['idtype'], values['id'], values['clickid']);
+}
+}
+</script>
+
+</div>
+<div class="o cl">
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=favorite&type=blog&id=234956&spaceuid=56821&handlekey=favoritebloghk_234956" id="a_favorite" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);" class="oshr ofav">收藏</a>
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=share&type=blog&id=234956&handlekey=sharebloghk_234956" id="a_share" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);" class="oshr">分享</a>
+
+
+<div class="wumii-hook"><div id="wumiiBtnDiv" style="clear:both;overflow:hidden;margin:0;padding:10px 0 0;text-shadow: none;text-indent:0;">
+    <div id="wumiiLikeBtnDiv" style="position: static; float: left; display: inline; width: 89px; height: 28px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; background-image: url(http://static.wumii.com/images/blogWidget/widget_buttons_deepBlue.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; text-indent: 0px; margin-left: 323px; background-position: 0px 0px; background-repeat: no-repeat no-repeat; " onmouseover="this.style.backgroundPosition=&#39;-89px 0&#39;;" onmouseout="this.style.backgroundPosition=&#39;0 0&#39;;">
+        <span id="wumiiNumLikes" style="float:left;width:45px;height:19px;line-height:21px;*line-height:19px;margin:4px 0 0 0;padding:0;color:#385c80;letter-spacing:0;text-align:center;text-indent:0;font-size:12px;">0</span>
+        <span style="float:left;width:40px;height:29px;margin:0;padding:0;outline:none;cursor:pointer;" id="wumiiLikeBtn" hidefocus="true"></span>
+    </div>
+    <div id="wumiiRecommendBtnDiv" style="position:static;clear:none;float:left;display:inline;height:28px;margin:0;padding:0 5px;text-indent:0;">
+        <span id="wumiiRecommendBtn" hidefocus="true" style="float:left;display:inline;width:60px;height:28px;margin:0 0 0 5px;padding:0;background:url(&#39;http://static.wumii.com/images/blogWidget/widget_buttons_deepBlue.png&#39;) no-repeat -267px 0;cursor:pointer;outline:none;" onmouseover="this.style.backgroundPosition=&#39;-328px 0&#39;;" onmouseout="this.style.backgroundPosition=&#39;-267px 0&#39;;"></span>
+        <img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/loading.gif" id="wumiiLoading" style="clear:none;display:none;height:15px;margin:7px 0 0 8px;padding:0;border:0;background:none;cursor:default;" alt="正在加载推荐文章">
+    </div>
+</div><div class="wumii-related-items-div" style="margin: 0; border: none; padding: 0; clear: both; overflow: hidden; *zoom: 1; *position: relative;">
+    <div class="wumii-internal" style="padding: 0; margin: 0; border: none; clear: both; display: block;">
+        <div class="wumii-widget-title" style="margin: 0; border: none; padding: 20px 0 5px; _padding-top:10px; text-indent: 0; text-align: left; font-weight: bold; ">您可能也喜欢：</div>
+    <ul class="wumii-text-ul" style="padding: 0; margin: 0 0 0 1px;">
+            <li class="wumii-text-li" style="list-style: disc inside none; display: list-item; line-height: 1.65em; background: none repeat scroll 0 0 transparent; padding: 0; margin: 0; text-indent: 0; text-align: left; font-size: 12px;">
+                <a class="wumii-text-a" hidefocus="true" onmouseout="this.style.textDecoration=&#39;none&#39;" onmouseover="this.style.textDecoration=&#39;underline&#39;" href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-234972.html" onmousedown="this.href=&#39;http://app.wumii.com/ext/redirect.htm?url=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-56821-do-blog-id-234972.html&amp;ts=&#39; + (new Date()).getTime() + &#39;&amp;from=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-56821-do-blog-id-234956.html&#39; + &#39;&amp;ref=relatedItems&#39;; return true;" onmouseup="t=this; setTimeout(function() {t.href=&#39;http://home.lupaworld.com/home-space-uid-56821-do-blog-id-234972.html&#39;;}, 50); return true;" style="text-decoration: none; border-bottom: none; outline: none; color: #333333;"><span>《Linux的capability深入分析-下》</span></a>
+            </li>
+            <li class="wumii-text-li" style="list-style: disc inside none; display: list-item; line-height: 1.65em; background: none repeat scroll 0 0 transparent; padding: 0; margin: 0; text-indent: 0; text-align: left; font-size: 12px;">
+                <a class="wumii-text-a" hidefocus="true" onmouseout="this.style.textDecoration=&#39;none&#39;" onmouseover="this.style.textDecoration=&#39;underline&#39;" href="http://home.lupaworld.com/home-space-uid-434384-do-blog-id-245975.html" onmousedown="this.href=&#39;http://app.wumii.com/ext/redirect.htm?url=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-434384-do-blog-id-245975.html&amp;ts=&#39; + (new Date()).getTime() + &#39;&amp;from=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-56821-do-blog-id-234956.html&#39; + &#39;&amp;ref=relatedItems&#39;; return true;" onmouseup="t=this; setTimeout(function() {t.href=&#39;http://home.lupaworld.com/home-space-uid-434384-do-blog-id-245975.html&#39;;}, 50); return true;" style="text-decoration: none; border-bottom: none; outline: none; color: #333333;"><span>grep: /proc/xen/capabilities: No such file or directory</span></a>
+            </li>
+            <li class="wumii-text-li" style="list-style: disc inside none; display: list-item; line-height: 1.65em; background: none repeat scroll 0 0 transparent; padding: 0; margin: 0; text-indent: 0; text-align: left; font-size: 12px;">
+                <a class="wumii-text-a" hidefocus="true" onmouseout="this.style.textDecoration=&#39;none&#39;" onmouseover="this.style.textDecoration=&#39;underline&#39;" href="http://home.lupaworld.com/home-space-uid-442517-do-blog-id-236583.html" onmousedown="this.href=&#39;http://app.wumii.com/ext/redirect.htm?url=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-442517-do-blog-id-236583.html&amp;ts=&#39; + (new Date()).getTime() + &#39;&amp;from=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-56821-do-blog-id-234956.html&#39; + &#39;&amp;ref=relatedItems&#39;; return true;" onmouseup="t=this; setTimeout(function() {t.href=&#39;http://home.lupaworld.com/home-space-uid-442517-do-blog-id-236583.html&#39;;}, 50); return true;" style="text-decoration: none; border-bottom: none; outline: none; color: #333333;"><span>linux汇编</span></a>
+            </li>
+            <li class="wumii-text-li" style="list-style: disc inside none; display: list-item; line-height: 1.65em; background: none repeat scroll 0 0 transparent; padding: 0; margin: 0; text-indent: 0; text-align: left; font-size: 12px;">
+                <a class="wumii-text-a" hidefocus="true" onmouseout="this.style.textDecoration=&#39;none&#39;" onmouseover="this.style.textDecoration=&#39;underline&#39;" href="http://home.lupaworld.com/home-space-uid-331886-do-blog-id-126045.html" onmousedown="this.href=&#39;http://app.wumii.com/ext/redirect.htm?url=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-331886-do-blog-id-126045.html&amp;ts=&#39; + (new Date()).getTime() + &#39;&amp;from=http%3A%2F%2Fhome.lupaworld.com%2Fhome-space-uid-56821-do-blog-id-234956.html&#39; + &#39;&amp;ref=relatedItems&#39;; return true;" onmouseup="t=this; setTimeout(function() {t.href=&#39;http://home.lupaworld.com/home-space-uid-331886-do-blog-id-126045.html&#39;;}, 50); return true;" style="text-decoration: none; border-bottom: none; outline: none; color: #333333;"><span>Linux 核心（二）</span></a>
+            </li>
+    </ul>
+    </div>
+        <div style="margin: 0; border: none; padding: 5px 0; clear: both; text-align: right;">
+            <a href="http://www.wumii.com/widget/relatedItems.htm" target="_blank" title="无觅相关文章插件" style="font: normal normal normal 12px/normal arial; color: rgb(187, 187, 187); border-bottom-style: none; border-bottom-width: initial; border-bottom-color: initial; word-wrap: normal; display: inline; ">无觅</a>
+            
+        </div>
+</div>
+
+</div><span style="display:none;"><a rel="tag">Linux</a><a rel="tag">cap</a><a rel="tag">capabilities</a><a rel="tag">capability</a></span>
+<a href="javascript:void((function(s,d,e,r,l,p,t,z,c) {var%20f='http://v.t.sina.com.cn/share/share.php?appkey=1659826410',u=z||d.location,p=['&url=',e(u),'& title=',e(t||d.title),'&source=',e(r),'&sourceUrl=',e(l),'& content=',c||'gb2312','&pic=',e(p||'')].join('');function%20a() {if(!window.open([f,p].join(''),'mb', ['toolbar=0,status=0,resizable=1,width=440,height=430,left=',(s.width- 440)/2,',top=',(s.height-430)/2].join('')))u.href=[f,p].join('');}; if(/Firefox/.test(navigator.userAgent))setTimeout(a,0);else%20a();}) (screen,document,encodeURIComponent,'','','','《Linux的capability深入分析-上》','',''));" class="oshr" id="xwb_blog_mibicon" onclick="setTimeout(&#39;forstat()&#39;, 0);">转发到微博</a>
+         <img id="statimg" style="display:none;">
+         <script type="text/javascript">
+            function forstat(){
+                var statimg = document.getElementById("statimg");
+                statimg.src = "http://beacon.x.weibo.com/a.gif?uid=&pjt=xwb4dx&dsz=1.5&ver=1.1&xt=fw&akey=1659826410&ip=202.118.236.184" + "&random=" + Math.round(Math.random()*1000000);
+            }
+         </script>
+<a href="javascript:;" onclick="showWindow(&#39;miscreport234956&#39;, &#39;misc.php?mod=report&amp;rtype=blog&amp;rid=234956&#39;, &#39;get&#39;, -1);return false;">举报</a>
+</div>
+
+</div>
+
+<div class="ct_vw cl">
+<div class="ct_vw_sd">
+<div class="mbm cl">
+<h2 class="mbm ptn pbn bbs"><span class="xs1 xw0 y"><a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-view-me.html">全部</a></span>作者的其他最新日志</h2>
+<ul class="xl xl1 cl"><li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-242388.html" target="_blank">《Linux下进程信息的深入分析》</a></li>
+<li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-242387.html" target="_blank">《Linux的CPU资源调优》</a></li>
+<li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-242320.html" target="_blank">《Linux的硬件时间及系统时间》</a></li>
+<li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-241652.html" target="_blank">《Linux keepalived与lvs的深入分析》</a></li>
+<li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-239185.html" target="_blank">《Linux下rsync服务的深入分析》</a></li>
+<li>• <a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-238537.html" target="_blank">《Linux下postfix服务的深入分析》</a></li>
+</ul>
+</div>
+<div class="mbm cl">
+<h2 class="mbm ptn pbn bbs">热门日志导读</h2>
+<ul class="xl xl1 cl"><li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-263754-do-blog-id-245958.html" target="_blank">程序员的本质</a></span></li>
+<li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-436999-do-blog-id-245844.html" target="_blank">一些让程序员伤心让程序员开心的话</a></span></li>
+<li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-26540-do-blog-id-245834.html" target="_blank">新一代弹性云计算平台cloudxy发布0.1版</a></span></li>
+<li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-439101-do-blog-id-244315.html" target="_blank">Linux系统下载网站----好东西</a></span></li>
+<li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-263754-do-blog-id-244297.html" target="_blank">Linux系统开机过程解释笔记</a></span></li>
+<li><span class="xl1_elp">• <a href="http://home.lupaworld.com/home-space-uid-263077-do-blog-id-243903.html" target="_blank">怎样花两年时间去面试一个人</a></span></li>
+</ul>
+</div>
+</div>
+
+<div class="ct_vw_mn">
+<div id="div_main_content" class="mbm">
+<h3 class="ptn pbn bbs">
+<a href="http://home.lupaworld.com/home-space-uid-56821-do-blog-id-234956.html#quickcommentform_234956" class="y xi2 xw0">发表评论</a>
+评论 (<span id="comment_replynum">8</span> 个评论)
+</h3>
+<div id="comment_ul" class="xld xlda"><a name="comment_anchor_56771"></a>
+<dl id="comment_56771_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-442920.html" c="1" mid="uejqFUWKMIojrdfWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar(1).php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56771&feedid=&handlekey=replycommenthk_56771" id="c_56771_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56771&amp;handlekey=reportcommenthk_56771" id="a_report_56771" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-442920.html" id="author_56771">smallQ</a>
+<span class="xg1 xw0">2011-6-19 22:30</span>
+</dt>
+
+<dd id="comment_56771">您好~~您的文章对我超有用的，呵呵，谢谢啦先。<br>
+不过我有个问题，第一段代码我编译不过，会有提示例如 cap_t 之类的都有说没有定义在使用前。。。。<br>
+<br>
+还有我想请教下，怎么可以来设置cap_effective的值，比如我想要把root的几个特权给削去，把那几个位的值给置0 ，该怎么做啊</dd>
+
+</dl><a name="comment_anchor_56792"></a>
+<dl id="comment_56792_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-56821.html" c="1" mid="uejqESgFLuWHicLWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56792&feedid=&handlekey=replycommenthk_56792" id="c_56792_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56792&amp;handlekey=reportcommenthk_56792" id="a_report_56792" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-56821.html" id="author_56792">ckhitler</a>
+<span class="xg1 xw0">2011-6-20 23:42</span>
+</dt>
+
+<dd id="comment_56792">如果编译不成功,建议检查libcap-devel包是否安装完成.</dd>
+
+</dl><a name="comment_anchor_56793"></a>
+<dl id="comment_56793_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-442920.html" c="1" mid="uejqFUWKMIojrdfWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar(1).php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56793&feedid=&handlekey=replycommenthk_56793" id="c_56793_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56793&amp;handlekey=reportcommenthk_56793" id="a_report_56793" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-442920.html" id="author_56793">smallQ</a>
+<span class="xg1 xw0">2011-6-22 01:26</span>
+</dt>
+
+<dd id="comment_56793"><div class="quote"><blockquote><b>ckhitler</b>: 如果编译不成功,建议检查libcap-devel包是否安装完成.</blockquote></div>恩恩~~我明儿去看看检查下！<br>
+还有个问题想请教您，就是如果通过设置cap_effective的值来清除掉特权用户的权能后，如果想要恢复他的这个权能要怎么办，还可以通过设置cap_effective的相应位来给他加上权能么？<br>
+我看有的书上说特权被剥夺了就无法恢复了，除非重新启动系统。。。<br>
+只能这样的么？<br>
+谢谢呀~~</dd>
+
+</dl><a name="comment_anchor_56794"></a>
+<dl id="comment_56794_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-56821.html" c="1" mid="uejqESgFLuWHicLWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56794&feedid=&handlekey=replycommenthk_56794" id="c_56794_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56794&amp;handlekey=reportcommenthk_56794" id="a_report_56794" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-56821.html" id="author_56794">ckhitler</a>
+<span class="xg1 xw0">2011-6-22 10:41</span>
+</dt>
+
+<dd id="comment_56794">你的书应该是针对2.6.18内核的，在这个内核下,修改capability，是要修改/proc下面的capability选项,后面的内核应该没有这种说法,而只能在程序上实现清除权限的情况,并不能在系统层面上清除权限.</dd>
+
+</dl><a name="comment_anchor_56795"></a>
+<dl id="comment_56795_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-442920.html" c="1" mid="uejqFUWKMIojrdfWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar(1).php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56795&feedid=&handlekey=replycommenthk_56795" id="c_56795_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56795&amp;handlekey=reportcommenthk_56795" id="a_report_56795" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-442920.html" id="author_56795">smallQ</a>
+<span class="xg1 xw0">2011-6-22 13:07</span>
+</dt>
+
+<dd id="comment_56795"><div class="quote"><blockquote><b>ckhitler</b>: 你的书应该是针对2.6.18内核的，在这个内核下,修改capability，是要修改/proc下面的capability选项,后面的内核应该没有这种说法,而只能在程序上实现清除权限的情 ...</blockquote></div>是的啊，我看的那书上的内核版本比较早，我现在在看内核是2.6.38的。<br>
+关于那个问题，您说的libcap-devel我已经安装了，在编译给当前进程设定能力再清除能力的capsettest这段代码的时候，报出的错误都是些说使用前未定义的错误。错误提示：<br>
+<br>
+capsettest.c: In function ‘listCaps’:<br>
+capsettest.c:21:1: error: ‘cap_t’ undeclared (first use in this function)<br>
+capsettest.c:21:1: note: each undeclared identifier is reported only once for each function it appears in<br>
+capsettest.c:21:7: error: expected ‘;’ before ‘caps’<br>
+capsettest.c:23:78: error: ‘caps’ undeclared (first use in this function)<br>
+main函数里也有类似的错误。。。<br>
+之前编译进程的能力掩码的时候也遇到过这样的问题，但后来我看到我的capability.h文体不在/linux目录下，修改了我的路径之后，编译就通过了。但这次就没有办法了，所以想请教您。</dd>
+
+</dl><a name="comment_anchor_56799"></a>
+<dl id="comment_56799_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-56821.html" c="1" mid="uejqESgFLuWHicLWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56799&feedid=&handlekey=replycommenthk_56799" id="c_56799_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56799&amp;handlekey=reportcommenthk_56799" id="a_report_56799" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-56821.html" id="author_56799">ckhitler</a>
+<span class="xg1 xw0">2011-6-23 06:57</span>
+</dt>
+
+<dd id="comment_56799"><div class="quote"><blockquote><b>smallQ</b>: 是的啊，我看的那书上的内核版本比较早，我现在在看内核是2.6.38的。<br>
+关于那个问题，您说的libcap-devel我已经安装了，在编译给当前进程设定能力再清除能力的cap ...</blockquote></div>你确认你使用的是下面的编译格式吗?<br>
+<br>
+gcc src.c -o dest -lcap</dd>
+
+</dl><a name="comment_anchor_56809"></a>
+<dl id="comment_56809_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-442920.html" c="1" mid="uejqFUWKMIojrdfWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar(1).php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56809&feedid=&handlekey=replycommenthk_56809" id="c_56809_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56809&amp;handlekey=reportcommenthk_56809" id="a_report_56809" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-442920.html" id="author_56809">smallQ</a>
+<span class="xg1 xw0">2011-6-28 19:54</span>
+</dt>
+
+<dd id="comment_56809"><div class="quote"><blockquote><b>ckhitler</b>: 你确认你使用的是下面的编译格式吗?<br>
+<br>
+gcc src.c -o dest -lcap</blockquote></div>那个程序我调出来了~~您的程序没有问题，是我系统出了点问题~呵呵！现在有个问题要请教您，就是通过您的程序可以给当前的进程特权，然后把特权给清除了，我用getpcaps命令来查看那个当前进程时会提示没有这个进程，这个是怎么回事呀，谢谢</dd>
+
+</dl><a name="comment_anchor_56810"></a>
+<dl id="comment_56810_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-56821.html" c="1" mid="uejqESgFLuWHicLWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56810&feedid=&handlekey=replycommenthk_56810" id="c_56810_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56810&amp;handlekey=reportcommenthk_56810" id="a_report_56810" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-56821.html" id="author_56810">ckhitler</a>
+<span class="xg1 xw0">2011-6-28 20:42</span>
+</dt>
+
+<dd id="comment_56810">噢,程序在运行的时候,你的系统看到了该进程的PID吗?</dd>
+
+</dl><a name="comment_anchor_56814"></a>
+<dl id="comment_56814_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-442920.html" c="1" mid="uejqFUWKMIojrdfWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar(1).php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56814&feedid=&handlekey=replycommenthk_56814" id="c_56814_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56814&amp;handlekey=reportcommenthk_56814" id="a_report_56814" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-442920.html" id="author_56814">smallQ</a>
+<span class="xg1 xw0">2011-6-29 22:05</span>
+</dt>
+
+<dd id="comment_56814"><div class="quote"><blockquote><b>ckhitler</b>: 噢,程序在运行的时候,你的系统看到了该进程的PID吗?</blockquote></div>额。。。这个怎么看。。。不太明白哎~~<br>
+<br>
+那个的情况就比如<br>
+the process 3357 was give capabilities=......<br>
+<br>
+如果我getpcaps 3357<br>
+得到的结果是<br>
+failed to get cap's for process 3357:(no such process)</dd>
+
+</dl><a name="comment_anchor_56815"></a>
+<dl id="comment_56815_li" class="bbda cl"><dd class="m avt"><a href="http://home.lupaworld.com/space-uid-56821.html" c="1" mid="uejqESgFLuWHicLWmKNHZXYKIYOLWYaW"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/avatar.php"></a></dd>
+<dt>
+<span class="y xw0">
+
+<a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment&op=reply&cid=56815&feedid=&handlekey=replycommenthk_56815" id="c_56815_reply" onclick="showWindow(this.id, this.href, &#39;get&#39;, 0);">回复</a>
+        <!--a href="home.php?mod=spacecp&amp;ac=common&amp;op=report&amp;idtype=comment&amp;id=56815&amp;handlekey=reportcommenthk_56815" id="a_report_56815" onclick="showWindow(this.id, this.href, 'get', 0);">举报</a-->
+</span>
+
+<a href="http://home.lupaworld.com/space-uid-56821.html" id="author_56815">ckhitler</a>
+<span class="xg1 xw0">2011-6-30 08:00</span>
+</dt>
+
+<dd id="comment_56815">程序处理完了,你用getpcaps当然获取不到</dd>
+
+</dl></div>
+</div>
+<form id="quickcommentform_234956" action="http://home.lupaworld.com/home.php?mod=spacecp&ac=comment" method="post" autocomplete="off" onsubmit="ajaxpost(&#39;quickcommentform_234956&#39;, &#39;return_qcblog_234956&#39;);doane(event);">
+<p>
+<span id="comment_face" title="插入表情" onclick="showFace(this.id, &#39;comment_message&#39;);return false;" style="cursor: pointer;"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/facelist.gif" alt="facelist" class="vm"></span>
+</p>
+<div class="tedt mtn mbn">
+<div class="area">
+<div class="pt hm">你需要登录后才可以评论 <a href="http://home.lupaworld.com/member.php?mod=logging&action=login" onclick="showWindow(&#39;login&#39;, this.href)" class="xi2">登录</a> | <a href="http://home.lupaworld.com/member.php?mod=luparegister21" onclick="showWindow(&#39;register&#39;, this.href)" class="xi2">注册</a></div>
+</div>
+</div>
+<div class="mtm mbm sec">
+<input name="sechash" type="hidden" value="S7P5i">
+
+验证问答 <span id="secqaaS7P5i" onclick="showMenu(this.id);"><input name="secanswer" id="secqaaverify_S7P5i" type="text" autocomplete="off" style="width:100px" class="txt px vm" onblur="checksec(&#39;qaa&#39;, &#39;S7P5i&#39;)" tabindex="1">
+<a href="javascript:;" onclick="updatesecqaa(&#39;S7P5i&#39;);doane(event);" class="xi2">换一个</a>
+<span id="checksecqaaverify_S7P5i"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/none.gif" width="16" height="16" class="vm"></span>
+</span><div id="secqaaS7P5i_menu" class="p_pop p_opt" style="display:none"><span id="secqaa_S7P5i" style="">输入下面问题的答案<br>64 - 3 = ?</span>
+<script type="text/javascript" reload="1">updatesecqaa('S7P5i');</script>
+</div>
+
+</div>
+<p class="pns">
+<input type="hidden" name="referer" value="home.php?mod=space&amp;uid=56821&amp;do=blog&amp;id=234956">
+<input type="hidden" name="id" value="234956">
+<input type="hidden" name="idtype" value="blogid">
+<input type="hidden" name="handlekey" value="qcblog_234956">
+<input type="hidden" name="commentsubmit" value="true">
+<input type="hidden" name="quickcomment" value="true">
+<button type="submit" name="commentsubmit_btn" value="true" id="commentsubmit_btn" class="pn" onclick="showWindow(this.id, this.form.action);return false;"><strong>评论</strong></button>
+<span id="return_qcblog_234956"></span>
+</p>
+<input type="hidden" name="formhash" value="b967f47c">
+</form>
+<script type="text/javascript">
+function succeedhandle_qcblog_234956(url, msg, values) {
+if(values['cid']) {
+comment_add(values['cid']);
+} else {
+$('return_qcblog_234956').innerHTML = msg;
+}
+updatesecqaa('S7P5i');
+}
+</script>
+
+<script type="text/javascript">
+function addFriendCall(){
+var el = $('friendinput');
+if(!el || el.value == "")	return;
+var s = '<input type="checkbox" name="fusername[]" class="pc" value="'+el.value+'" id="'+el.value+'" checked="checked">';
+s += ' <label for="'+el.value+'">'+el.value+'</label>';
+s += '<br />';
+$('friends').innerHTML += s;
+el.value = '';
+}
+resizeImg('div_main_content','450');
+
+var elems = selector('dd[class~=magicflicker]');
+for(var i=0; i<elems.length; i++){
+magicColor(elems[i]);
+}
+</script>
+
+</div>
+</div>
+
+</div>
+<!--[diy=diycontentbottom]--><div id="diycontentbottom" class="area"></div><!--[/diy]-->
+</div>
+<div class="appl"><ul><li><a href="http://home.lupaworld.com/home-space-do-doing.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/doing.gif" width="16" height="16">微博</a></li><li><a href="http://www.lupaworld.com/plugin.php?id=luckypost:luckypost" title="发帖际遇"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/bgpic.gif" width="16" height="16">际遇</a></li><li><span><a href="http://home.lupaworld.com/forum.php?mod=misc&action=nav&special=0&" onclick="showWindow(&#39;nav&#39;, this.href);return false;">发布</a></span><a href="http://home.lupaworld.com/home-space-do-thread.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/thread.gif" width="16" height="16">帖子</a></li><li><span><a href="http://home.lupaworld.com/home-spacecp-ac-blog.html">发布</a></span><a href="http://home.lupaworld.com/home-space-do-blog.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/blog.gif" width="16" height="16">日志</a></li><li><span><a href="http://home.lupaworld.com/home-spacecp-ac-upload.html">上传</a></span><a href="http://home.lupaworld.com/home-space-do-album.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/album.gif" width="16" height="16">相册</a></li><li><span><a href="http://home.lupaworld.com/home.php?mod=spacecp&ac=share" onclick="showWindow(&#39;share&#39;, this.href, &#39;get&#39;, 0);return false;">添加</a></span><a href="http://home.lupaworld.com/home-space-do-share.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/share.gif" width="16" height="16">分享</a></li><li><span><a href="http://home.lupaworld.com/home-spacecp-ac-tv.html">添加</a></span><a href="http://home.lupaworld.com/home-tv.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/activitysmall.gif" width="16" height="16">视频</a></li><li><a href="http://home.lupaworld.com/home-task-item-new.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/debatesmall.gif" width="16" height="16">小任务</a></li></ul><hr class="da"><ul><li><a href="http://home.lupaworld.com/home-space-do-favorite.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/favorite.gif" width="16" height="16">收藏</a></li><li><a href="http://home.lupaworld.com/home-medal.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/medal.gif" width="16" height="16">勋章</a></li><li><a href="http://home.lupaworld.com/home-spacecp-ac-credit-op-base.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/rewardsmall.gif" width="16" height="16">积分</a></li></ul><hr class="da"><ul></ul>
+<ul id="my_defaultapp"><li><a href="http://www.lupaworld.com/userapp-app-id-1021978.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/1021978" onerror="this.onerror=null;this.src=&#39;http://appicon.manyou.com/icons/1021978&#39;" alt="开心农场">开心农场</a></li>
+<li><a href="http://www.lupaworld.com/userapp-app-id-1047370.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/1047370" onerror="this.onerror=null;this.src=&#39;http://appicon.manyou.com/icons/1047370&#39;" alt="地产大亨">地产大亨</a></li>
+<li><a href="http://www.lupaworld.com/userapp-app-id-1003049.html"><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/1003049.jpg" onerror="this.onerror=null;this.src=&#39;http://appicon.manyou.com/icons/1003049&#39;" alt="每天进步">每天进步</a></li>
+</ul>
+<script type="text/javascript">inituserabout();</script></div>
+</div>
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+
+﻿	</div>
+
+<p style="margin:0;padding:0;height:1px;">
+    <script type="text/javascript"><!--
+        var wumiiSitePrefix = "http://home.lupaworld.com/";
+        var wumiiEnableCustomPos = false;
+        var wumiiParams = "&num=4&mode=3&v=1.0.1.1&pf=DiscuzX1.5";
+    //--></script>
+    <script id="wumiiRelatedItems" type="text/javascript" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/relatedItemsWidget.htm"></script>
+    <a href="http://www.wumii.com/widget/relatedItems.htm" style="border:0;">
+        <img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/pixel.png" alt="无觅相关文章插件" style="border:0;padding:0;margin:0;">
+    </a>
+</p><script language="javascript">
+var _xwb_cfg_data ={
+	tipsType:	'',site_uid:	'0',sina_uid:	'',
+	siteVer:	'1.5',siteName:	'LUPA开源社区',pName:'home_space',
+	regUrl:		'/xwb.php?m=xwbSiteInterface.reg',
+	setUrl:		'/xwb.php?m=xwbSiteInterface.bind',
+	bindUrl:	'/xwb.php?m=xwbSiteInterface.bind',
+	signerUrl:	'/xwb.php?m=xwbSiteInterface.signer',
+	authUrl:	'/xwb.php?m=xwbAuth.login',
+	getTipsUrl:	'/xwb.php?m=xwbSiteInterface.getTips',
+	attentionUrl:	'/xwb.php?m=xwbSiteInterface.attention',
+	wbxUrl:		'http://service.t.sina.com.cn/widget/WeiboShow.php?uname=xweibo%E6%B5%8B%E8%AF%95%E5%B8%90%E5%8F%B7&width=180&height=500&skin=2&isTitle=1&isWeibo=1&isFans=1&fansRow=7&__noCache=1304603850328'
+};
+
+function xwb_loadScript(file, charset){
+	var script = document.createElement('SCRIPT');
+	script.type = 'text/javascript'; script.charset = charset; script.src = file;
+	document.getElementsByTagName('HEAD')[0].appendChild(script);
+}
+xwb_loadScript("http://home.lupaworld.com/xwb/images/dlg.js", "UTF-8");
+xwb_loadScript("http://home.lupaworld.com/xwb/images/xwb.js", "UTF-8");
+</script>
+<link href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/xwb_base.css" rel="stylesheet" type="text/css">
+<link href="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/xwb_1.5.css" rel="stylesheet" type="text/css">
+<div id="ft" class="wp cl">
+<div id="flk" class="y">
+<p><a href="http://www.lupaworld.com/misc-faq.html">社区帮助</a><span class="pipe">|</span><a href="http://bbs.lupaworld.com/forum-332-1.html">留言反馈</a><span class="pipe">|</span><a href="http://bbs.lupaworld.com/forum.php?archiver=1">Archiver</a><span class="pipe">|</span><a href="http://t.sina.com.cn/lupaworld">LUPA新浪微博</a><span class="pipe">|</span><a href="http://www.lupaworld.com/portal-list-catid-245.html">关于我们</a><span class="pipe">|</span><strong><a href="http://www.lupaworld.com/" target="_blank">LUPA</a></strong>
+( <a href="http://www.miitbeian.gov.cn/" target="_blank">浙ICP备09009928号</a> )</p><div style="display:none">
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/stat.php" language="JavaScript"></script><a href="http://www.cnzz.com/stat/website.php?web_id=1360480" target="_blank" title="站长统计">站长统计</a><img src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/stat.htm" border="0" width="0" height="0">
+</div>
+<script type="text/javascript" src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/jiathis_r.js" charset="utf-8"></script><script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/ckepop.js" charset="utf-8"></script><script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/ckecenterpop.js" charset="utf-8"></script>				
+<p></p>
+<p class="xs0">
+GMT+8, 2011-12-7 13:03<span id="debuginfo">
+, Processed in 0.430702 second(s), 21 queries
+.
+</span> <b>开源</b>支持
+</p>
+<h1>浙江科华科技发展有限公司旗下站点--LUPA开源社区</h1>
+</div>
+<div id="frt">
+<p>Powered by <strong><a href="http://www.lupaworld.com/" target="_blank">LUPA</a>，基于Discuz X1.5修改。</strong></p><strong> 
+<p class="xs0">© 2005-2011 </p>  
+<a href="http://www.lupaworld.com/"><h1>开源社区</h1></a>
+</strong></div><strong></strong></div><strong>
+
+<ul id="usersetup_menu" class="p_pop" style="display:none;">
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-avatar.html">修改头像</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-profile.html">个人资料</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-credit.html">积分</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-usergroup.html">用户组</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-privacy.html">隐私筛选</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-sendmail.html">邮件提醒</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-profile-op-password.html">密码安全</a></li>
+<li><a href="http://home.lupaworld.com/home-spacecp-ac-plugin-id-myrepeats%3Amemcp.html">我的马甲</a></li><li><a href="http://home.lupaworld.com/home-spacecp-ac-plugin-id-sina_xweibo%3Ahome_binding.html">绑定新浪微博</a></li></ul>
+
+<div id="g_upmine_menu" class="g_up" style="display:none;">
+<div class="crly">
+积分 0, 距离下一级还需  积分
+</div>
+<div class="mncr"></div>
+</div>
+<script src="./《Linux的capability深入分析-上》 - ckhitler的日志 LUPA开源社区_files/home.php" type="text/javascript"></script>
+
+</strong></body></html>

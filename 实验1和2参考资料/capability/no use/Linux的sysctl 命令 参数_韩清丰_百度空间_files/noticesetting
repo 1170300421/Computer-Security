@@ -1,0 +1,10 @@
+top.NoticeOperator.loadBack({
+            'portrait':'0'
+        ,            'suliao':'0'
+        ,            'friend':'0'
+        ,            'dashan':'0'
+        ,            'duiwei':'1'
+        ,            'gift':'0'
+        ,            'photopk':'0'
+        ,            'visitor':'0'
+            })

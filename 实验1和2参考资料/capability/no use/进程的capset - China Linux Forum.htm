@@ -1,0 +1,441 @@
+
+<!-- saved from url=(0074)http://www.linuxforum.net/forum/showflat.php?Board=linuxK%20&Number=324985 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"><link rel="stylesheet" href="./进程的capset - China Linux Forum_files/stylesheet2.css" type="text/css"><title>进程的capset - China Linux Forum</title></head><body><span class="onbody"> <table width="95%" border="0" cellspacing="0" cellpadding="3" align="center" class="p9">
+<tbody><tr bgcolor="#0099cc" align="right" valign="middle">
+<td width="20%" align="left"> <a href="http://www.linuxforum.net/index.php"><font color="#FFFFFF">中国Linux论坛首页</font></a></td>
+<td width="80%">
+ <a href="http://www.linuxforum.net/forum/ubbthreads.php"><font color="#FFFFFF">技术论坛|</font></a><fon t="" color="#FFFFFF">
+ <a href="http://www.linuxforum.net/docnew/index.php"><font color="#FFFFFF">文章荟萃</font></a><font color="#FFFFFF">|
+ <a href="http://www.linuxforum.net/books/index.php"><font color="#FFFFFF">藏经阁</font></a>|
+ <a href="http://sf.linuxforum.net/"><font color="#FFFFFF">项目计划</font></a>|
+ <a href="http://www.linuxforum.net/poll2/index.php"><font color="#FFFFFF">在线调查</font></a>|
+ <a href="http://www.linuxforum.net/mirror.php"><font color="#FFFFFF">网站镜像</font></a>|
+ <a href="http://www.linuxforum.net/mirror.php"><font color="#FFFFFF">软件仓库</font></a>|
+ <a href="http://www.linuxforum.net/about.php"><font color="#FFFFFF">关于本站</font></a>|
+</font></fon></td></tr></tbody></table>
+<br>
+   
+</span> 
+<table width="95%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody><tr>
+<td class="tableborders">
+<table cellpadding="3" cellspacing="1" width="100%" border="0">
+      <tbody><tr><td align="right" class="menubar">
+   <a href="http://www.linuxforum.net/forum/ubbthreads.php?Cat=">讨论区列表</a>
+    | 
+   <a href="http://www.linuxforum.net/forum/search.php?Cat=">搜寻文章</a>
+    | 
+   <a href="http://www.linuxforum.net/forum/newuser.php?Cat=">新用户注册</a>
+    | 
+   <a href="http://www.linuxforum.net/forum/login.php?Cat=">登入论坛</a>
+    | 
+   <a href="http://www.linuxforum.net/forum/online.php?Cat=">在线用户</a>
+    | 
+   <a href="http://www.linuxforum.net/forum/faq_chinese.php?Cat=">常见问题</a>
+           
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+      <p> 
+<table width="95%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody><tr>
+<td class="tableborders">
+<table cellpadding="3" cellspacing="1" width="100%" border="0">
+      
+<tbody><tr class="darktable">
+<td>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tbody><tr class="darktable">
+<td align="left" width="33%">
+<span class="catandforum">
+<a href="http://www.linuxforum.net/forum/ubbthreads.php?Cat=&C=4">Linux 高级应用</a>
+<br>&nbsp;&nbsp;&nbsp;&gt;&gt;
+<a href="http://www.linuxforum.net/forum/postlist.php?Cat=&Board=linuxK%20&page=&view=&sb=&o=">Linux内核技术</a>
+</span>
+</td>
+<td width="33%" align="center">
+此话题阅读次数: 2890
+</td>
+<td width="33%" align="right">
+   <table border="0"><tbody><tr>
+<td class="navigation" nowrap="">
+<img alt="*" src="./进程的capset - China Linux Forum_files/greyflat.gif" align="absmiddle">平坦模式&nbsp;
+</td>
+<td class="navigation" nowrap="">
+<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&vc=1"><img align="absmiddle" src="./进程的capset - China Linux Forum_files/threaded.gif" alt="树状模式，一封一封读" border="0">树状模式</a>&nbsp;
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+   
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+      
+<br>
+<table width="95%" align="center" cellpadding="4" cellspacing="0" border="0">
+<tbody><tr>
+<td align="left" class="small">
+   <img src="./进程的capset - China Linux Forum_files/pages.gif" align="absmiddle"> 此话题的页数：1 | <a href="http://www.linuxforum.net/forum/showflat.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&fpart=2&vc=1">2</a> | (<a href="http://www.linuxforum.net/forum/showflat.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&fpart=all&vc=1">显示全部</a>) &nbsp; </td><td class="small" align="right"> 
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=324985&type=thread"><img src="./进程的capset - China Linux Forum_files/printthread.gif" align="top" border="0"> 打印</a>
+</td></tr></tbody></table>
+    
+<table width="95%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody><tr>
+<td class="tableborders">
+<table cellpadding="3" cellspacing="1" width="100%" border="0">
+      <tbody><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post324985"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=guoyichao&Number=324985&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+guoyichao</a><br><span class="small">(enthusiast)<br>
+            02-08-28 14:10<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book.gif" width="15" height="15"> 
+<b>进程的capset</b> 
+         </td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+怎样配置才能使linux进程的cap缺省就设置了cap_setpcap，是需要重新配置内核还是其他什么？  
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=324985&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325100"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=xshell&Number=325100&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+<font color="#00AA00">xshell</font></a><img src="./进程的capset - China Linux Forum_files/mod.gif" alt="版主" border="0"><br><span class="small">(Pooh-Bah)<br>
+            02-08-28 17:10<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&vc=1" target="_new">re: guoyichao</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+不是很明白你的意思,grep -r /usr/src/linux cap_setpcap没有找到这个字符串  
+<br><br><br>--------------------<br>it shudn't be that hard but just needs to be done
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325100&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325139"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=jbtzhm&Number=325139&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+jbtzhm</a><br><span class="small">(member)<br>
+            02-08-28 18:45<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325100&page=&view=&sb=&o=&vc=1" target="_new">re: xshell</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+&gt;grep -r /usr/src/linux cap_setpcap
+<br>写反了。:) 
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325139&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325312"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=guoyichao&Number=325312&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+guoyichao</a><br><span class="small">(enthusiast)<br>
+            02-08-29 09:11<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325100&page=&view=&sb=&o=&vc=1" target="_new">re: xshell</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+cap是linux对进程进行安全性控制的一种措施,有点类似于windows的系统安全策略,可以通过capset(syscall)来设置进程的cap.
+<br>现在有个问题就是要通过capset设置进程的有效cap位必须是设置了CAP_SETPCAP(/usr/include/linux/capability.h),但所有进程缺省都没有置这位,系统调用都失败,内核配置哪块牵涉到这个或者是改某个/proc下的设置?
+<br>有关连接libcap(http://www.kernel.org/pub/linux/libs/security/linux-privs/)  
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325312&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325354"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=xshell&Number=325354&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+<font color="#00AA00">xshell</font></a><img src="./进程的capset - China Linux Forum_files/mod.gif" alt="版主" border="0"><br><span class="small">(Pooh-Bah)<br>
+            02-08-29 09:52<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325312&page=&view=&sb=&o=&vc=1" target="_new">re: guoyichao</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+我翻了一下源码2.4.18,
+<br>
+<br>只有root用户才可以进行sys_capset,对于普通用户将得到-EPERM.
+<br>
+<br>既然当前内核缺省是这样限制的,如果想更改的话,对sys_capset系统调用做个hook
+<br>if( current-&gt;uid &gt; 0 &amp;&amp; 合法 )
+<br>current-&gt;cap_effective |= CAP_TO_MASK(CAP_SETPCAP)
+<br>调用saved_sys_capset
+<br>如何?
+<br>
+<br>btw,/proc下没有找到相关设置,只能出此下策...   
+<br><br><br>--------------------<br>it shudn't be that hard but just needs to be done
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325354&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325398"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=guoyichao&Number=325398&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+guoyichao</a><br><span class="small">(enthusiast)<br>
+            02-08-29 11:08<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325354&page=&view=&sb=&o=&vc=1" target="_new">re: xshell</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+问题就在于root也没办法改,是不是这个系统调用有问题?管得太严格了?  
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325398&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325425"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=xshell&Number=325425&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+<font color="#00AA00">xshell</font></a><img src="./进程的capset - China Linux Forum_files/mod.gif" alt="版主" border="0"><br><span class="small">(Pooh-Bah)<br>
+            02-08-29 11:47<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325398&page=&view=&sb=&o=&vc=1" target="_new">re: guoyichao</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+哦, 前面我看错了
+<br>if (pid &amp;&amp; !capable(CAP_SETPCAP))
+<br>return -EPERM;
+<br>原来是pid,我当成uid了. 这样的话,root也不能改了,
+<br>
+<br>至于为什么这么严格,我不清楚,cap的具体功能也不清楚,但是如果想改变这种严格限制的话,不妨就象上篇帖子中说的,将sys_capset做个hook即可capset了  
+<br><br><br>--------------------<br>it shudn't be that hard but just needs to be done
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325425&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325467"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=guoyichao&Number=325467&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+guoyichao</a><br><span class="small">(enthusiast)<br>
+            02-08-29 13:29<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325425&page=&view=&sb=&o=&vc=1" target="_new">re: xshell</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+pid为0的只能是sched了,init也是sched的子进程,也就是说只有sched才能改cap??有点不讲理...  
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325467&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325549"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=guoyichao&Number=325549&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+guoyichao</a><br><span class="small">(enthusiast)<br>
+            02-08-29 15:50<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325425&page=&view=&sb=&o=&vc=1" target="_new">re: xshell</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+大致写了个模块试了试,发现误会了,pid不是当前进程pid,只不过是syscall目标的pid,不过下面有更严格的检测,仅仅像前面那样hook是根本没有效果的.  
+
+
+</p><p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325549&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr><tr><td rowspan="2" width="17%" valign="top" class="darktable"><a name="Post325554"></a>
+<a href="http://www.linuxforum.net/forum/showprofile.php?Cat=&User=xshell&Number=325554&Board=linuxK%20&what=showflat&page=&view=&sb=&o=&fpart=1&vc=1">
+<font color="#00AA00">xshell</font></a><img src="./进程的capset - China Linux Forum_files/mod.gif" alt="版主" border="0"><br><span class="small">(Pooh-Bah)<br>
+            02-08-29 16:04<br>
+</span>
+</td><td width="83%" class="subjecttable">        
+<table width="100%" class="subjecttable" border="0">
+<tbody><tr><td align="left" width="70%">
+<img src="./进程的capset - China Linux Forum_files/book(1).gif" width="15" height="15"> 
+<b>Re: 进程的capset</b> <img alt="新" src="./进程的capset - China Linux Forum_files/new.gif">
+          <font class="small">[<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325549&page=&view=&sb=&o=&vc=1" target="_new">re: guoyichao</a>]</font></td><td align="right" width="30%">&nbsp;
+</td></tr></tbody></table></td></tr>
+<tr><td width="83%" class="lighttable">
+<br><p class="post">
+你认为运行到下面哪一行返回,是不是149?
+<br></p><pre><br>129 asmlinkage long sys_capset(cap_user_header_t header, const cap_user_data_t data)
+<br>130 {
+<br>131      kernel_cap_t inheritable, permitted, effective;
+<br>132      __u32 version;
+<br>133      struct task_struct *target;
+<br>134      int error, pid;
+<br>135 
+<br>136      if (get_user(version, &amp;header-&gt;version))
+<br>137              return -EFAULT; 
+<br>138 
+<br>139      if (version != _LINUX_CAPABILITY_VERSION) {
+<br>140              version = _LINUX_CAPABILITY_VERSION;
+<br>141              if (put_user(version, &amp;header-&gt;version))
+<br>142                      return -EFAULT; 
+<br>143              return -EINVAL;
+<br>144      }
+<br>145 
+<br>146      if (get_user(pid, &amp;header-&gt;pid))
+<br>147              return -EFAULT; 
+<br>148 
+<br>149      if (pid &amp;&amp; !capable(CAP_SETPCAP))
+<br>150              return -EPERM;
+<br>151 
+<br>152      if (copy_from_user(&amp;effective, &amp;data-&gt;effective,<br>sizeof(effective)) ||
+<br>153          copy_from_user(&amp;inheritable, &amp;data-&gt;inheritable,<br>sizeof(inheritable)) ||
+<br>154          copy_from_user(&amp;permitted, &amp;data-&gt;permitted,<br>sizeof(permitted)))
+<br>155              return -EFAULT; 
+<br>156 
+<br>157      error = -EPERM;
+<br>158      spin_lock(&amp;task_capability_lock);
+<br>159 
+<br>160      if (pid &gt; 0 &amp;&amp; pid != current-&gt;pid) {
+<br>161              read_lock(&amp;tasklist_lock);
+<br>162              target = find_task_by_pid(pid);  /* identify target of query */
+<br>163              if (!target) {
+<br>164                      error = -ESRCH;
+<br>165                      goto out;
+<br>166              }
+<br>167      } else {
+<br>168              target = current;
+<br>169      }
+<br>170 
+<br>171 
+<br>172      /* verify restrictions on target's new Inheritable set */
+<br>173      if (!cap_issubset(inheritable,
+<br>174                        cap_combine(target-&gt;cap_inheritable,
+<br>175                                    current-&gt;cap_permitted))) {
+<br>176              goto out;
+<br>177      }
+<br>178 
+<br>179      /* verify restrictions on target's new Permitted set */
+<br>180      if (!cap_issubset(permitted,
+<br>181                        cap_combine(target-&gt;cap_permitted,
+<br>182                                    current-&gt;cap_permitted))) {
+<br>183              goto out;
+<br>184      }
+<br>185 
+<br>186      /* verify the _new_Effective_ is a subset of the _new_Permitted_ */
+<br>187      if (!cap_issubset(effective, permitted)) {
+<br>188              goto out;
+<br>189      }
+<br>190 
+<br>191      /* having verified that the proposed changes are legal,
+<br>192            we now put them into effect. */
+<br>193      error = 0;
+<br>194 
+<br>195      if (pid &lt; 0) {
+<br>196              if (pid == -1)  /* all procs other than current and init */
+<br>197                      cap_set_all(&amp;effective, &amp;inheritable,<br>&amp;permitted);
+<br>198 
+<br>199              else            /* all procs in process group */
+<br>200                      cap_set_pg(-pid, &amp;effective, &amp;inheritable,<br>&amp;permitted);
+<br>201              goto spin_out;
+<br>202      } else {
+<br>203              /* FIXME: do we need to have a write lock here..? */
+<br>204              target-&gt;cap_effective   = effective;
+<br>205              target-&gt;cap_inheritable = inheritable;
+<br>206              target-&gt;cap_permitted   = permitted;
+<br>207      }
+<br>208 
+<br>209 out:
+<br>210      if (target != current) {
+<br>211              read_unlock(&amp;tasklist_lock);
+<br>212      }
+<br>213 spin_out:
+<br>214      spin_unlock(&amp;task_capability_lock);
+<br>215      return error;
+<br>216 }
+<br>217 
+<br></pre>  
+<br><br><br>--------------------<br>it shudn't be that hard but just needs to be done
+
+<p class="small">文章选项：
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=325554&type=post"><img align="absmiddle" alt="打印" src="./进程的capset - China Linux Forum_files/print.gif" border="0"></a>
+         </p></td></tr></tbody></table></td></tr></tbody></table>
+<table width="95%" align="center" cellpadding="4" cellspacing="0" border="0">
+<tbody><tr>
+<td align="left" class="small">
+<img src="./进程的capset - China Linux Forum_files/pages.gif" align="absmiddle"> 此话题的页数：1 | <a href="http://www.linuxforum.net/forum/showflat.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&fpart=2&vc=1">2</a> | (<a href="http://www.linuxforum.net/forum/showflat.php?Cat=&Board=linuxK%20&Number=324985&page=&view=&sb=&o=&fpart=all&vc=1">显示全部</a>) &nbsp;
+</td><td class="small" align="right">
+   
+<a target="_blank" href="http://www.linuxforum.net/forum/printthread.php?Cat=&Board=linuxK%20&main=324985&type=thread"><img src="./进程的capset - China Linux Forum_files/printthread.gif" align="top" border="0"> 打印</a>
+</td></tr></tbody></table>
+<br>
+    
+<table width="95%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody><tr>
+<td class="tableborders">
+<table cellpadding="3" cellspacing="1" width="100%" border="0">
+      <tbody><tr class="darktable"><td align="right"><table border="0"><tbody><tr>
+<td class="navigation" nowrap="">
+<img alt="*" src="./进程的capset - China Linux Forum_files/greyflat.gif" align="absmiddle">平坦模式&nbsp;
+</td>
+<td class="navigation" nowrap="">
+<a href="http://www.linuxforum.net/forum/showthreaded.php?Cat=&Board=linuxK%20&Number=325554&page=&view=&sb=&o=&vc=1"><img align="absmiddle" src="./进程的capset - China Linux Forum_files/threaded.gif" alt="树状模式，一封一封读" border="0">树状模式</a>&nbsp;
+</td></tr></tbody></table>
+   
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+      <table cellpadding="0" cellspacing="0" border="0" width="95%" align="center"><tbody><tr><td align="right">
+         <form method="POST" action="http://www.linuxforum.net/forum/jumper.php">
+         <input type="HIDDEN" name="Cat" value="">
+         <span class="onbody">前往讨论区 </span>
+         <select name="board" class="formboxes">
+       <option value="-CATJUMP-1">*Linux 社区和文化* -----</option><option value="new">&nbsp;&nbsp;&nbsp;社区公告栏</option><option value="uglyduck">&nbsp;&nbsp;&nbsp;社区服务台</option><option value="linuxnews">&nbsp;&nbsp;&nbsp;业界新闻与评论</option><option value="software">&nbsp;&nbsp;&nbsp;Linux软件快递</option><option value="Tworkshop">&nbsp;&nbsp;&nbsp;翻译作坊</option><option value="tcl">&nbsp;&nbsp;&nbsp;Linux图书与评论</option><option value="job">&nbsp;&nbsp;&nbsp;招聘和求职</option><option value="-CATJUMP-2">*Linux 桌面与办公自动化* -----</option><option value="vim">&nbsp;&nbsp;&nbsp;GNU Emacs/XEmacs</option><option value="chinese">&nbsp;&nbsp;&nbsp;Linux 中文环境和中文化</option><option value="office">&nbsp;&nbsp;&nbsp;Linux桌面与办公软件</option><option value="game">&nbsp;&nbsp;&nbsp;Linux 多媒体与娱乐版</option><option value="mozilla">&nbsp;&nbsp;&nbsp;自由之窗Mozilla </option><option value="laptop">&nbsp;&nbsp;&nbsp;笔记本电脑上的Linux</option><option value="-CATJUMP-3">*Linux  入门及网络应用* -----</option><option value="gentoo">&nbsp;&nbsp;&nbsp;Gentoo </option><option value="debian">&nbsp;&nbsp;&nbsp;Debian 一族</option><option value="nm">&nbsp;&nbsp;&nbsp;网络管理技术</option><option value="newbie">&nbsp;&nbsp;&nbsp;Linux  安装与入门</option><option value="web">&nbsp;&nbsp;&nbsp;WEB服务器和FTP服务器</option><option value="dns">&nbsp;&nbsp;&nbsp;域名服务器和邮件服务器</option><option value="proxy">&nbsp;&nbsp;&nbsp;Linux防火墙和代理服务器应用</option><option value="samba">&nbsp;&nbsp;&nbsp;文件及打印服务器</option><option value="training">&nbsp;&nbsp;&nbsp; 技术培训与认证</option><option value="-CATJUMP-4">*Linux 高级应用* -----</option><option value="TI">&nbsp;&nbsp;&nbsp;TI专版</option><option value="linuxK">&nbsp;&nbsp;&nbsp;Linux内核技术</option><option value="embedded">&nbsp;&nbsp;&nbsp;Linux 嵌入技术</option><option value="driver">&nbsp;&nbsp;&nbsp;Linux设备驱动程序 </option><option value="cluster">&nbsp;&nbsp;&nbsp;Linux 集群技术</option><option value="db">&nbsp;&nbsp;&nbsp;LINUX平台数据库</option><option value="security">&nbsp;&nbsp;&nbsp;系统和网络安全</option><option value="cpu">&nbsp;&nbsp;&nbsp;CPU 与 编译器</option><option value="school">&nbsp;&nbsp;&nbsp;系统计算研究所专栏</option><option value="-CATJUMP-5">*Linux 环境下的程序设计* -----</option><option value="kylix">&nbsp;&nbsp;&nbsp;Linux下的GUI软件开发</option><option value="program">&nbsp;&nbsp;&nbsp;C/C++编程版</option><option value="php3">&nbsp;&nbsp;&nbsp;PHP 技 术</option><option value="java">&nbsp;&nbsp;&nbsp;Java&amp;jsp技术</option><option value="vrml">&nbsp;&nbsp;&nbsp;Shell编程技术</option><option value="perl">&nbsp;&nbsp;&nbsp;Perl 编 程</option><option value="python">&nbsp;&nbsp;&nbsp;Python 编 程</option><option value="xml">&nbsp;&nbsp;&nbsp;XML/Web Service 技术</option><option value="-CATJUMP-6">*永远的 UNIX* -----</option><option value="unix">&nbsp;&nbsp;&nbsp;永远的Unix</option><option value="bsd">&nbsp;&nbsp;&nbsp;FreeBSD世界
+         </option></select>
+         <input type="submit" name="Jump" value="出发" class="buttons">
+         </form>
+
+       </td></tr></tbody></table></p><p> 
+<table width="95%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tbody><tr>
+<td class="tableborders">
+<table cellpadding="3" cellspacing="1" width="100%" border="0">
+      
+        <tbody><tr class="darktable">
+        <td>
+          <table border="0" width="100%" cellpadding="0" cellspacing="0">
+          <tbody><tr>
+            <td align="left">
+
+              <a href="mailto:david99deng@yahoo.con">Contact Us</a>
+      
+            </td><td align="right">
+              <a href="http://www.linuxforum.net/">LINUXFORUM.NET</a>
+          </td></tr></tbody></table>
+      
+</td></tr></tbody></table>
+</td></tr></tbody></table>
+      
+</p>
+        
+        
+      
+</body></html>

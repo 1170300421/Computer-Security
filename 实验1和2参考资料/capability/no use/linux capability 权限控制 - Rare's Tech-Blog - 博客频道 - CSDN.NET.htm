@@ -1,0 +1,1133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0051)http://blog.csdn.net/dux003/article/details/5940458 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET</title>
+
+<meta name="description" content="如何使用capability控制linux权限">
+<script type="text/javascript" async="" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ga.js"></script><script src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/jquery.js" type="text/javascript"></script>
+<script src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/plugins.js" type="text/javascript"></script>
+<script src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/common.js" type="text/javascript"></script>
+<link rel="Stylesheet" type="text/css" href="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/style.css">
+<link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/dux003/rss/list">
+<link rel="shortcut icon" href="http://blog.csdn.net/favicon.ico">
+<link type="text/css" rel="stylesheet" href="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/default.css">
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/shCore.js"></script>
+</head><body>
+<script src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/pub_topnav_2011.js" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/navtop_2011.css">
+<div class="nav_top_2011">
+<p><span style="color:red;">您还未登录！</span>|<a href="http://passport.csdn.net/UserLogin.aspx">登录</a>|<a href="http://passport.csdn.net/CSDNUserRegister.aspx">注册</a>|<a href="http://passport.csdn.net/help/faq">帮助</a></p><ul>
+<li><a href="http://www.csdn.net/" target="_blank">CSDN首页</a></li>
+<li><a href="http://news.csdn.net/" target="_blank">资讯</a></li>
+<li><a href="http://bbs.csdn.net/" target="_blank">论坛</a></li>
+<li><a href="http://blog.csdn.net/" target="_blank">博客</a></li>
+<li><a href="http://download.csdn.net/" target="_blank">下载</a></li>
+<li><a href="http://so.csdn.net/" target="_blank">搜索</a></li>
+<li class="more"><h2 id="topnav_btnmore"><a href="javascript:void(0);">更多</a></h2>
+<ul id="topnav_hidlist" style="display: none; ">
+<li><a href="http://cto.csdn.net/" target="_blank">CTO俱乐部</a></li>
+<li><a href="http://student.csdn.net/" target="_blank">学生大本营</a></li>
+<li><a href="http://edu.csdn.net/" target="_blank">培训充电</a></li>
+<li><a href="http://mobile.csdn.net/" target="_blank">移动开发</a></li>
+<li><a href="http://sd.csdn.net/" target="_blank">软件研发</a></li>
+<li><a href="http://cloud.csdn.net/" target="_blank">云计算</a></li>
+<li><a href="http://www.programmer.com.cn/" target="_blank">程序员</a></li>
+<li><a href="http://tup.csdn.net/" target="_blank">TUP</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+<div id="container">
+<div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h1>
+                <a href="http://blog.csdn.net/dux003">Rare's Tech-Blog</a></h1>
+            <h2>What Ever!</h2>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+            <!--<li id="btnHome"><a href="/dux003"><span><img src="http://static.blog.csdn.net/images/ico_home.gif">我的首页</span></a></li>-->
+            <li id="btnContents"><a href="http://blog.csdn.net/dux003?viewmode=contents"><span><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+            <li id="btnView"><a href="http://blog.csdn.net/dux003?viewmode=list"><span><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+            <li id="btnRss"><a href="http://blog.csdn.net/dux003/rss/list"><span><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>
+</ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "dux003";
+    var blog_address = "http://blog.csdn.net/dux003";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = $.cookie("UserName");
+</script>
+        
+<div id="body">
+<div id="main">
+<div class="main">
+<div class="notice"> 
+<a href="http://blog.csdn.net/blogdevteam/article/details/7035499" target="_blank"><font color="red"><b>“我的2011”博客频道跨年征文活动火爆上线！</b></font></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://topic.csdn.net/u/20111128/09/901bca2e-3ace-4889-9b33-09cc5d2dcf85.html" target="_blank"><font color="red">《深入理解计算机系统》有奖问答大赛</font></a>
+
+<br>
+<a href="http://blog.csdn.net/blogdevteam/article/details/7027714" target="_blank"><font color="blue">11月热门下载资源TOP100强力推荐！</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="http://ad.doubleclick.net/click;h=v2%7C3E84%7C0%7C0%7C%2a%7Cb;247908458;0-0;0;73605427;31-1%7C1;44759227%7C44777015%7C1;;%3fhttp://www.ithaowai.com/cloud?utm_source=CSDN&utm_medium=CSDN_HomePage_news_picture_g01&utm_campaign=CN2011Q4BIZ_Xeon_IT_Center_Promotion" target="_blank"><font color="red">点击了解英特尔云计算 </font></a>
+</div><script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ad.js"></script>
+
+<div id="article_details" class="details">
+    <div class="article_title">
+    <span class="ico ico_type_Repost"></span>
+    <h3>
+        <span class="link_title"><a href="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET.htm" title="linux capability 权限控制">linux capability 权限控制</a></span>
+        
+    </h3>
+</div>
+
+        
+    <div class="article_manage">
+        <span class="link_categories">
+        分类：
+            <a href="http://blog.csdn.net/dux003/article/category/609344">linux开发</a> 
+        </span>
+    <span class="link_postdate">2010-10-14 12:15</span>
+    <span class="link_view" title="阅读次数">167人阅读</span>
+    <span class="link_comments" title="评论次数"><a href="http://blog.csdn.net/dux003/article/details/5940458#comments">评论</a>(0)</span>
+    <span class="link_collect"><a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;linux capability 权限控制&#39;,&#39;5940458&#39;);return false;" title="收藏">收藏</a></span>
+    <span class="link_report"><a href="http://blog.csdn.net/dux003/article/details/5940458#report" onclick="javascript:report(5940458,2);return false;" title="举报">举报</a></span>
+    
+</div>
+
+    
+<div id="article_content" class="article_content">
+    <p><a href="http://www.ibm.com/developerworks/library/l-posixcap.html">http://www.ibm.com/developerworks/library/l-posixcap.html</a></p>
+<p>&nbsp;</p>
+<p>
+</p><p>Some programs need to perform privileged operations on behalf of an unprivileged user. For instance, the&nbsp;<code>passwd</code>&nbsp;program writes to the very sensitive&nbsp;<code>/etc/passwd</code>&nbsp;and&nbsp;<code>/etc/shadow</code>&nbsp;files. On UNIX® systems, you achieve this control by setting the setuid bit on the binary file. This bit tells the system that while the program is running -- regardless of who executed it -- it should be treated as belonging to the user who owns the file, typically the root user. Because the&nbsp;<code>passwd</code>&nbsp;program cannot be written to by the user, and is very constrained in what it allows the user to do, this setup is usually safe. More complicated programs make use of saved uids to switch back and forth between root and a non-root user.</p>
+<p>POSIX capabilities break the root privileges into smaller pieces, and allow tasks to run with only a subset of the root user's privileges. File capabilities allow such privileges to be attached to a program, greatly simplifying the use of capabilities. POSIX capabilities have been available in Linux for years. Using capabilities has several advantages over being the root user:</p>
+<div class="ibm-container ibm-alt-header dw-container-sidebar">
+<h2>exec(3)</h2>
+<div class="ibm-container-body"><em>From the Linux man pages:</em>&nbsp;The&nbsp;<code>exec()</code>&nbsp;family of functions replaces the current process image with a new process image. Find more details in&nbsp;<a href="http://www.ibm.com/developerworks/library/l-posixcap.html#resources">Resources</a>below.</div>
+</div>
+<ul>
+<li>You can remove the capabilities from the effective set but retain them in the permitted set to prevent inadvertent abuse of the capabilities.</li>
+<li>You can remove all unneeded capabilities from the permitted set, such that they cannot be regained. Admittedly, most of the capabilities are dangerous and can be abused, but reducing the capabilities available to an attacker might well protect your system from harm.</li>
+<li>After an&nbsp;<code>exec(3)</code>&nbsp;of a regular executable file, all capabilities are lost. (The details are more complicated and are soon expected to change, as will be explained later in this article.)</li>
+</ul>
+<p>This article shows you how programs can make use of POSIX capabilities, how to investigate which capabilities are needed by a program, and how to assign those capabilities to the program.</p>
+<p><a name="N1007D"><span class="atitle">Process capabilities</span></a></p>
+<p>For years, POSIX capabilities could be assigned to processes, but not to files. A program therefore had to be started by root (or be owned by root and have its setuid bit set) before it could drop some of its root privileges while keeping others. Additionally, the order in which capabilities had to be dropped was very specific:</p>
+<ol>
+<li>The program would tell the system that it wanted to keep its capabilities while changing its effective userid. That is done using&nbsp;<code>prctl</code>.</li>
+<li>The program would change its userid to something other than root.</li>
+<li>The program would construct sets of required capabilities and make those its active sets.</li>
+</ol>
+<p>A process carries three capability sets:&nbsp;<em>permitted</em>&nbsp;(P),&nbsp;<em>inheritable</em>&nbsp;(I), and&nbsp;<em>effective</em>&nbsp;(E). When a process forks, the child's capability sets are copied from the parent. When a process executes a new program, its new capability sets are calculated according to a formula I will discuss in a moment.</p>
+<p>The&nbsp;<code>effective set</code>&nbsp;consists of those capabilities that the process can currently use. The effective set must always be a subset of the&nbsp;<em>permitted set</em>. The process can change the contents of the effective set at any time as long as the effective set does not exceed the permitted set. The&nbsp;<em>inheritable set</em>&nbsp;is used only for calculating the new capability sets after&nbsp;<code>exec()</code>.</p>
+<p>Listing 1 shows the three formulas that dictate a process's new capability sets after file execution according to the POSIX draft (see&nbsp;<a href="http://www.ibm.com/developerworks/library/l-posixcap.html#resources">Resources</a>&nbsp;for a link to IEEE Std 1003.1-2001).</p>
+<br><a name="listing1"><strong>Listing 1. Formulas for new capability sets after exec()</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">pI' = pI
+pP' = fP | (fI &amp; pI)
+pE' = pP' &amp; fE
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>A value ending with a&nbsp;<code>'</code>&nbsp;indicates the newly calculated value. A value beginning with a&nbsp;<code>p</code>&nbsp;indicates a process capability. A value beginning with an&nbsp;<code>f</code>&nbsp;indicates a file capability.</p>
+<p>The inheritable set is taken unchanged from the parent process, so once a process drops a capability from its inheritable set, it should never be able to regain it (but read the discussion of&nbsp;<a href="http://www.ibm.com/developerworks/library/l-posixcap.html#secure_noroot"><code>SECURE_NOROOT</code></a>&nbsp;below). The new permitted set is taken as a union of the file's permitted set and the result of intersecting the file's and process's inheritable sets. The process's effective set is the conjunction of the new permitted and file effective sets. Technically, in Linux&nbsp;<code>fE</code>&nbsp;is not a set but a boolean. If true, the&nbsp;<code>pE'</code>&nbsp;is set to<code>pP'</code>. If false, then&nbsp;<code>pE'</code>&nbsp;starts empty.</p>
+<p>For a process to keep any capabilities after executing a file, the capabilities must be in the file's permitted or inheritable set. Because Linux has not implemented file capabilities for most of its life, this posed an unworkable restriction. To get around it, a "secure mode" was implemented. It consists of two bits:</p>
+<ul>
+<li>When&nbsp;<code>SECURE_NOROOT</code>&nbsp;is not set, then when a process executes a file, the new capability sets may be calculated as though the file had some file capability sets set fully populated. In particular:
+<ul>
+<li>The file inheritable and permitted sets will be full on if the process's real or effective uid is 0 (root) or the file is setuid root.</li>
+<li>The file effective set will be full on if the process's effective uid is root or the file is setuid root.</li>
+</ul>
+</li>
+<li>When&nbsp;<code>SECURE_NO_SETUID_FIXUP</code>&nbsp;is not set, then when a process switches its real or effective uids to or from 0, capability sets are further shifted around:
+<ul>
+<li>If a process switches its effective uid from 0 to non-0, then its effective capability set is cleared.</li>
+<li>If a process switches its real, effective, or saved uids from at least one being 0 to all being non-zero, then both the permitted and effective capabilities are cleared.</li>
+<li>If a process sets its effective uid from non-zero to 0, then the effective capabilities are set equal to the permitted capabilities.</li>
+</ul>
+</li>
+</ul>
+<p>This set of rules allows a process to have capabilities either by virtue of being root or by running a setuid root file. However, the<code>SECURE_NO_SETUID_FIXUP</code>&nbsp;rules prevent a process from keeping any capabilities after becoming non-root. But with<code>SECURE_NOROOT</code>&nbsp;unset, a root process having dropped some capabilities can simply execute another program to regain its capabilities. So in order for capabilities to be useful, a root process must be able to irrevocably switch its uid to non-zero while keeping a few capabilities.</p>
+<p>Using&nbsp;<code>prctl(3)</code>, a process can request keeping its capabilities across its next&nbsp;<code>setuid(2)</code>&nbsp;call. This means that a process can:</p>
+<ul>
+<li>Start as root, either by authenticating as root or executing a setuid root binary.</li>
+<li>Call&nbsp;<code>prctl(2)</code>&nbsp;to set PR_SET_KEEPCAPS, which asks the system to let it keep its capabilities across&nbsp;<code>setuid(2)</code>.</li>
+<li>Call&nbsp;<code>setuid(2)</code>&nbsp;or a related system call to change its userid.</li>
+<li>Call&nbsp;<code>cap_set_proc(3)</code>&nbsp;to drop capabilities.</li>
+</ul>
+<p>Now the process can continue running with a subset of root privileges. If it is compromised, the attacker can use only the capabilities present in the effective set, or, with a call to&nbsp;<code>cap_set_proc(3)</code>, in its permitted set. And if the attacker should coerce the program into executing another file, all capabilities will be dropped and the file will be executed as an unprivileged user.</p>
+<p>The function&nbsp;<code>exec_with_caps()</code>&nbsp;in Listing 2 shows a function that can be used by a setuid root program to continue execution at a specified function as a specified userid and with a set of capabilities specified as a string.</p>
+<br><a name="listing2"><strong>Listing 2. Executing code with reduced capabilities</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">#include &lt;sys/prctl.h&gt;
+#include &lt;sys/capability.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;stdio.h&gt;
+
+int printmycaps(void *d)
+{
+	cap_t cap = cap_get_proc();
+	printf("Running with uid %d/n", getuid());
+	printf("Running with capabilities: %s/n", cap_to_text(cap, NULL));
+	cap_free(cap);
+	return 0;
+}
+
+int exec_with_caps(int newuid, char *capstr, int (*f)(void *data), void *data)
+{
+	int ret;
+	cap_t newcaps;
+
+	ret = prctl(PR_SET_KEEPCAPS, 1);
+	if (ret) {
+		perror("prctl");
+		return -1;
+	}
+	ret = setresuid(newuid, newuid, newuid);
+	if (ret) {
+		perror("setresuid");
+		return -1;
+	}
+	newcaps = cap_from_text(capstr);
+	ret = cap_set_proc(newcaps);
+	if (ret) {
+		perror("cap_set_proc");
+		return -1;
+	}
+	cap_free(newcaps);
+	f(data);
+}
+
+int main(int argc, char *argv[])
+{
+	if (argc &lt; 2) {
+		printf("Usage: %s &lt;capability_list&gt;/n",
+			argv[0]);
+		return 1;
+	}
+	return exec_with_caps(1000, argv[1], printmycaps, NULL);
+}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>To test this, paste the code into a file named execwithcaps.c, and compile and run it as root:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">gcc -o execwithcaps execwithcaps.c -lcap
+./execwithcaps cap_sys_admin=eip
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p class="ibm-ind-link ibm-back-to-top"><a class="ibm-anchor-up-link" href="http://www.ibm.com/developerworks/library/l-posixcap.html#ibm-pcon">Back to top</a></p>
+<p><a name="N10140"><span class="atitle">File capabilities</span></a></p>
+<p>File capabilities are currently implemented in the&nbsp;<code>-mm</code>&nbsp;kernel tree, and are expected in the mainline kernel by 2.6.24. With file capabilities, you can assign capabilities to a program. For example, the ping program requires&nbsp;<code>CAP_NET_RAW</code>&nbsp;in order to function. For this reason, it has historically been a setuid root program. With file capabilities, you can reduce the amount of privilege invested in the program by doing:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">chmod u-s /bin/ping
+setfcaps -c cap_net_admin=p -e /bin/ping
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>This requires the newest version of the libcap libraries and related programs, which are available at GoogleCode (see<a href="http://www.ibm.com/developerworks/library/l-posixcap.html#resources">Resources</a>&nbsp;for a link). This first removes the setuid bit from the binary, then assigns it the&nbsp;<code>CAP_NET_RAW</code>&nbsp;privilege it needs. Now any user can run ping with the&nbsp;<code>CAP_NET_RAW</code>&nbsp;privilege, but if the ping program is compromised, the attacker can exercise no other privileges.</p>
+<p>The question arises how you would determine the minimal capability set required for an unprivileged user to run any particular program. If there were only the one program, a worthwhile approach would be to scour the application, its dynamically linked libraries, and the kernel sources. This action, though, would need to be repeated for all setuid root programs. Of course, this approach may not be a bad idea before allowing an application to be run as root by an unprivileged user, but it is unfortunately an unrealistic prospect.</p>
+<p>If a program were verbose and well behaved, it might be possible to simply run the program without privilege and have it complain about which privileges it lacks. Let's try that with ping.</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">chmod u-s /bin/ping
+setfcaps -r /bin/ping
+su - myuser
+ping google.com
+	ping: icmp open socket: Operation not permitted
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>This technique could be helpful depending on our understanding of the implementation of&nbsp;<code>icmp</code>, but it certainly isn't spelled out for us.</p>
+<p>Next, we can try to run the program (again without the suid bit) under&nbsp;<code>strace</code>.&nbsp;<code>strace</code>&nbsp;reports all system calls used by the program along with their return values, so we can look through the&nbsp;<code>strace</code>&nbsp;output for return values indicating lack of permission.</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">strace -oping.out ping google.com
+grep EPERM ping.out
+   socket(PF_INET, SOCK_RAW, IPPROTO_ICMP) = -1 EPERM (Operation not permitted)
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>The permission we lack is to create a socket of type&nbsp;<code>SOCK_RAW</code>. Reading through /usr/include/linux/capability.h, you'll see that:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">/* Allow use of RAW sockets */
+/* Allow use of PACKET sockets */
+
+#define CAP_NET_RAW          13
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>In this case, it is clear that&nbsp;<code>CAP_NET_RAW</code>&nbsp;is the capability needed in order to allow unprivileged users to use ping. However, it does seem likely that some programs will attempt and be denied with&nbsp;<code>-EPERM</code>&nbsp;many things that they don't actually need to do. It's also likely that the capability it will need won't be quite as simple to guess.</p>
+<p>Another more practical approach may be to insert a probe into the kernel at the place where capabilities are checked. The probe will print debugging information about denied capabilities.</p>
+<p><code>kprobes</code>&nbsp;allow developers to write small kernel modules to run code at the start of a function (<code>jprobe</code>), the end of a function (<code>kretprobe</code>), or at any address (<code>kprobe</code>). Enabling this ability allows you to obtain information about which capabilities the kernel requires to run certain programs. (This remainder of this section assumes that you have a kernel with both&nbsp;<code>kprobes</code>&nbsp;and file capabilities enabled.)</p>
+<p>Listing 3 is a kernel module that inserts a&nbsp;<code>jprobe</code>&nbsp;to instrument the start of the&nbsp;<code>cap_capable()</code>&nbsp;kernel function.</p>
+<br><a name="listing3"><strong>Listing 3. capable_probe.c</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">#include &lt;linux/kernel.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kprobes.h&gt;
+#include &lt;linux/sched.h&gt;
+
+static const char *probed_func = "cap_capable";
+
+int cr_capable (struct task_struct *tsk, int cap)
+{
+	printk(KERN_NOTICE "%s: asking for capability %d for %s/n",
+		__FUNCTION__, cap, tsk-&gt;comm);
+	jprobe_return();
+	return 0;
+}
+
+static struct jprobe jp = {
+	.entry = JPROBE_ENTRY(cr_capable)
+};
+
+static int __init kprobe_init(void)
+{
+	int ret;
+	jp.kp.symbol_name = (char *)probed_func;
+
+	if ((ret = register_jprobe(&amp;jp)) &lt; 0) {
+		printk("%s: register_jprobe failed, returned %d/n",
+			__FUNCTION__, ret);
+		return -1;
+	}
+	return 0;
+}
+
+static void __exit kprobe_exit(void)
+{
+	unregister_jprobe(&amp;jp);
+	printk("capable kprobes unregistered/n");
+}
+
+module_init(kprobe_init);
+module_exit(kprobe_exit);
+
+MODULE_LICENSE("GPL");
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>When this kernel module is inserted, any calls to&nbsp;<code>cap_capable()</code>&nbsp;are replaced by a call to the&nbsp;<code>cr_capable()</code>&nbsp;function. This function prints the name of the program that requires capabilities and the capability being checked. It then continues executing the actual&nbsp;<code>cap_capable()</code>&nbsp;call through the call to&nbsp;<code>jprobe_return()</code>.</p>
+<p>Compile the module using the makefile in Listing 4:</p>
+<br><a name="listing4"><strong>Listing 4. Makefile for capable_probe</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">obj-m := capable_probe.o
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD := $(shell pwd)
+default:
+	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+clean:
+	rm -f *.mod.c *.ko *.o
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>Then execute as root:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	/sbin/insmod capable_probe.ko
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>Now in one window, watch the system logs using:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	tail -f /var/log/messages
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>In another window, as non-root, execute the ping binary without the setuid bit set:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	/bin/ping google.com
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>The system logs now contain multiple entries for ping. These are the capabilities that the program attempted to use. Not that all of these are needed. We can cross-reference /usr/include/linux/capability.h to convert the integer to a capability name and see that ping requested 21, 13, and 7.</p>
+<ul>
+<li>21 is&nbsp;<code>CAP_SYS_ADMIN</code>. Avoid granting this catch-all to&nbsp;<em>any</em>&nbsp;program.</li>
+<li>7 is&nbsp;<code>CAP_SETUID</code>. Ping should not require this.</li>
+<li>13 is&nbsp;<code>CAP_NET_RAW</code>. Ping should require this.</li>
+</ul>
+<p>Let's grant it that capability and see whether it succeeds.</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	setfcaps -c cap_net_raw=p -e /bin/ping
+	(become non root user)
+	ping google.com
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>As we expected, ping succeeded.</p>
+<p><a name="N1020C"><span class="smalltitle">Complications</span></a></p>
+<p>Existing software is often written to be as secure as possible with few changes across many UNIX variants. On top of this, distributions sometimes apply their own patches, which can make it impossible to replace the root setuid bit with file capabilities in some situations.</p>
+<p>An example of such a program on Fedora is&nbsp;<code>at</code>. The&nbsp;<code>at</code>&nbsp;program allows users to schedule jobs for execution at a later time. For instance, a cheap way to get a pop-up reminder to dial into a meeting at 2 p.m. would be:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">echo "xterm -display :0.0 -e /
+/"echo Call customer 555-5555; echo ^V^G; sleep 10m/" " | /
+at 14:00
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>The&nbsp;<code>at</code>&nbsp;program is available for all UNIX systems and can be used by any user. Users share a common job spool under /var/spool. Security is therefore of the utmost importance, but it also is coded to work across many systems and so does not make use of system-specific security mechanisms like capabilities. Nevertheless, it attempts to reduce privilege through the use of&nbsp;<code>setuid(2)</code>. On top of this, the Fedora package adds patches of use to PAM modules.</p>
+<p>The quickest way to check whether&nbsp;<code>at</code>&nbsp;could be made to run by a non-root user without being setuid root is to remove the setuid bit and then grant it all capabilities.</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">chmod u-s /usr/bin/at
+setfcaps -c all=p -e /usr/bin/at
+su - (non root user)
+/usr/bin/at
+      </pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>By specifying&nbsp;<code>-c all=p</code>, we asked for a fully populated permitted, or forced, capability set on&nbsp;<code>/usr/bin/at</code>. So any user running this program will do so with all of root's privileges. But on a Fedora 7, running&nbsp;<code>/usr/bin/at</code>&nbsp;will now result in:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">You do not have permission to run at.
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>The reason is evident if you download and study the source code, but the details are not helpful for this exercise. While certainly it is possible to change the source code to make&nbsp;<code>at</code>&nbsp;usable with file capabilities, the setuid bit cannot be substituted by simply assigning file capabilities on Fedora.</p>
+<p><a name="N1024D"><span class="smalltitle">File capability details</span></a></p>
+<p>So far, we have been using a very specific format for the capabilities we assign to executables. For ping we used:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	setfcaps -c cap_net_raw=p -e /bin/ping
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p><code>setfcaps</code>&nbsp;is a program that sets the target file's capabilities by setting an extended attribute named&nbsp;<em>security.capability</em>. The&nbsp;<code>-c</code>flag is followed by a list of capabilities in a somewhat free-flowing format:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	capability_list=capability_set(s)
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p><code>capability_set</code>&nbsp;can contain&nbsp;<code>i</code>&nbsp;and&nbsp;<code>p</code>, and&nbsp;<code>capability_list</code>&nbsp;can contain any valid capabilities. The capability types represent inheritable and permitted sets, respectively, and separate capability lists can be specified for each set. The&nbsp;<code>-e</code>&nbsp;or&nbsp;<code>-d</code>&nbsp;flag dictates whether the capabilities in the permitted set are in the program's effective set on startup or not, respectively. If the capabilities are not in the program's effective set, then the program must be capability aware and must activate the bits in its effective set itself in order to make use of the capabilities.</p>
+<p>Until now, we have asserted the desired capabilities in the permitted set but not the inheritable set. In fact, there are subtler and more powerful things we could do with capabilities. Recall Listing 1, repeated here:</p>
+<br><a name="listing1"><strong>Repeat of Listing 1. Formulas for new capability sets after exec()</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">pI' = pI
+pP' = fP | (fI &amp; pI)
+pE' = pP' &amp; fE
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>The file inheritable set specifies which of the process's inheritable capabilities can be in the process's new permitted set. If only<code>cap_dac_override</code>&nbsp;is in the file inheritable set, then only that capability can be inherited into the process's new permitted set.</p>
+<p>The file permitted set, also known as the "forced" set, is the set that is forced on in the new permitted set, regardless of whether it was in the task's inheritable set or not.</p>
+<p>Finally, the file effective bit dictates whether the bits in the task's new permitted set should be in its new effective set; that is, whether the program should be able to actually exercise the capabilities without explicitly asking to using&nbsp;<code>cap_set_proc(3)</code>.</p>
+<p><a name="secure_noroot"></a>Recall that the system makes a few changes for the root user when&nbsp;<code>SECURE_NOROOT</code>&nbsp;is not set. In particular, the system pretends that on the file being executed, the inheritable (<code>fI</code>), permitted (<code>fP</code>), and effective (<code>fE</code>) sets are fully populated. So the fI set on a binary is only useful for a non-root process with non-empty capability sets. In particular, for a program that has kept capabilities while becoming a non-root user, the above formulas will apply without such finagling. It is likely that&nbsp;<code>SECURE_NOROOT</code>will become a per-process setting so that process trees can choose whether to use true capabilities or use a root-user-is-privileged model. But at the time of this writing, this is a system-wide setting that, for any practical system, is set such that the root user is always all-powerful by default.</p>
+<p>To illustrate the interactions of these sets, let's assume that the administrator has used the following command to set file capabilities on /bin/some_program:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">	setfcaps -c cap_sys_admin=i,cap_dac_read_search=p -e /
+	/bin/some_program
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>If a non-root user runs this program while running with full capabilities, its inheritable set&nbsp;<code>pI</code>&nbsp;is first masked against&nbsp;<code>fI</code>&nbsp;so it is reduced to just&nbsp;<code>cap_sys_admin</code>. Next,&nbsp;<code>fP</code>&nbsp;is unioned with that set, so the interim result is<code>cap_sys_admin+cap_dac_read_search</code>. This set becomes the task's new permitted set.</p>
+<p>Finally, since the effective bit is on, the task's new effective set will contain both the bits that are in its new permitted set.</p>
+<p>In contrast, if a completely unprivileged user runs this same program, his empty inheritable set is masked against&nbsp;<code>fI</code>, resulting in the empty set. This is unioned with&nbsp;<code>fP</code>, resulting in&nbsp;<code>cap_dac_read_search</code>. This becomes the task's new permitted set. Finally, since the effective bit is on, the new permitted set is copied to the new effective set, resulting again in<code>cap_dac_read_search</code>.</p>
+<p>In either case, if the file effective bit were not set, then the task would need to use&nbsp;<code>cap_set_proc(3)</code>&nbsp;to copy any bits it wanted to use from its permitted set to its effective set.</p>
+<p class="ibm-ind-link ibm-back-to-top"><a class="ibm-anchor-up-link" href="http://www.ibm.com/developerworks/library/l-posixcap.html#ibm-pcon">Back to top</a></p>
+<p><a name="N102E9"><span class="atitle">Summary and exercises</span></a></p>
+<p>To summarize:</p>
+<ul>
+<li>The file effective bit dictates whether the program can exercise its permitted capabilities by default.</li>
+<li>The file permitted set is a set that will always be on in the resulting process.</li>
+<li>The file inheritable set is the set that can be inherited from the parent process's inheritable set into its new permitted set.</li>
+</ul>
+<p>To illustrate what we've covered, let's experiment with the programs in Listings 5 and 6. In Listing 5,&nbsp;<code>print_caps</code>&nbsp;simply prints out the capability sets with which it is running. In Listing 6,&nbsp;<code>exec_as_nonroot_priv</code>&nbsp;is intended to be executed as the root user. It asks to keep its capabilities across the next&nbsp;<code>setuid(2)</code>, becomes the non-root user specified as the first command-line argument, sets its capability sets to those indicated in the second command-line argument, and then executes the program specified as the third command-line argument.</p>
+<br><a name="listing5"><strong>Listing 5. print_caps.c</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/capability.h&gt;
+
+int main(int argc, char *argv[])
+{
+	cap_t cap = cap_get_proc();
+
+	if (!cap) {
+		perror("cap_get_proc");
+		exit(1);
+	}
+	printf("%s: running with caps %s/n", argv[0], cap_to_text(cap, NULL));
+	cap_free(cap);
+	return 0;
+}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br><br><a name="listing6"><strong>Listing 6. exec_as_nonroot_priv.c</strong></a><br>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">#include &lt;sys/prctl.h&gt;
+#include &lt;sys/capability.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+
+void printmycaps(void)
+{
+	cap_t cap = cap_get_proc();
+
+	if (!cap) {
+		perror("cap_get_proc");
+		return;
+	}
+	printf("%s/n",  cap_to_text(cap, NULL));
+	cap_free(cap);
+}
+
+int main(int argc, char *argv[])
+{
+	cap_t cur;
+	int ret;
+	int newuid;
+
+	if (argc&lt;4) {
+		printf("Usage: %s &lt;uid&gt; &lt;capset&gt;"
+			"&lt;program_to_run&gt;/n", argv[0]);
+		exit(1);
+	}
+	ret = prctl(PR_SET_KEEPCAPS, 1);
+	if (ret) {
+		perror("prctl");
+		return 1;
+	}
+	newuid = atoi(argv[1]);
+	printf("Capabilities before setuid: ");
+	printmycaps();
+	ret = setresuid(newuid, newuid, newuid);
+	if (ret) {
+		perror("setresuid");
+		return 1;
+	}
+	printf("Capabilities after setuid, before capset: ");
+	printmycaps();
+	cur = cap_from_text(argv[2]);
+	ret = cap_set_proc(cur);
+	if (ret) {
+		perror("cap_set_proc");
+		return 1;
+	}
+	printf("Capabilities after capset: ");
+	cap_free(cur);
+	printmycaps();
+	ret = execl(argv[3], argv[3], NULL);
+	if (ret)
+		perror("exec");
+}
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>Let's use these programs to verify the effect of the inheritable and permitted file capabilities. We will do this by placing file capabilities on&nbsp;<code>print_caps</code>, then executing&nbsp;<code>print_caps</code>&nbsp;with initial process capability sets carefully set up using<code>exec_as_nonroot_priv</code>. First, set some capabilities just in&nbsp;<code>print_caps</code>'s permitted set:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">gcc -o print_caps print_caps.c -lcap
+setfcaps -c cap_dac_override=p -d print_caps
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>Now execute&nbsp;<code>print_caps</code>&nbsp;as a non-root user:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">su - (username)
+./print_caps
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>Next, as root, execute&nbsp;<code>print_caps</code>&nbsp;through&nbsp;<code>exec_as_nonroot_priv</code>:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">./exec_as_nonroot_priv 1000 cap_dac_override=eip ./print_caps
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>In the either case,&nbsp;<code>print_caps</code>&nbsp;ran with&nbsp;<code>cap_dac_override=p</code>. Note that the effective set is empty. That means that<code>print_caps</code>&nbsp;would have to use&nbsp;<code>cap_set_proc(3)</code>&nbsp;before it would actually be able to make use of the&nbsp;<code>cap_dac_override</code>capability. To change that, use the&nbsp;<code>-e</code>&nbsp;flag to&nbsp;<code>setflags</code>&nbsp;to set the effective bit.</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">setfcaps -c cap_dac_override=p -e print_caps
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p><code>print_caps</code>&nbsp;has an empty&nbsp;<code>fI</code>&nbsp;so none of the process'&nbsp;<code>pI</code>&nbsp;is pulled into&nbsp;<code>pP'</code>. The single bit in&nbsp;<code>pP'</code>&nbsp;came from the file forced set,<code>fP</code>.</p>
+<p>A more interesting test, though, is to test the effect of the inheritable file capability and run&nbsp;<code>print_caps</code>&nbsp;again both as a non-root user and through the&nbsp;<code>exec_as_nonroot_priv</code>&nbsp;program:</p>
+<table style="width: 80%;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="code-outline">
+<pre class="displaycode">setfcaps -c cap_dac_override=i -e print_caps
+su - (nonroot_user)
+	./print_caps
+	exit
+./exec_as_nonroot_priv 1000 cap_dac_override=eip ./print_caps
+</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<br>
+<p>This time, the non-root user has an empty capability set, while the process started as a root user has&nbsp;<code>cap_dac_override</code>&nbsp;in its permitted and effective sets.</p>
+<p>Run&nbsp;<code>print_caps</code>&nbsp;one more time, this time simply as the root user without going through&nbsp;<code>exec_as_nonroot_priv</code>. Note that the capability set is full. The root user always receives a full capability set after executing a program, regardless of file capabilities. The&nbsp;<code>exec_as_nonroot_priv</code>&nbsp;does not run&nbsp;<code>print_caps</code>&nbsp;as the root user. Rather it uses the privileges of the root user to set up a non-root process with some inheritable capabilities.</p>
+<p class="ibm-ind-link ibm-back-to-top"><a class="ibm-anchor-up-link" href="http://www.ibm.com/developerworks/library/l-posixcap.html#ibm-pcon">Back to top</a></p>
+<p><a name="N103A3"><span class="atitle">Conclusion</span></a></p>
+<p>Now you know how to determine which capabilities are needed by a program, how to set the capabilities, and how to do some other interesting things with file capabilities.</p>
+<p>Always handle capabilities with care; they are still dangerous pieces of root privilege. On the other hand, experience with the sendmail capabilities bug (see&nbsp;<a href="http://www.ibm.com/developerworks/library/l-posixcap.html#resources">Resources</a>&nbsp;for a link) shows that providing too&nbsp;<em>few</em>&nbsp;capabilities can be dangerous as well. Nevertheless, file capabilities applied judiciously to system binaries in place of making them setuid root can help protect your systems.</p>
+<br>
+<p><a name="resources"><span class="atitle">Resources</span></a></p>
+<p><strong>Learn</strong></p>
+<ul>
+<li>The&nbsp;<em>Secure programmer</em>&nbsp;series on developerWorks includes several articles that comment on&nbsp;<code>setuid()</code>:
+<ul>
+<li>"<a href="http://www.ibm.com/developerworks/linux/library/l-sp3.html">Keep an eye on inputs</a>" (developerWorks, December 2003) discusses ways data gets into your program and how to deal with them</li>
+<li>"<a href="http://www.ibm.com/developerworks/linux/library/l-sppriv.html">Minimizing privileges</a>" (May 2004) discusses ways to provide the minimal privileges without starving system users</li>
+<li>"<a href="http://www.ibm.com/developerworks/linux/library/l-calls.html">Call components safely</a>" (December 2004) explains how to prevent attackers from exploiting component calls</li>
+</ul>
+</li>
+<li>"<a href="http://www.ibm.com/developerworks/aix/library/au-speakingunix8/">Speaking UNIX, Part 8</a>" (developerWorks, April 2007) shows how to control processes and use a number of commands to peer into your system.&nbsp;<br></li>
+<li>"<a href="http://www.ibm.com/developerworks/linux/library/l-linux-kernel/">Anatomy of the Linux kernel</a>" (developerWorks, June 2007) is a good place to start to understand how Linux bits fit together.&nbsp;<br></li>
+<li>Read about the&nbsp;<a href="http://archives.neohapsis.com/archives/sendmail/2000-q2/0002.html">sendmail capabilities bug</a>.<br></li>
+<li>From the Linux man pages: The&nbsp;<a href="http://linux.die.net/man/3/exec"><code>exec()</code></a>&nbsp;family of functions replaces the current process image with a new process image.&nbsp;<br></li>
+<li>From the Linux man pages:&nbsp;<a href="http://linux.die.net/man/2/prctl"><code>prctl()</code></a>, operations on a process, is called with a first argument describing what to do (with values defined in &lt;linux/prctl.h&gt;) and further parameters with a significance depending on the first one.&nbsp;<br></li>
+<li>From the Linux man pages:&nbsp;<a href="http://linux.die.net/man/2/setuid"><code>setuid()</code></a>&nbsp;sets the effective user ID of the current process. If the effective UID of the caller is root, the real UID and saved set-user-ID are also set. Under Linux, it is implemented like the POSIX version with the<code>_POSIX_SAVED_IDS</code>&nbsp;feature. This allows a set-user-ID (other than root) program to drop all of its user privileges, do some un-privileged work, and then re-engage the original effective user ID in a secure manner.&nbsp;<br></li>
+<li>From the Linux man pages:&nbsp;<a href="http://linux.die.net/man/3/cap_set_proc"><code>cap_set_proc()</code></a>&nbsp;sets the values for all capability flags for all capabilities with the capability state identified by&nbsp;<code>cap_p</code>. The new capability state of the process will be completely determined by the contents of&nbsp;<code>cap_p</code>upon successful return from this function. If any flag in&nbsp;<code>cap_p</code>&nbsp;is set for any capability not currently permitted for the calling process, the function will fail, and the capability state of the process will remain unchanged.&nbsp;<br></li>
+<li><a href="http://www.llnl.gov/computing/tutorials/pthreads/">POSIX Threads Programming</a>&nbsp;is a great tutorial that begins with an introduction to concepts and takes you all the way through such topics as how to develop hybrid MPI/Pthreads.&nbsp;<br></li>
+<li>POSIX, also known as&nbsp;<a href="http://www.opengroup.org/onlinepubs/009695399/toc.htm">IEEE Std 1003.1-2001</a>, defines a standard operating system interface and environment, including a command interpreter (or "shell") and common utility programs to support applications portability at the source code level. It is intended to be used by both applications developers and system implementors.&nbsp;<br></li>
+<li>Take a look at "<a href="http://www.ibm.com/developerworks/aix/library/au-unix-reiserFS/">Using ReiserFS with Linux</a>" (developerWorks, April 2006) for an "alternative, advanced filesystem for the adventurous."&nbsp;<br></li>
+<li>In "<a href="http://www.ibm.com/developerworks/aix/library/au-unix-difflinux.html#N1005B">Differentiating UNIX and Linux</a>" (developerWorks, March 2006), get a quick lesson in the differences in filesystem support between Linux and UNIX—look for the heading "Filesystem support."&nbsp;<br></li>
+<li>For more on filesystems, "<a href="http://www.ibm.com/developerworks/aix/library/au-satmigrat.html">System Administration Toolkit: Migrating and moving UNIX filesystems</a>" (developerWorks, July 2006) shows you how to transfer an entire filesystem on a live system, including how to create, copy, and re-enable.&nbsp;<br></li>
+<li>In the&nbsp;<a href="http://www.ibm.com/developerworks/linux/">developerWorks Linux zone</a>, find more resources for Linux developers, and scan our&nbsp;<a href="http://www.ibm.com/developerworks/linux/library/l-top-10.html">most popular articles and tutorials</a>.&nbsp;<br></li>
+<li>See all&nbsp;<a href="http://www.ibm.com/developerworks/views/linux/libraryview.jsp?topic_by=All+topics+and+related+products&sort_order=desc&lcl_sort_order=desc&search_by=linux+tip%3A&search_flag=true&type_by=All+Types&show_abstract=true&start_no=1&sort_by=Date&end_no=100&show_all=false">Linux tips</a>&nbsp;and&nbsp;<a href="http://www.ibm.com/developerworks/views/linux/libraryview.jsp?topic_by=All+topics+and+related+products&sort_order=desc&lcl_sort_order=desc&search_by=&search_flag=&type_by=Tutorials&show_abstract=true&sort_by=Date&end_no=100&show_all=false">Linux tutorials</a>&nbsp;on developerWorks.&nbsp;<br></li>
+<li>Stay current with&nbsp;<a href="http://www.ibm.com/developerworks/offers/techbriefings/">developerWorks technical events and Webcasts</a>.&nbsp;<br></li>
+</ul>
+<p><strong>Get products and technologies</strong></p>
+<ul>
+<li><a href="http://www.kernel.org/pub/linux/libs/pam/">Linux PAM</a>&nbsp;is a flexible mechanism for authenticating users that lets developers craft programs that are independent of authentication scheme (so, "new device" doesn't have to equal recoding of all the authentication support programs).&nbsp;<br></li>
+<li>With&nbsp;<a href="http://www.ibm.com/developerworks/downloads/">IBM trial software</a>, available for download directly from developerWorks, build your next development project on Linux.<br></li>
+</ul>
+<p><strong>Discuss</strong></p>
+<ul>
+<li>Get involved in the&nbsp;<a href="http://www.ibm.com/developerworks/community">developerWorks community</a>&nbsp;through blogs, forums, podcasts, and community topics in our&nbsp;<a href="http://www.ibm.com/developerworks/spaces/">new developerWorks spaces</a>.&nbsp;<br></li>
+</ul>
+<p><a name="author"><span class="atitle">About the author</span></a></p>
+<div class="ibm-container ibm-portrait-module ibm-alternate-two">
+<div class="ibm-container-body">
+<p><a name="author1"></a>Serge Hallyn is a part of IBM's Linux Technology Center, focusing on Linux kernel and security. He obtained his Ph.D. in computer science from the College of William and Mary. He has written and contributed to several security modules. He currently focuses on adding support for virtual server functionality, application checkpoint/restart, and POSIX file capabilities.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</p>
+<p>&nbsp;</p>
+<p>other resource</p>
+<p><a href="http://www.symantec.com/connect/articles/introduction-linux-capabilities-and-acls">http://www.symantec.com/connect/articles/introduction-linux-capabilities-and-acls</a></p>
+<p><a href="http://linux.die.net/man/7/capabilities">http://linux.die.net/man/7/capabilities</a></p>
+</div>
+</div>
+<p></p>
+</div>
+<div class="share_buttons" id="sharePanel"><span>分享到：</span> <a name="sina" class="share_sina" title="分享到新浪微博"></a><a name="qq" class="share_qq" title="分享到腾讯微博"></a></div>
+
+<div class="article_next_prev">
+        <li class="prev_article">
+            <span>上一篇：</span><a href="http://blog.csdn.net/dux003/article/details/5911239">linux如何写一个daemon程序</a></li>
+        <li class="next_article">
+            <span>下一篇：</span><a href="http://blog.csdn.net/dux003/article/details/5941335">How to break out of a chroot() jail</a></li>
+</div>
+
+
+</div>
+<div id="ad_cen"><iframe id="ad_frm_0" frameborder="0" scrolling="no" style="border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; overflow-x: hidden; overflow-y: hidden; width: 732px; height: 97px; " src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ad(1).htm"></iframe></div>
+<script type="text/javascript">
+    new Ad(4, 'ad_cen');
+</script>
+<div id="comment_title" class="panel_head">查看评论<a name="comments"></a></div>
+<div id="comment_list"><br>&nbsp;&nbsp;暂无评论<br><br><div class="clear"></div></div>
+<div id="comment_bar"></div>
+<div id="comment_form"><div class="guest_link">您还没有登录,请<a href="http://passport.csdn.net/account/login?from=http%3A%2F%2Fblog.csdn.net%2Fdux003%2Farticle%2Fdetails%2F5940458">[登录]</a>或<a href="http://passport.csdn.net/account/register?from=http%3A%2F%2Fblog.csdn.net%2Fdux003%2Farticle%2Fdetails%2F5940458">[注册]</a></div></div>
+<div class="announce">* 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+<script type="text/javascript">
+    var fileName = '5940458';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/comment.js"></script>
+<div id="ad_bot"><iframe id="ad_frm_1" frameborder="0" scrolling="no" style="border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; overflow-x: hidden; overflow-y: hidden; width: 732px; height: 170px; " src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ad(2).htm"></iframe></div>
+<script type="text/javascript">
+    new Ad(5, 'ad_bot');
+</script>
+<div id="report_dialog"></div>
+
+
+
+<div class="clear"></div>
+</div>
+</div>
+<div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+    <ul class="panel_head"><span>个人资料</span></ul>
+    <ul class="panel_body profile">
+        <div id="blog_userface">
+            <a href="http://blog.csdn.net/dux003" title="我的博客主页">
+            <img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/1_dux003.jpg" style="max-width:90%">
+            </a>
+            <br>
+            <span>dux003</span>
+        </div>
+        <div id="blog_medal">
+        <div id="bms_box"></div></div>
+        <ul id="blog_rank">
+            <li>访问：<span>52215次</span></li>
+            <li>积分：<span>2431分</span></li>
+            <li>排名：<span>第1548名</span></li>
+        </ul>
+        <ul id="blog_statistics">
+            <li>原创：<span>165篇</span></li>
+            <li>转载：<span>128篇</span></li>
+            <li>译文：<span>4篇</span></li>
+            <li>评论：<span>21条</span></li>
+        </ul>
+    </ul>
+</div><div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="submit" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>文章分类</span></ul>
+    <ul class="panel_body">
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482069">C&amp;amp;C++</a><span>(39)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/703668">CSS</a><span>(1)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482052">DirectX</a><span>(0)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697518">go语言</a><span>(3)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/703669">HTML</a><span>(3)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697519">java</a><span>(8)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697506">javascript</a><span>(12)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/609344">linux开发</a><span>(69)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697513">lisp</a><span>(1)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697509">php</a><span>(17)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697511">python</a><span>(11)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482070">SCM</a><span>(4)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/734776">WEB</a><span>(10)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482068">Windows开发</a><span>(32)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/535442">其它</a><span>(17)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482062">多媒体</a><span>(10)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/484171">数据库</a><span>(28)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697521">测试</a><span>(4)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/706655">算法</a><span>(4)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482054">网络编程</a><span>(14)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/482072">脚本</a><span>(12)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/697507">软件应用</a><span>(26)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/881091">adroid开发</a><span>(1)</span>
+        
+        </li>
+        <li>
+        <a href="http://blog.csdn.net/dux003/article/category/914243">分布式</a><span>(0)</span>
+        
+        </li>
+    </ul>
+</div><div id="panel_Archive" class="panel">
+    <ul class="panel_head"><span>文章存档</span></ul>
+    <ul class="panel_body">
+        <div id="archive_list"><li><a href="http://blog.csdn.net/dux003/article/month/2011/10">2011年10月</a>(1)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/09">2011年09月</a>(2)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/08">2011年08月</a>(1)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/06">2011年06月</a>(4)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/05">2011年05月</a>(1)</li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/dux003/article/month/2011/04">2011年04月</a>(3)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/03">2011年03月</a>(3)</li><li><a href="http://blog.csdn.net/dux003/article/month/2011/01">2011年01月</a>(7)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/12">2010年12月</a>(21)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/11">2010年11月</a>(12)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/10">2010年10月</a>(4)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/09">2010年09月</a>(12)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/08">2010年08月</a>(11)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/07">2010年07月</a>(31)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/06">2010年06月</a>(14)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/05">2010年05月</a>(9)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/04">2010年04月</a>(91)</li><li><a href="http://blog.csdn.net/dux003/article/month/2010/01">2010年01月</a>(1)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/11">2009年11月</a>(12)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/10">2009年10月</a>(18)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/09">2009年09月</a>(2)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/08">2009年08月</a>(6)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/07">2009年07月</a>(4)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/06">2009年06月</a>(9)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/05">2009年05月</a>(5)</li><li><a href="http://blog.csdn.net/dux003/article/month/2009/04">2009年04月</a>(3)</li><li><a href="http://blog.csdn.net/dux003/article/month/2008/12">2008年12月</a>(3)</li><li><a href="http://blog.csdn.net/dux003/article/month/2008/11">2008年11月</a>(7)</li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+    </ul>
+</div>
+<div id="hotarticls" class="panel">
+    <ul class="panel_head"><span>阅读排行</span></ul>
+    <ul class="panel_body">
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5655963" title="如何用批处理修改系统path环境变量">如何用批处理修改系统path环境变量</a> (2539)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5486898" title="第一个go语言的网络程序">第一个go语言的网络程序</a> (1803)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/4752064" title="VS2008快捷键的设置">VS2008快捷键的设置</a> (1729)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5523881" title="google翻译接口">google翻译接口</a> (1444)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5463900" title="xz压缩文件">xz压缩文件</a> (1409)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5459502" title="java 非阻塞 socket 编程">java 非阻塞 socket 编程</a> (1358)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5771901" title="linux odbc 访问数据库">linux odbc 访问数据库</a> (1159)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5680389" title="ubuntu设置IBus开机启动 ">ubuntu设置IBus开机启动 </a> (1039)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/3296554" title="如何在DATE与SYSTEMTIME之间转化">如何在DATE与SYSTEMTIME之间...</a> (976)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/3298442" title="由于ip地址更改导致无法连接svn服务器的解决办法">由于ip地址更改导致无法连接svn服务器...</a> (954)
+        </li>
+    </ul>
+</div>
+<div id="hotarticls" class="panel">
+    <ul class="panel_head"><span>评论排行</span></ul>
+    <ul class="panel_body">
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5486898" title="第一个go语言的网络程序">第一个go语言的网络程序</a> (7)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/4089909" title="汉字点阵字库原理">汉字点阵字库原理</a> (4)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5496295" title="go语言代码测试">go语言代码测试</a> (2)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/4721511" title="gtk窗口操作">gtk窗口操作</a> (2)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5459366" title="Ubuntu双网卡上网设置">Ubuntu双网卡上网设置</a> (2)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5523881" title="google翻译接口">google翻译接口</a> (1)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5731126" title="Oracle Objects for OLE(OO4O)">Oracle Objects for O...</a> (1)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5459391" title="使用SDL播放YUV图像数据">使用SDL播放YUV图像数据</a> (1)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5629148" title="记录几个最近遇到的bug">记录几个最近遇到的bug</a> (1)
+        </li>
+        <li>
+            <a href="http://blog.csdn.net/dux003/article/details/5726754" title="在ubuntu上安装oracle10g">在ubuntu上安装oracle10g</a> (0)
+        </li>
+    </ul>
+</div>
+<div id="homepageArticles" class="panel">
+    <ul class="panel_head"><span>推荐文章</span></ul>
+    <ul class="panel_body" id="ad_commend">
+    <iframe id="ad_frm_2" frameborder="0" scrolling="no" style="border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; overflow-x: hidden; overflow-y: hidden; width: 182px; height: 269px; " src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ad.htm"></iframe></ul>
+</div>
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/ad.js"></script>
+<script type="text/javascript">
+    new Ad(12, 'ad_commend');
+</script><div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body">
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5731126#comments">Oracle Objects for OLE(OO4O)</a>
+    <p style="margin:0px;">Birchgrove:
+完全看不懂
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5523881#comments">google翻译接口</a>
+    <p style="margin:0px;">qqcxw:
+
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5459391#comments">使用SDL播放YUV图像数据</a>
+    <p style="margin:0px;">zd186:
+我在LCD上做的，出现的是花屏啊，大侠指点一哈啊
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5496295#comments">go语言代码测试</a>
+    <p style="margin:0px;">abcdeok:
+
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5496295#comments">go语言代码测试</a>
+    <p style="margin:0px;">wwwllg:
+
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5486898#comments">第一个go语言的网络程序</a>
+    <p style="margin:0px;">bivinchen:
+哎，还是先学好自己的java本职，新语言还是先别吃
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5486898#comments">第一个go语言的网络程序</a>
+    <p style="margin:0px;">shendl:
+语法有点像Java。      没看到有什么过人之处。      比C语言好在哪里？
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5486898#comments">第一个go语言的网络程序</a>
+    <p style="margin:0px;">wfd0807:
+哎，怎么跟微软学了，没有分号，如果再碰见没有良好编码习惯的程序员，那样的代码读起来就痛苦鸟！
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5486898#comments">第一个go语言的网络程序</a>
+    <p style="margin:0px;">Matol:
+好强悍呀 ！短短几句代码 ,无比的强悍 ！
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/dux003/article/details/5486898#comments">第一个go语言的网络程序</a>
+    <p style="margin:0px;">jyq083693:
+哎 现在研究新的技术  还早  我还是将本职的做好吧  胖子不是一天吃出来的     一天吃一年的好...
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+
+<div class="clear"></div>
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".article_content pre").each(function () {
+                var $this = $(this);
+                if ($this.attr("class").indexOf("brush:") != -1) {
+                    var lang = $this.attr("class").split(';')[0].split(':')[1];
+                    $this.attr('name', 'code');
+                    $this.attr('class', lang);
+                }
+            });
+            dp.SyntaxHighlighter.HighlightAll('code');
+        });
+    </script>
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/show.js"></script>
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/pv.aspx" border="0" width="0" height="0">
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/counter.js"></script><script type="text/javascript" charset="UTF-8" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/msg.popup.js"></script><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/visitlog.php" width="1" height="1" border="0" alt=""><iframe id="myframe" name="myframe" frameborder="no" scrolling="no" width="0" height="0" border="0" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/dd333.htm"></iframe>
+<script type="text/javascript" src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/publib_footer.js"></script><link rel="stylesheet" type="text/css" href="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/pub_footerstyle.css"><div class="pub_footerall"><dl><dt> <dd><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a>|<a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a>|<a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a>|<a href="http://www.csdn.net/company/account.html" target="_blank">银行汇款帐号</a>|<a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a>|<a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a>|<a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a>|<a href="mailto:webmaster@csdn.net">问题报告</a></dd><dd>北京创新乐知信息技术有限公司 版权所有,&nbsp;京&nbsp;ICP&nbsp;证&nbsp;070598&nbsp;号</dd><dd>世纪乐知(北京)网络技术有限公司 提供技术支持</dd><dd>江苏乐知网络技术有限公司 提供商务支持</dd><dd><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/pic_email.gif" alt="" title=""> Email:webmaster@csdn.net</dd><dd>Copyright © 1999-2011, CSDN.NET, All Rights Reserved</dd><dd><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./linux capability 权限控制 - Rare's Tech-Blog - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div>
+
+</div>
+
+</body></html>

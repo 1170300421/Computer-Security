@@ -1,0 +1,784 @@
+
+<!-- saved from url=(0059)http://fanqiang.chinaunix.net/a1/b1/20020816/060200295.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+<title>[ 永远的UNIX &gt; Chroot Linux中所有的服务 ]</title>
+<style type="text/css">
+<!--
+body,th,input,select,textarea,select,checkbox{font:12pt 宋体}
+A:link { text-decoration:underline; color:#E6A306}
+A:visited { text-decoration:underline; color:#E6A306}
+A:hover { text-decoration:underline; color:#FFFF00}
+body {  font-family: "宋体", "serif"; font-size: 12pt}
+td {  font-family: "宋体", "serif"; font-size: 12pt}
+p  { font-size: 9pt; line-height: 150%}
+-->
+</style>
+</head><body text="#ffffff" background="./[ 永远的UNIX   Chroot Linux中所有的服务 ]_files/bline.gif" bgcolor="#000000">
+<div align="center"><center>
+
+<table border="0" width="750" cellspacing="0" cellpadding="0" height="400">
+<tbody><tr>
+  <td height="45"><p align="center"><img src="./[ 永远的UNIX   Chroot Linux中所有的服务 ]_files/title.gif" alt="[ 永远的UNIX::UNIX技术资料的宝库 ]"> &nbsp;&nbsp;<b>GB | <a href="http://fanqiang.chinaunix.net/a1/b1/20020816/060200295_b.html">BIG5</a></b></p></td>
+  </tr> 
+<tr>
+</tr><tr>
+ <td align="left" height="40" valign="bottom"><small><a href="http://fanqiang.chinaunix.net/">首页</a> &gt; 系统管理 &gt; Linux &gt;   正文</small></td>
+</tr>
+<tr>
+  <td width="100%" height="2" colspan="5" bgcolor="#D09F0D"><img src="./[ 永远的UNIX   Chroot Linux中所有的服务 ]_files/c.gif" width="1" height="1"></td> 
+</tr>
+<tr>
+ <td align="center" height="40" valign="middle"><font size="5"><b>Chroot Linux中所有的服务</b></font></td>
+</tr>
+<tr>
+ <td align="center" height="20"><font color="#999999"><small>本文出自:www.netguard.com 作者: (2002-08-16 06:02:00)</small></font></td>
+</tr>
+<tr><td align="center">
+<table border="0" width="700" cellspacing="0" cellpadding="0" align="center">
+<tbody><tr><td valign="top">
+<font color="#cccccc"><!--HTML_BEGIN-->
+<table width="700" align="center" cellpadding="5" cellspacing="0" border="0">
+<tbody><tr><td>
+什么是chroot？chroot基本上重定义了一个程序的运行环境。更确切地说，它重定义了一个程序（或登录会话）的“ROOT”目录或“/”。 
+<br>
+也就是说，对于chroot了的程序或shell来说，chroot环境之外的目录是不存在的。 
+<br>
+
+<br>
+那这样又有什么用呢？如果入侵者入侵了你的电脑，他们就不能看见你系统里所有的文件了。 
+<br>
+这样，就限制了入侵者可能执行的命令，从而禁止了他们溢出不安全文件的机会。但唯一的缺点是， 
+<br>
+我认为这不能阻止他们察看网络连接和其他资料。因此，你应做一些本文未深入涉及的事情： 
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+保护网络端口。 
+<br>
+
+<br>
+察看是否所有的服务都以非root权限运行。另外，是否所有的服务都进行了chroot？ 
+<br>
+
+<br>
+把系统日志转移到其他电脑。 
+<br>
+
+<br>
+分析日志文件。 
+<br>
+
+<br>
+分析那些试图探测你的计算机的随机端口的人们。 
+<br>
+
+<br>
+限制服务所占用的cpu和内存资源。 
+<br>
+
+<br>
+激活用户配额。 
+<br>
+
+<br>
+我认为（把以非root权限运行的服务进行）chroot可以作为一道安全防线的原因是， 
+<br>
+如果入侵者得到了一个非root账户，但没有使他们得到root权限的文件的话，那么他们只能对所入侵的区域造成破坏。 
+<br>
+而且，如果root账户是入侵区域大部分文件的拥有者的话，入侵者是没有多少攻击的选择的。显然，如果你的账户被入侵， 
+<br>
+那一定是某些地方出问题了，但最好能减少入侵者所能造成的破坏。 
+<br>
+
+<br>
+请记住 我所做的并不是100%正确的。这是我第一次尝试这样做，就算只是部分有效的话， 
+<br>
+也应该是很容易完成基本的配置的。我想做一个chroot的HOWTO，现在所说的只是一些基本的东西。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+
+<br>
+怎样把所有的服务都chroot呢？
+<br>
+
+<br>
+好的，让我们先创建一个目录“/chroot”，然后以下面的格式把我们的所有服务都放在它下面： 
+<br>
+
+<br>
+
+<br>
+
+<br>
+Syslogd 分别和每一个服务一起运行在hroot环境下。 
+<br>
+
+<br>
+Apache 运行在/chroot/httpd下. 
+<br>
+
+<br>
+Ssh 运行在/chroot/sshd下. 
+<br>
+
+<br>
+PostgreSQL 运行在/chroot/postmaster下. 
+<br>
+
+<br>
+Sendmail 运行在 chroot环境下，但不幸的是，它必须以root权限运行。 
+<br>
+
+<br>
+ntpd 运行在 /chroot/ntpd下。 
+<br>
+
+<br>
+named 运行在 /chroot/named 下。
+<br>
+每一个服务都是完全与外界隔离的。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+我用来创建chroot环境的Perl脚本。
+<br>
+
+<br>
+下载 href="http://main.linuxfocus.org/common/src/article225/Config_Chroot.pl.txt"&gt;Config_Chroot.pl.txt并更名为 Config_Chroot.pl. 这个Perl脚本让你列出所有已安装的服务，查看配置文件，配置服务，并启动和停止服务。通常，这就是你应该做的。 
+<br>
+
+<br>
+
+<br>
+
+<br>
+创建chroot目录
+<br>
+mkdir -p /chroot/Config/Backup 
+<br>
+
+<br>
+下载 href="http://main.linuxfocus.org/common/src/article225/Config_Chroot.pl.txt"&gt;Config_Chroot.pl.txt 
+<br>
+并更名为 /chroot/Config_Chroot.pl 
+<br>
+
+<br>
+如果你的家目录（home directory）不是/chroot，请把Perl脚本里的$Home 变量作相应的改变。 
+<br>
+
+<br>
+下载我的 href="http://main.linuxfocus.org/common/src/article225/"&gt;配置文件。 
+<br>
+
+<br>
+现在，重要的是：我只在 RedHat 
+<br>
+7.2 和 RedHat 6.2 上测试过。. 
+<br>
+
+<br>
+请在Perl脚本里作相应的改变以适应你的发行版。 
+<br>
+
+<br>
+
+<br>
+关于chroot，我写了一遍很长的文章，但有了我的脚本，它变得短了很多。在chroot了很多服务之后，我注意到这些服务中需要被chroot的文件和配置都很相似。对一个特定的服务来说，判断哪些文件需要拷贝的最容易的方法是查看man，如果程序要用到库文件，就再键入“ldd /usr/bin/file“。你还可以把你正在安装的服务进行chroot并手动启动， 看看出了什么错或查一查它的日志文件。 
+<br>
+
+<br>
+
+<br>
+通常，要安装一个服务，可以这样做：
+<br>
+
+<br>
+cd /chroot
+<br>
+./Config_Chroot.pl config&nbsp;&nbsp;SERVICE
+<br>
+./Config_Chroot.pl install SERVICE
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; SERVICE
+<br>
+
+<br>
+
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+对 Ntpd 进行 Chroot
+<br>
+
+<br>
+
+<br>
+Ntpd 是一个时间服务，它使你的计算机以及其它计算机和实际时间同步。把它chroot是很简单的。 
+<br>
+
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+#./Config_Chroot.pl config&nbsp;&nbsp;ntpd
+<br>
+./Config_Chroot.pl install ntpd
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; ntpd
+<br>
+
+<br>
+
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+对 DNS 和 named 进行 Chroot 
+<br>
+
+<br>
+已经有了howto文件，请看
+<br>
+href="http://www.linuxdoc.org/HOWTO/Chroot-BIND8-HOWTO.html"&gt;http://www.linuxdoc.org/HOWTO/Chroot-BIND8-HOWTO.html 
+<br>
+
+<br>
+或 
+<br>
+href="http://www.linuxdoc.org/HOWTO/Chroot-BIND-HOWTO.html"&gt;http://www.linuxdoc.org/HOWTO/Chroot-BIND-HOWTO.html 
+<br>
+
+<br>
+
+<br>
+如果你想用我的脚本
+<br>
+
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+#./Config_Chroot.pl config&nbsp;&nbsp;named
+<br>
+./Config_Chroot.pl install named
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; named
+<br>
+
+<br>
+
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+把 Syslog 和其他服务一起进行chroot以及我所遇到的困难。
+<br>
+
+<br>
+我想把syslogd进行chroot。我遇到的困难是，syslogd默认使用/dev/log目录，而chroot了的服务是看不见这个目录的。因此，用syslogd做日志记录就不是很方便了。下面是可能的解决方案。 
+<br>
+
+<br>
+
+<br>
+
+<br>
+把syslogd分别和每一个服务进行chroot。我实际上就是这样测试的，而且记录了一些日志。我不喜欢这样做，因为我有一个以root权限运行的服务。 
+<br>
+
+<br>
+看看我们是否能连接到外部日志记录设备。 
+<br>
+
+<br>
+直接把日志记录到文件上而不是通过syslogd。这可能是最好的安全选择了，尽管如果被入侵，入侵者可以随意改动日志。 
+<br>
+
+<br>
+配置syslogd来查看几个地方，从而得到所有的服务，你可以用syslogd的-a选项来做到。 
+<br>
+
+<br>
+我的唯一的解决方案是确保syslogd分别和每一个服务进行chroot。我喜欢这样的解决方案，它以非root权限在自己的chroot环境（有些像网络端口）下记录日志。这也许是可行的，但我正在停止我所做的，然后寻求一个更好的解决方案。 
+<br>
+
+<br>
+如果你不想为每一个服务都配备一个独立的syslogd，那么当你的系统运行syslogd时，请在syslogd开始时运行下面命令： 
+<br>
+
+<br>
+
+<br>
+syslogd -a /chroot/SERVICE/dev/log
+<br>
+
+<br>
+如果有ssh和dns要运行，那么看上去应该像这样：
+<br>
+syslogd -a /chroot/ssh/dev/log -a /chroot/named/dev/log -a /dev/log
+<br>
+
+<br>
+
+<br>
+
+<br>
+关于syslogd，我最后想说的是，我希望它能运行在非root账户下。我试了几个简单的东西， 
+<br>
+但都没有成功，于是就放弃了。如果能让syslogd和每一个服务一起运行在非root账户下， 
+<br>
+我就会对我的安全措施感到满意了。如果可能的话，最好将日志记录到外部设备上。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+
+<br>
+对 Apache 进行 Chroot
+<br>
+
+<br>
+很简单。一旦我运行它，就可以执行Perl脚本。现在，我的配置文件是很长的， 
+<br>
+因为我必须在chroot环境下包括Perl和PostgreSQL函数库。有一件事要注意，如果你要连接到数据库上， 
+<br>
+请确保你的数据库服务运行在127.0.0.1 回环设备上，并在关于DBI的Perl脚本中指定主机为127.0.0.1. 
+<br>
+下面是我怎样把apache永久连接到一个数据库上的例子： 
+<br>
+
+<br>
+$dbh ||= DBI-&gt;connect(dbi:Pg:dbname=DATABASE,"","", {PrintError=&gt;0});
+<br>
+
+<br>
+if ($dbh ) {$dbh-&gt;{PrintError} = 1;}
+<br>
+else
+<br>
+&nbsp;&nbsp;{$dbh ||= DBI-&gt;connect(dbi:Pg:dbname=DATABASE;host=127.0.0.1,"","",
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{PrintError=&gt;1});}
+<br>
+
+<br>
+
+<br>
+
+<br>
+源地址: <a href="http://httpd.apache.org/dist/httpd/">http://httpd.apache.org/dist/httpd/ </a>
+<br>
+
+<br>
+
+<br>
+
+<br>
+把apache编译并安装在你系统的/usr/local/apache目录下，然后运行Perl脚本。 
+<br>
+
+<br>
+
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+ # ./Config_Chroot.pl config&nbsp;&nbsp;httpd
+<br>
+./Config_Chroot.pl install httpd
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; httpd
+<br>
+
+<br>
+在httpd.conf文件里包含以下几行: 
+<br>
+ExtendedStatus On
+<br>
+
+<br>
+&lt;Location /server-status&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SetHandler server-status
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Order deny,allow
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Deny from all
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Allow from 127.0.0.1
+<br>
+&lt;/Location&gt;
+<br>
+
+<br>
+&lt;Location /server-info&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SetHandler server-info
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Order deny,allow
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Deny from all
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Allow from 127.0.0.1
+<br>
+&lt;/Location&gt;
+<br>
+
+<br>
+
+<br>
+然后，在你的浏览器里输入 http://127.0.0.1/server-status 或 
+<br>
+http://127.0.0.1/server-info 并检查！ 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+对 Ssh 进行 Chroot
+<br>
+
+<br>
+首先，如果把ssh从端口22重定向到2222就理想了。然后，当你启动ssh时， 
+<br>
+让它在一个非root账户下监听2222端口。在初始化ssh连接时，我们只想让有密码的安全账户连进来，但不做其他任何事情。 
+<br>
+在他们登录之后，运行在端口127.0.0.1:2222 的第二个ssh程序让它们连接到真正的系统 -- 这第二个ssh程序应该只在回环设备上监听。 
+<br>
+这才是你应该做的。现在我们不打算去做。我们要做的唯一的事情是以这个chroot的ssh做个例子。 
+<br>
+上面提到的一个练习就请读者自己完成：让sshd运行在非root账户下，再安装第二个监听回环设备的sshd以使人们连进真正的系统。 
+<br>
+
+<br>
+此外，我们只要把ssh进行chroot并让你看一看那样做的结果（如果你只做了这些，你不必观察整个系统）。 
+<br>
+当然，如果能把日志记录在外部设备上就更好了。我们应该用OpenSSH，但为了方便（这好像不是一个好的借口），我用的是一个商业的SSH。 
+<br>
+
+<br>
+
+<br>
+源地址: <a href="http://www.ssh.com/products/ssh/download.cfm">http://www.ssh.com/products/ssh/download.cfm </a>
+<br>
+
+<br>
+
+<br>
+
+<br>
+在/usr/local/ssh_chroot下安装ssh并运行脚本。 
+<br>
+
+<br>
+
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+ # ./Config_Chroot.pl config&nbsp;&nbsp;sshd
+<br>
+./Config_Chroot.pl install sshd
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; sshd
+<br>
+
+<br>
+我觉得把ssh放在chroot环境下的一个真正有益的事情是，如果你用它代替ftp服务器，人们在你的区域里就只有有限的权限。 
+<br>
+Rsync 和 SCP 在人们上传文件时运行得非常好。我不是很喜欢建立ftp服务器让人们登录。很多ftp服务器都运行在chroot环境下， 
+<br>
+但我不喜欢他们仍旧传送明文密码。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+把 PostSQL 进行 Chroot
+<br>
+
+<br>
+这几乎和perl一样简单，除了它需要一些额外的函数库。总的来说，这并不难做。 
+<br>
+我必须做的一件事是把PostgreSQL放在网络上，但仅仅是放在回环设备上。因为它是被chroot了的， 
+<br>
+所以其他已经chroot了的服务是不能和它接触的，就像web服务器 apache 一样。 
+<br>
+我把Perl编译进PostgreSQL里去了，因此我必须在我的配置文件里加很多Perl的东西。 
+<br>
+
+<br>
+源代码: href="ftp://ftp.us.postgresql.org/source/v7.1.3/postgresql-7.1.3.tar.gz"&gt;ftp://ftp.us.postgresql.org/source/v7.1.3/postgresql-7.1.3.tar.gz 
+<br>
+
+<br>
+
+<br>
+
+<br>
+把apache编译并安装在你系统里的/usr/local/postgres目录下。然后运行Perl脚本。 
+<br>
+
+<br>
+
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+ # ./Config_Chroot.pl config&nbsp;&nbsp;postgres
+<br>
+./Config_Chroot.pl install postgres
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; postgres
+<br>
+
+<br>
+
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+把 Sendmail 进行 Chroot
+<br>
+
+<br>
+请执行我的Perl脚本。
+<br>
+cd /chroot
+<br>
+ # 如果你没有使用我的配置文件，请把下一行的注释去掉。
+<br>
+ # ./Config_Chroot.pl config&nbsp;&nbsp;sendmail
+<br>
+./Config_Chroot.pl install sendmail
+<br>
+./Config_Chroot.pl start&nbsp;&nbsp; sendmail
+<br>
+
+<br>
+现在你发现什么了？是的，他仍旧以root账户运行。而且，当sendmail启动的时候，程序/etc/rc.d/init.d/sendmail会重新建立一些文件。 
+<br>
+我的脚本并没有解决这个问题。无论何时，如果你在/etc/mail下做了任何改动，请把改动过的文件拷贝到/chroot/sendmail/etc目录下。 
+<br>
+你还必须把/var/spool/mail指向/chroot/sendmail/var/spool/mail，以使sendmail程序和用户（当他们登录进来的时候）看到的是相同的文件。 
+<br>
+
+<br>
+好在你随时可以发送邮件，当你收信的时候才会出问题。因此，我可以把sendmail和apache一起安装而不出问题。 
+<br>
+我的一些Perl脚本会向外发送邮件，所以我要把sendmail程序拷贝到apache的chroot环境下。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+
+<br>
+关于 Chroot 的其他一些事情。
+<br>
+
+<br>
+下面是我的观点： 
+<br>
+
+<br>
+
+<br>
+
+<br>
+你的机器上包括sendmail, ssh, apache, 
+<br>
+postgresql, syslog在内的所有服务都必须运行在chroot环境下。 
+<br>
+
+<br>
+每一个服务都必须以非root账户运行（你也许需要把已受保护的端口重定向到未受保护得端口。这包括sendmail和syslog。 
+<br>
+
+<br>
+日志应该远离现场。 
+<br>
+
+<br>
+对每一个服务都实行磁盘配额，以限制入侵者所能占用的磁盘。当磁盘已写满时，你应该在回环设备上为某些服务安装文件系统。 
+<br>
+
+<br>
+所有不需改动的文件的拥有者应该是root账户。
+<br>
+现在，说到sendmail和syslogd，我仍然认为他们不应运行在root账户下。 
+<br>
+对于sendmail，这也许是可能的，但我发现让它运行在非root账户下是极其困难的，至少我还没有成功过。 
+<br>
+我想，sendmail不能运行在非root账户下应是一个很严重的错误。虽然我知道让它运行在非root账户下很困难， 
+<br>
+但我认为所有的困难都是可以解决的。只要解决了文件的许可权问题，我觉得sendmail是不必以root权限运行的。 
+<br>
+我肯定是忽略了什么东西，我不相信这些障碍是不可征服的。 
+<br>
+
+<br>
+至于syslog，我还没有试过，但我认为应该以非root账户去记录日志，我想这应该是可行的。 
+<br>
+至少我可以为每一个服务在chroot的环境下记录日志。 
+<br>
+
+<br>
+
+<br>
+所有的服务都要运行在非root账户下，甚至是NFS。请记住，是所有的服务。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+
+<br>
+建议 
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+请运行两个sshd守护进程，并进行二次登录。 
+<br>
+
+<br>
+设法使sendmail或其他邮件程序运行在非root账户下。 
+<br>
+
+<br>
+删掉/lib下不需要的函数库。我只是拷了我需要的函数库在上面。其实你不需要其中的大部分。 
+<br>
+
+<br>
+请用syslogd进行远程日志记录，看看我们是否能让syslogd连接到网络端口上并得到运行在回环设备网络端口上的所有服务的日志。 
+<br>
+看看能否使syslogd运行在非root账户下。 
+<br>
+
+<br>
+
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+结论 
+<br>
+
+<br>
+
+<br>
+我觉得对所有的服务来说chroot都是那么酷，我想，不能让所有的服务都运行在非root账户的chroot环境下应该是个很大的错误。 
+<br>
+我希望主要的发行版应该做到这一点，当然，也希望其它发行版做到。Mandrake 以兼容 RedHat 起家并发展，因此，人们可以仿效 Mandrake ， 
+<br>
+在其他人的基础上对chroot进行扩展。我认为这是可行的，因为在GNU/Linux里，没有什么会阻止你重做其他人的工作。 
+<br>
+如果某个公司想chroot所有服务并为人们创建了一套容易管理chroot了的服务的环境，那么它就拥有了一个理想的发行版。 
+<br>
+记住，Linux正趋向主流，人们不想再看见命令行，因此如果每件事都可以在gui的环境下去做，人们就不需要了解内部的构造， 
+<br>
+并且不需要知道到底是什么在运行，他们只要能配置并知道这是行之有效的就行了。 
+<br>
+
+<br>
+我绝对支持让所有服务都运行在非root权限的chroot的环境下，任何不能做到这一点的发行版，我都不会考虑在生产环境中使用它。 
+<br>
+我正使所有的服务都运行在chroot环境下，尽我的可能使越来越多的东西这样运行 -- 最终，我会达到我的理想。 
+<br>
+
+<br>
+
+<br>
+我打算为chroot写一个HOWTO。我正发送请求，希望某个人能够把我这篇文章转换成LyX格式，以便它可以放到Linux得HOWTO上。 
+<br>
+&nbsp;&nbsp;
+<br>
+
+<br>
+
+<br>
+参考书目
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+如有变动，请见 <a href="http://www.gnujobs.com/Articles/23/chroot.html">http://www.gnujobs.com/Articles/23/chroot.html</a>
+
+</td></tr></tbody></table>
+
+<!--HTML_END-->
+<br>	
+(<a href="http://www.fanqiang.com/">http://www.fanqiang.com</a>)
+</font>
+&nbsp;&nbsp;&nbsp;&nbsp;进入【<a href="http://www.chinaunix.net/">UNIX论坛</a>】
+</td>
+</tr>
+<tr>
+<td><hr></td>
+</tr>
+<tr>
+<td><b>相关文章</b> </td>
+</tr>
+<tr>
+<td><a href="http://fanqiang.chinaunix.net/a1/b1/20020116/08100049.html">如何在Redhat 7.1下设置chroot DNS</a> <small>(2002-01-16 08:10:00)</small><br><a href="http://fanqiang.chinaunix.net/a1/b5/20010416/134954.html">什么是CHROOT？</a> <small>(2001-04-16 13:51:59)</small><br></td>
+</tr>
+<tr>
+</tr><tr>
+<td>
+</tr>
+<tr><td>&nbsp;</td>
+</tr>
+</tbody></table>
+</td>
+</tr>
+<tr>
+  <td width="100%" height="2" colspan="5" bgcolor="#D09F0D"><img src="./[ 永远的UNIX   Chroot Linux中所有的服务 ]_files/c.gif" width="1" height="1"></td> 
+</tr>
+<tr>
+    <td width="100%" height="40" colspan="5" valign="top"><p align="center"><font color="#ffffff">★&nbsp;&nbsp;樊强制作 欢迎分享&nbsp;&nbsp;★ </font></p></td>
+  </tr>
+</tbody></table>
+</center></div>
+
+
+</body></html>

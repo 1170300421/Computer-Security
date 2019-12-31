@@ -1,0 +1,214 @@
+
+.mod-nav .nav-title{
+	margin-top:10px;
+	background:url(http://img.baidu.com/hi/img/simblog/rf_bg.png) repeat-x;
+	height:76px;
+	border:1px solid #ddd;
+	border-bottom:none;
+}
+.mod-nav .u-info{
+	line-height:25px;
+	margin-left:20px;
+	margin-top:20px;
+	
+}
+.mod-nav .nav-title .u-name{
+	font-size:14px;
+	font-weight:bolder;
+	color:#1463c4;
+}
+.mod-nav .nav-title .u-desc{
+	color:#999;
+	margin-left:20px;
+	color:#666;
+}
+.mod-nav .nav-menu{
+	background:url(http://img.baidu.com/hi/img/simblog/rf_menu.png) repeat-x;
+	height:31px;
+	color:#fff;
+}
+.mod-nav .nav-menu li{
+	
+	display:inline-block;
+	float:left;
+	line-height:31px;
+	padding:0 10px;
+	text-align:center;
+	cursor:pointer;
+	
+}
+.mod-nav .nav-menu .act{
+	background-color:#3d8ee4;
+	line-height:21px;
+	margin-top:5px;
+
+}
+.mod-nav .nav-menu a{
+	color:#fff;
+	text-decoration:none;
+}
+.mod-article,.mod-frdcomment,.mod-repcomment,.mod-rel-article{
+	border:1px solid #bddaf2;
+	margin-top:10px;
+}
+.mod-article .t-warp,.mod-article .t-warp,.mod-frdcomment .t-warp,.mod-repcomment .t-warp,.mod-rel-article .t-warp{
+	padding:1px;
+
+}
+.mod-article .title,.mod-article .foot,.mod-frdcomment .title,.mod-repcomment .title,.mod-rel-article .title{
+	height:31px;
+	line-height:31px;
+	background-color:#dbeaf8;
+	padding-left:10px;
+	color:#666;
+}
+.mod-article .relative-docs{
+	margin:15px 0px;
+}
+#inDocNav{
+	text-align:center;
+}
+#inDocNav a{
+	color:#1463c4;
+
+}
+.page-warp{
+
+	line-height:30px;
+	text-align:center;
+}
+.mod-article .shareUser ,.mod-article  .shareLastEditor{
+	line-hegiht:30px;
+}
+
+.btn-nav{
+	display:inline-block;
+	background-color:#E5F0FA;
+	border:1px solid #BDDAF2;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+	height:18px;
+	line-height:18px;
+	padding:0 5px;
+	text-decoration:none;
+	color:#666;
+	font-size:12px;
+}
+.mod-article .foot{
+	padding-left:10px;
+}
+.mod-article .foot a{
+	display:inline-block;
+	line-height:31px;
+	color:#1463c4;
+}
+.mod-article .fenxiang{
+	background:url(http://img.baidu.com/hi/img/simblog/fenxiang.png) no-repeat;
+	height:15px;
+	width:46px;
+	display:inline-block;
+}
+#in_comment a{
+	color:#1463c4;
+}
+.mod-frdcomment,.mod-repcomment{
+	margin-top:10px;
+}
+.mod-frdcomment .frdcom-detail{
+	margin-top:5px;
+	color:#666;
+	margin-bottom:5px;
+}
+.mod-frdcomment .frdcom-detail .time{
+	
+	color:#999;
+}
+.mod-frdcomment .frdcom-detail li{
+	line-height:30px;
+	border-bottom:dotted 1px #dfdfdf;
+	margin: 0px 20px;
+
+}
+.mod-frdcomment .frdcom-detail .num{
+	display:inline-block;
+	width:25px;
+	text-align:left;
+}
+.mod-frdcomment .frdcom-detail .u-name{
+	color:#1463c4;
+	font-weight:bolder;
+	margin-right:10px;
+}
+.mod-rel-article .rel-art{
+	margin:15px 0px 15px 10px;
+}
+.mod-rel-article li{
+	line-height:25px;
+	background:url(http://img.baidu.com/hi/img/simblog/rf_li.png) no-repeat;
+	padding-left:15px;
+	background-position:0px 7px;
+}
+
+.mod-rel-article a{
+	color:#1463c4;
+}
+.modbox {
+	background-color: #FFFFFF;
+	padding: 10px 10px 0;
+}
+#m_blog div.tit {
+	font-size: 14px;
+	font-weight: bold;
+}
+#m_blog div.tit a {
+	color: #333;
+	font-size: 14px;
+	font-weight: bold;
+}
+#m_blog div.tit a:visited {
+	color: #333;
+}
+#m_blog div.date {
+	color: #999;
+	margin: 5px 0 8px;
+}
+#m_blog div.cnt {
+	color: #333;
+	font-size: 14px;
+	line-height: 1.5;
+}
+#m_blog div.cnt div {
+	font-size: 14px;
+}
+
+.mod-repcomment .cmt-name,.mod-repcomment .cmt-ctt{
+	font-size:14px;
+	width:100px;
+	text-align:center;
+	display:block;
+	margin-top:5px;
+}
+
+.mod-repcomment .cmt-content{
+	display:block;
+	margin:5px 0px;
+}
+.mod-repcomment td{
+	line-height:25px;
+}
+.mod-repcomment{
+	margin-bottom:50px;
+}
+.container {
+	clear: both;
+}
+.mgr5{
+	margin-right:5px
+}
+.mgt5{
+	margin-top:_5px;
+}
+.fwb {
+	font-weight: bold;
+}

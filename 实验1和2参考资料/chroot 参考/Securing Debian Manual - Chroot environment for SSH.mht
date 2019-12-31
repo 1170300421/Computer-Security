@@ -1,0 +1,1811 @@
+From: <¨®¨¦ Windows Internet Explorer 8 ¡À¡ê¡ä?>
+Subject: Securing Debian Manual - Chroot environment for SSH
+Date: Wed, 7 Dec 2011 08:34:20 +0800
+MIME-Version: 1.0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://www.debian.org/doc/manuals/securing-debian-howto/ap-chroot-ssh-env.en.html
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.6157
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>Securing Debian Manual - Chroot environment for =
+SSH</TITLE>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3Dcontent-type><LINK=20
+rel=3Dstart href=3D"index.en.html"><LINK rel=3Dprev=20
+href=3D"ap-fw-security-update.en.html"><LINK rel=3Dnext=20
+href=3D"ap-chroot-apache-env.en.html"><LINK rel=3Dcontents=20
+href=3D"index.en.html#contents"><LINK rel=3Dcopyright=20
+href=3D"index.en.html#copyright"><LINK title=3D"1 Introduction" =
+rel=3Dchapter=20
+href=3D"ch1.en.html"><LINK title=3D"2 Before you begin" rel=3Dchapter=20
+href=3D"ch2.en.html"><LINK title=3D"3 Before and during the =
+installation"=20
+rel=3Dchapter href=3D"ch3.en.html"><LINK title=3D"4 After installation" =
+rel=3Dchapter=20
+href=3D"ch4.en.html"><LINK title=3D"5 Securing services running on your =
+system"=20
+rel=3Dchapter href=3D"ch-sec-services.en.html"><LINK=20
+title=3D"6 Automatic hardening of Debian systems" rel=3Dchapter=20
+href=3D"ch-automatic-harden.en.html"><LINK=20
+title=3D"7 Debian Security Infrastructure" rel=3Dchapter =
+href=3D"ch7.en.html"><LINK=20
+title=3D"8 Security tools in Debian" rel=3Dchapter =
+href=3D"ch-sec-tools.en.html"><LINK=20
+title=3D"9 Developer's Best Practices for OS Security" rel=3Dchapter=20
+href=3D"ch9.en.html"><LINK title=3D"10 Before the compromise" =
+rel=3Dchapter=20
+href=3D"ch10.en.html"><LINK title=3D"11 After the compromise (incident =
+response)"=20
+rel=3Dchapter href=3D"ch-after-compromise.en.html"><LINK=20
+title=3D"12 Frequently asked Questions (FAQ)" rel=3Dchapter=20
+href=3D"ch12.en.html"><LINK title=3D"A The hardening process step by =
+step"=20
+rel=3Dappendix href=3D"ap-harden-step.en.html"><LINK=20
+title=3D"B Configuration checklist" rel=3Dappendix =
+href=3D"ap-checklist.en.html"><LINK=20
+title=3D"C Setting up a stand-alone IDS" rel=3Dappendix=20
+href=3D"ap-snort-box.en.html"><LINK title=3D"D Setting up a bridge =
+firewall"=20
+rel=3Dappendix href=3D"ap-bridge-fw.en.html"><LINK=20
+title=3D"E Sample script to change the default Bind installation." =
+rel=3Dappendix=20
+href=3D"ap-bind-chuser.en.html"><LINK=20
+title=3D"F Security update protected by a firewall" rel=3Dappendix=20
+href=3D"ap-fw-security-update.en.html"><LINK=20
+title=3D"G <code>Chroot</code> environment for <code>SSH</code>" =
+rel=3Dappendix=20
+href=3D"ap-chroot-ssh-env.en.html"><LINK=20
+title=3D"H <code>Chroot</code> environment for <code>Apache</code>" =
+rel=3Dappendix=20
+href=3D"ap-chroot-apache-env.en.html"><LINK title=3D"1.1 Authors" =
+rel=3Dsection=20
+href=3D"ch1.en.html#s-authors"><LINK=20
+title=3D"1.2 Where to get the manual (and available formats)" =
+rel=3Dsection=20
+href=3D"ch1.en.html#s1.2"><LINK title=3D"1.3 Organizational =
+notes/feedback"=20
+rel=3Dsection href=3D"ch1.en.html#s1.3"><LINK title=3D"1.4 Prior =
+knowledge"=20
+rel=3Dsection href=3D"ch1.en.html#s1.4"><LINK=20
+title=3D"1.5 Things that need to be written (FIXME/TODO)" rel=3Dsection=20
+href=3D"ch1.en.html#s1.5"><LINK title=3D"1.6 Changelog/History" =
+rel=3Dsection=20
+href=3D"ch1.en.html#s-changelog"><LINK title=3D"1.7 Credits and thanks!" =
+rel=3Dsection=20
+href=3D"ch1.en.html#s-credits"><LINK title=3D"2.1 What do you want this =
+system for?"=20
+rel=3Dsection href=3D"ch2.en.html#s2.1"><LINK=20
+title=3D"2.2 Be aware of general security problems" rel=3Dsection=20
+href=3D"ch2.en.html#s-references"><LINK=20
+title=3D"2.3 How does Debian handle security?" rel=3Dsection=20
+href=3D"ch2.en.html#s2.3"><LINK title=3D"3.1 Choose a BIOS password" =
+rel=3Dsection=20
+href=3D"ch3.en.html#s-bios-passwd"><LINK title=3D"3.2 Partitioning the =
+system"=20
+rel=3Dsection href=3D"ch3.en.html#s3.2"><LINK=20
+title=3D"3.3 Do not plug to the Internet until ready" rel=3Dsection=20
+href=3D"ch3.en.html#s3.3"><LINK title=3D"3.4 Set a root password" =
+rel=3Dsection=20
+href=3D"ch3.en.html#s3.4"><LINK=20
+title=3D"3.5 Activate shadow passwords and MD5 passwords" rel=3Dsection=20
+href=3D"ch3.en.html#s3.5"><LINK=20
+title=3D"3.6 Run the minimum number of services required" rel=3Dsection=20
+href=3D"ch3.en.html#s3.6"><LINK=20
+title=3D"3.7 Install the minimum amount of software required" =
+rel=3Dsection=20
+href=3D"ch3.en.html#s3.7"><LINK title=3D"3.8 Read the Debian security =
+mailing lists"=20
+rel=3Dsection href=3D"ch3.en.html#s3.8"><LINK=20
+title=3D"4.1 Subscribe to the Debian Security Announce mailing list" =
+rel=3Dsection=20
+href=3D"ch4.en.html#s-debian-sec-announce"><LINK=20
+title=3D"4.2 Execute a security update" rel=3Dsection=20
+href=3D"ch4.en.html#s-security-update"><LINK title=3D"4.3 Change the =
+BIOS (again)"=20
+rel=3Dsection href=3D"ch4.en.html#s-bios-boot"><LINK=20
+title=3D"4.4 Set a LILO or GRUB password" rel=3Dsection=20
+href=3D"ch4.en.html#s-lilo-passwd"><LINK=20
+title=3D"4.5 Disable root prompt on the initramfs" rel=3Dsection=20
+href=3D"ch4.en.html#s-kernel-initramfs-prompt"><LINK=20
+title=3D"4.6 Remove root prompt on the kernel" rel=3Dsection=20
+href=3D"ch4.en.html#s-kernel-root-prompt"><LINK=20
+title=3D"4.7 Restricting console login access" rel=3Dsection=20
+href=3D"ch4.en.html#s-restrict-console-login"><LINK=20
+title=3D"4.8 Restricting system reboots through the console" =
+rel=3Dsection=20
+href=3D"ch4.en.html#s-restrict-reboots"><LINK=20
+title=3D"4.9 Mounting partitions the right way" rel=3Dsection=20
+href=3D"ch4.en.html#s4.9"><LINK title=3D"4.10 Providing secure user =
+access"=20
+rel=3Dsection href=3D"ch4.en.html#s4.10"><LINK title=3D"4.11 Using =
+tcpwrappers"=20
+rel=3Dsection href=3D"ch4.en.html#s-tcpwrappers"><LINK=20
+title=3D"4.12 The importance of logs and alerts" rel=3Dsection=20
+href=3D"ch4.en.html#s-log-alerts"><LINK title=3D"4.13 Adding kernel =
+patches"=20
+rel=3Dsection href=3D"ch4.en.html#s-kernel-patches"><LINK=20
+title=3D"4.14 Protecting against buffer overflows" rel=3Dsection=20
+href=3D"ch4.en.html#s4.14"><LINK title=3D"4.15 Secure file transfers" =
+rel=3Dsection=20
+href=3D"ch4.en.html#s4.15"><LINK title=3D"4.16 File system limits and =
+control"=20
+rel=3Dsection href=3D"ch4.en.html#s4.16"><LINK title=3D"4.17 Securing =
+network access"=20
+rel=3Dsection href=3D"ch4.en.html#s-network-secure"><LINK=20
+title=3D"4.18 Taking a snapshot of the system" rel=3Dsection=20
+href=3D"ch4.en.html#s-snapshot"><LINK title=3D"4.19 Other =
+recommendations"=20
+rel=3Dsection href=3D"ch4.en.html#s4.19"><LINK title=3D"5.1 Securing =
+ssh" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.1"><LINK title=3D"5.2 Securing Squid" =
+rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.2"><LINK title=3D"5.3 Securing FTP" =
+rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s-ftp-secure"><LINK=20
+title=3D"5.4 Securing access to the X Window System" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.4"><LINK=20
+title=3D"5.5 Securing printing access (the lpd and lprng issue)" =
+rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.5"><LINK title=3D"5.6 Securing the =
+mail service"=20
+rel=3Dsection href=3D"ch-sec-services.en.html#s5.6"><LINK title=3D"5.7 =
+Securing BIND"=20
+rel=3Dsection href=3D"ch-sec-services.en.html#s-sec-bind"><LINK=20
+title=3D"5.8 Securing Apache" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.8"><LINK title=3D"5.9 Securing =
+finger"=20
+rel=3Dsection href=3D"ch-sec-services.en.html#s5.9"><LINK=20
+title=3D"5.10 General chroot and suid paranoia" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s-chroot"><LINK=20
+title=3D"5.11 General cleartext password paranoia" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s5.11"><LINK title=3D"5.12 Disabling =
+NIS"=20
+rel=3Dsection href=3D"ch-sec-services.en.html#s5.12"><LINK=20
+title=3D"5.13 Securing RPC services" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s-rpc"><LINK=20
+title=3D"5.14 Adding firewall capabilities" rel=3Dsection=20
+href=3D"ch-sec-services.en.html#s-firewall-setup"><LINK title=3D"6.1 =
+Harden"=20
+rel=3Dsection href=3D"ch-automatic-harden.en.html#s6.1"><LINK=20
+title=3D"6.2 Bastille Linux" rel=3Dsection=20
+href=3D"ch-automatic-harden.en.html#s6.2"><LINK=20
+title=3D"7.1 The Debian Security Team" rel=3Dsection=20
+href=3D"ch7.en.html#s-debian-sec-team"><LINK=20
+title=3D"7.2 Debian Security Advisories" rel=3Dsection=20
+href=3D"ch7.en.html#s-dsa"><LINK title=3D"7.3 Security Tracker" =
+rel=3Dsection=20
+href=3D"ch7.en.html#s7.3"><LINK title=3D"7.4 Debian Security Build =
+Infrastructure"=20
+rel=3Dsection href=3D"ch7.en.html#s7.4"><LINK title=3D"7.5 Package =
+signing in Debian"=20
+rel=3Dsection href=3D"ch7.en.html#s-deb-pack-sign"><LINK=20
+title=3D"8.1 Remote vulnerability assessment tools" rel=3Dsection=20
+href=3D"ch-sec-tools.en.html#s-vuln-asses"><LINK title=3D"8.2 Network =
+scanner tools"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s8.2"><LINK title=3D"8.3 =
+Internal audits"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s8.3"><LINK=20
+title=3D"8.4 Auditing source code" rel=3Dsection=20
+href=3D"ch-sec-tools.en.html#s8.4"><LINK title=3D"8.5 Virtual Private =
+Networks"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s-vpn"><LINK=20
+title=3D"8.6 Public Key Infrastructure (PKI)" rel=3Dsection=20
+href=3D"ch-sec-tools.en.html#s8.6"><LINK title=3D"8.7 SSL =
+Infrastructure"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s8.7"><LINK title=3D"8.8 =
+Antivirus tools"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s8.8"><LINK title=3D"8.9 GPG =
+agent"=20
+rel=3Dsection href=3D"ch-sec-tools.en.html#s-gpg-agent"><LINK=20
+title=3D"9.1 Best practices for security review and design" =
+rel=3Dsection=20
+href=3D"ch9.en.html#s-bpp-devel-design"><LINK=20
+title=3D"9.2 Creating users and groups for software daemons" =
+rel=3Dsection=20
+href=3D"ch9.en.html#s-bpp-lower-privs"><LINK title=3D"10.1 Keep your =
+system secure"=20
+rel=3Dsection href=3D"ch10.en.html#s-keep-secure"><LINK=20
+title=3D"10.2 Do periodic integrity checks" rel=3Dsection=20
+href=3D"ch10.en.html#s-periodic-integrity"><LINK=20
+title=3D"10.3 Set up Intrusion Detection" rel=3Dsection=20
+href=3D"ch10.en.html#s-intrusion-detect"><LINK title=3D"10.4 Avoiding =
+root-kits"=20
+rel=3Dsection href=3D"ch10.en.html#s10.4"><LINK=20
+title=3D"10.5 Genius/Paranoia Ideas =97 what you could do" rel=3Dsection =
+
+href=3D"ch10.en.html#s10.5"><LINK title=3D"11.1 General behavior" =
+rel=3Dsection=20
+href=3D"ch-after-compromise.en.html#s11.1"><LINK=20
+title=3D"11.2 Backing up the system" rel=3Dsection=20
+href=3D"ch-after-compromise.en.html#s11.2"><LINK=20
+title=3D"11.3 Contact your local CERT" rel=3Dsection=20
+href=3D"ch-after-compromise.en.html#s11.3"><LINK title=3D"11.4 Forensic =
+analysis"=20
+rel=3Dsection href=3D"ch-after-compromise.en.html#s11.4"><LINK=20
+title=3D"12.1 Security in the Debian operating system" rel=3Dsection=20
+href=3D"ch12.en.html#s12.1"><LINK=20
+title=3D"12.2 My system is vulnerable! (Are you sure?)" rel=3Dsection=20
+href=3D"ch12.en.html#s-vulnerable-system"><LINK=20
+title=3D"12.3 Questions regarding the Debian security team" =
+rel=3Dsection=20
+href=3D"ch12.en.html#s-debian-sec-team-faq"><LINK=20
+title=3D"D.1 A bridge providing NAT and firewall capabilities" =
+rel=3Dsection=20
+href=3D"ap-bridge-fw.en.html#sD.1"><LINK=20
+title=3D"D.2 A bridge providing firewall capabilities" rel=3Dsection=20
+href=3D"ap-bridge-fw.en.html#sD.2"><LINK title=3D"D.3 Basic IPtables =
+rules"=20
+rel=3Dsection href=3D"ap-bridge-fw.en.html#sD.3"><LINK=20
+title=3D"G.1 Chrooting the ssh users" rel=3Dsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.1"><LINK title=3D"G.2 Chrooting the =
+ssh server"=20
+rel=3Dsection href=3D"ap-chroot-ssh-env.en.html#sG.2"><LINK title=3D"H.1 =
+Introduction"=20
+rel=3Dsection href=3D"ap-chroot-apache-env.en.html#sH.1"><LINK=20
+title=3D"H.2 Installing the server" rel=3Dsection=20
+href=3D"ap-chroot-apache-env.en.html#sH.2"><LINK title=3D"H.3 See also" =
+rel=3Dsection=20
+href=3D"ap-chroot-apache-env.en.html#sH.3"><LINK=20
+title=3D"1.6.1 Version 3.15 (December 2010)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.1"><LINK title=3D"1.6.2 Version 3.14 (March =
+2009)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.2"><LINK=20
+title=3D"1.6.3 Version 3.13 (Februrary 2008)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.3"><LINK title=3D"1.6.4 Version 3.12 (August =
+2007)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.4"><LINK=20
+title=3D"1.6.5 Version 3.11 (January 2007)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.5"><LINK title=3D"1.6.6 Version 3.10 (November =
+2006)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.6"><LINK=20
+title=3D"1.6.7 Version 3.9 (October 2006)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.7"><LINK title=3D"1.6.8 Version 3.8 (July =
+2006)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.8"><LINK=20
+title=3D"1.6.9 Version 3.7 (April 2006)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.9"><LINK title=3D"1.6.10 Version 3.6 (March =
+2006)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.10"><LINK=20
+title=3D"1.6.11 Version 3.5 (November 2005)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.11"><LINK=20
+title=3D"1.6.12 Version 3.4 (August-September 2005)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.12"><LINK title=3D"1.6.13 Version 3.3 (June =
+2005)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.13"><LINK=20
+title=3D"1.6.14 Version 3.2 (March 2005)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.14"><LINK title=3D"1.6.15 Version 3.1 (January =
+2005)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.15"><LINK=20
+title=3D"1.6.16 Version 3.0 (December 2004)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.16"><LINK title=3D"1.6.17 Version 2.99 (March =
+2004)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.17"><LINK=20
+title=3D"1.6.18 Version 2.98 (December 2003)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.18"><LINK title=3D"1.6.19 Version 2.97 =
+(September 2003)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.19"><LINK=20
+title=3D"1.6.20 Version 2.96 (August 2003)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.20"><LINK title=3D"1.6.21 Version 2.95 (June =
+2003)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.21"><LINK=20
+title=3D"1.6.22 Version 2.94 (April 2003)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.22"><LINK title=3D"1.6.23 Version 2.93 (March =
+2003)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.23"><LINK=20
+title=3D"1.6.24 Version 2.92 (February 2003)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.24"><LINK=20
+title=3D"1.6.25 Version 2.91 (January/February 2003)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.25"><LINK title=3D"1.6.26 Version 2.9 (December =
+2002)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.26"><LINK=20
+title=3D"1.6.27 Version 2.8 (November 2002)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.27"><LINK title=3D"1.6.28 Version 2.7 (October =
+2002)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.28"><LINK=20
+title=3D"1.6.29 Version 2.6 (September 2002)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.29"><LINK title=3D"1.6.30 Version 2.5 =
+(September 2002)"=20
+rel=3Dsubsection href=3D"ch1.en.html#s1.6.30"><LINK=20
+title=3D"1.6.31 Version 2.5 (August 2002)" rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.31"><LINK title=3D"1.6.32 Version 2.4" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.32"><LINK title=3D"1.6.33 Version 2.3" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.33"><LINK title=3D"1.6.34 Version 2.3" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.34"><LINK title=3D"1.6.35 Version 2.2" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.35"><LINK title=3D"1.6.36 Version 2.1" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.36"><LINK title=3D"1.6.37 Version 2.0" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.37"><LINK title=3D"1.6.38 Version 1.99" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.38"><LINK title=3D"1.6.39 Version 1.98" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.39"><LINK title=3D"1.6.40 Version 1.97" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.40"><LINK title=3D"1.6.41 Version 1.96" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.41"><LINK title=3D"1.6.42 Version 1.95" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.42"><LINK title=3D"1.6.43 Version 1.94" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.43"><LINK title=3D"1.6.44 Version 1.93" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.44"><LINK title=3D"1.6.45 Version 1.92" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.45"><LINK title=3D"1.6.46 Version 1.91" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.46"><LINK title=3D"1.6.47 Version 1.9" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.47"><LINK title=3D"1.6.48 Version 1.8" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.48"><LINK title=3D"1.6.49 Version 1.7" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.49"><LINK title=3D"1.6.50 Version 1.6" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.50"><LINK title=3D"1.6.51 Version 1.5" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.51"><LINK title=3D"1.6.52 Version 1.4" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.52"><LINK title=3D"1.6.53 Version 1.3" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.53"><LINK title=3D"1.6.54 Version 1.2" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.54"><LINK title=3D"1.6.55 Version 1.1" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.55"><LINK title=3D"1.6.56 Version 1.0" =
+rel=3Dsubsection=20
+href=3D"ch1.en.html#s1.6.56"><LINK=20
+title=3D"3.2.1 Choose an intelligent partition scheme" rel=3Dsubsection=20
+href=3D"ch3.en.html#s3.2.1"><LINK=20
+title=3D"3.2.1.1 Selecting the appropriate file systems" =
+rel=3Dsubsection=20
+href=3D"ch3.en.html#s3.2.1.1"><LINK title=3D"3.6.1 Disabling daemon =
+services"=20
+rel=3Dsubsection href=3D"ch3.en.html#s-disableserv"><LINK=20
+title=3D"3.6.2 Disabling <code>inetd</code> or its services" =
+rel=3Dsubsection=20
+href=3D"ch3.en.html#s-inetd"><LINK title=3D"3.7.1 Removing Perl" =
+rel=3Dsubsection=20
+href=3D"ch3.en.html#s3.7.1"><LINK title=3D"4.2.1 Security update of =
+libraries"=20
+rel=3Dsubsection href=3D"ch4.en.html#s-lib-security-update"><LINK=20
+title=3D"4.2.2 Security update of the kernel" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-kernel-security-update"><LINK=20
+title=3D"4.9.1 Setting <code>/tmp</code> noexec" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.9.1"><LINK title=3D"4.9.2 Setting /usr read-only" =
+
+rel=3Dsubsection href=3D"ch4.en.html#s4.9.2"><LINK=20
+title=3D"4.10.1 User authentication: PAM" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-auth-pam"><LINK=20
+title=3D"4.10.2 Limiting resource usage: the <code>limits.conf</code> =
+file"=20
+rel=3Dsubsection href=3D"ch4.en.html#s-user-limits"><LINK=20
+title=3D"4.10.3 User login actions: edit <code>/etc/login.defs</code>"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.3"><LINK=20
+title=3D"4.10.4 Restricting ftp: editing <code>/etc/ftpusers</code>"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.4"><LINK title=3D"4.10.5 =
+Using su"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.5"><LINK title=3D"4.10.6 =
+Using sudo"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.6"><LINK=20
+title=3D"4.10.7 Disallow remote administrative access" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.10.7"><LINK title=3D"4.10.8 Restricting users's =
+access"=20
+rel=3Dsubsection href=3D"ch4.en.html#s-user-restrict"><LINK=20
+title=3D"4.10.9 User auditing" rel=3Dsubsection =
+href=3D"ch4.en.html#s4.10.9"><LINK=20
+title=3D"4.10.9.1 Input and output audit with script" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.10.9.1"><LINK title=3D"4.10.9.2 Using the shell =
+history file"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.9.2"><LINK=20
+title=3D"4.10.9.3 Complete user audit with accounting utilities" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.10.9.3"><LINK title=3D"4.10.9.4 Other user =
+auditing methods"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.9.4"><LINK=20
+title=3D"4.10.10 Reviewing user profiles" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.10.10"><LINK title=3D"4.10.11 Setting users =
+umasks"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.11"><LINK=20
+title=3D"4.10.12 Limiting what users can see/access" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.10.12"><LINK=20
+title=3D"4.10.12.1 Limiting access to other user's information" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s-limit-user-perm"><LINK=20
+title=3D"4.10.13 Generating user passwords" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-user-pwgen"><LINK title=3D"4.10.14 Checking user =
+passwords"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.10.14"><LINK=20
+title=3D"4.10.15 Logging off idle users" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-idle-logoff"><LINK=20
+title=3D"4.12.1 Using and customizing <code>logcheck</code>" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s-custom-logcheck"><LINK=20
+title=3D"4.12.2 Configuring where alerts are sent" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.12.2"><LINK title=3D"4.12.3 Using a loghost" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.12.3"><LINK title=3D"4.12.4 Log file permissions" =
+
+rel=3Dsubsection href=3D"ch4.en.html#s4.12.4"><LINK=20
+title=3D"4.14.1 Kernel patch protection for buffer overflows" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.14.1"><LINK title=3D"4.14.2 Testing programs for =
+overflows"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.14.2"><LINK title=3D"4.16.1 =
+Using quotas"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.16.1"><LINK=20
+title=3D"4.16.2 The ext2 filesystem specific attributes (chattr/lsattr)" =
+
+rel=3Dsubsection href=3D"ch4.en.html#s-ext2attr"><LINK=20
+title=3D"4.16.3 Checking file system integrity" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-check-integ"><LINK title=3D"4.16.4 Setting up =
+setuid check"=20
+rel=3Dsubsection href=3D"ch4.en.html#s4.16.4"><LINK=20
+title=3D"4.17.1 Configuring kernel network features" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-kernel-conf"><LINK title=3D"4.17.2 Configuring =
+syncookies"=20
+rel=3Dsubsection href=3D"ch4.en.html#s-tcp-syncookies"><LINK=20
+title=3D"4.17.3 Securing the network on boot-time" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-net-harden"><LINK=20
+title=3D"4.17.4 Configuring firewall features" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-kernel-fw"><LINK=20
+title=3D"4.17.5 Disabling weak-end hosts issues" rel=3Dsubsection=20
+href=3D"ch4.en.html#s-limit-bindaddr"><LINK=20
+title=3D"4.17.6 Protecting against ARP attacks" rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.17.6"><LINK=20
+title=3D"4.19.1 Do not use software depending on svgalib" =
+rel=3Dsubsection=20
+href=3D"ch4.en.html#s4.19.1"><LINK title=3D"5.1.1 Chrooting ssh" =
+rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-ssh-chroot"><LINK title=3D"5.1.2 Ssh =
+clients"=20
+rel=3Dsubsection href=3D"ch-sec-services.en.html#s5.1.2"><LINK=20
+title=3D"5.1.3 Disallowing file transfers" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.1.3"><LINK=20
+title=3D"5.1.4 Restricing access to file transfer only" rel=3Dsubsection =
+
+href=3D"ch-sec-services.en.html#s-ssh-only-file"><LINK=20
+title=3D"5.4.1 Check your display manager" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.4.1"><LINK=20
+title=3D"5.6.1 Configuring a Nullmailer" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.6.1"><LINK=20
+title=3D"5.6.2 Providing secure access to mailboxes" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.6.2"><LINK=20
+title=3D"5.6.3 Receiving mail securely" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.6.3"><LINK=20
+title=3D"5.7.1 Bind configuration to avoid misuse" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-configure-bind"><LINK=20
+title=3D"5.7.2 Changing BIND's user" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-user-bind"><LINK=20
+title=3D"5.7.3 Chrooting the name server" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-chroot-bind"><LINK=20
+title=3D"5.8.1 Disabling users from publishing web contents" =
+rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.8.1"><LINK title=3D"5.8.2 Logfiles =
+permissions"=20
+rel=3Dsubsection href=3D"ch-sec-services.en.html#s5.8.2"><LINK=20
+title=3D"5.8.3 Published web files" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.8.3"><LINK=20
+title=3D"5.10.1 Making chrooted environments automatically" =
+rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-auto-chroot"><LINK=20
+title=3D"5.13.1 Disabling RPC services completely" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.13.1"><LINK=20
+title=3D"5.13.2 Limiting access to RPC services" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.13.2"><LINK=20
+title=3D"5.14.1 Firewalling the local system" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.14.1"><LINK=20
+title=3D"5.14.2 Using a firewall to protect other systems" =
+rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.14.2"><LINK=20
+title=3D"5.14.3 Setting up a firewall" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.14.3"><LINK=20
+title=3D"5.14.3.1 Using firewall packages" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s-firewall-pack"><LINK=20
+title=3D"5.14.3.2 Manual init.d configuration" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.14.3.2"><LINK=20
+title=3D"5.14.3.3 Configuring firewall rules through <code>ifup</code>"=20
+rel=3Dsubsection href=3D"ch-sec-services.en.html#s5.14.3.3"><LINK=20
+title=3D"5.14.3.4 Testing your firewall configuration" rel=3Dsubsection=20
+href=3D"ch-sec-services.en.html#s5.14.3.4"><LINK=20
+title=3D"7.2.1 Vulnerability cross references" rel=3Dsubsection=20
+href=3D"ch7.en.html#s-crossreference"><LINK title=3D"7.2.2 CVE =
+compatibility"=20
+rel=3Dsubsection href=3D"ch7.en.html#s-cve-compatible"><LINK=20
+title=3D"7.4.1 Developer's guide to security updates" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.4.1"><LINK=20
+title=3D"7.5.1 The current scheme for package signature checks" =
+rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.1"><LINK title=3D"7.5.2 Secure apt" =
+rel=3Dsubsection=20
+href=3D"ch7.en.html#s-apt-0.6"><LINK title=3D"7.5.3 Per distribution =
+release check"=20
+rel=3Dsubsection href=3D"ch7.en.html#s-check-releases"><LINK=20
+title=3D"7.5.3.1 Basic concepts" rel=3Dsubsection =
+href=3D"ch7.en.html#s7.5.3.1"><LINK=20
+title=3D"7.5.3.2 <code>Release</code> checksums" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.2"><LINK=20
+title=3D"7.5.3.3 Verification of the <code>Release</code> file" =
+rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.3"><LINK=20
+title=3D"7.5.3.4 Check of <code>Release.gpg</code> by <code>apt</code>"=20
+rel=3Dsubsection href=3D"ch7.en.html#s7.5.3.4"><LINK=20
+title=3D"7.5.3.5 How to tell apt what to trust" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.5"><LINK=20
+title=3D"7.5.3.6 Finding the key for a repository" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.6"><LINK title=3D"7.5.3.7 Safely adding a =
+key"=20
+rel=3Dsubsection href=3D"ch7.en.html#s-secure-apt-add-key"><LINK=20
+title=3D"7.5.3.8 Verifying key integrity" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.8"><LINK=20
+title=3D"7.5.3.9 Debian archive key yearly rotation" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.9"><LINK=20
+title=3D"7.5.3.10 Known release checking problems" rel=3Dsubsection=20
+href=3D"ch7.en.html#s7.5.3.10"><LINK=20
+title=3D"7.5.3.11 Manual per distribution release check" =
+rel=3Dsubsection=20
+href=3D"ch7.en.html#s-manual-check-releases"><LINK=20
+title=3D"7.5.4 Release check of non Debian sources" rel=3Dsubsection=20
+href=3D"ch7.en.html#s-check-non-debian-releases"><LINK=20
+title=3D"7.5.5 Alternative per-package signing scheme" rel=3Dsubsection=20
+href=3D"ch7.en.html#s-check-pkg-sign"><LINK title=3D"8.5.1 Point to =
+Point tunneling"=20
+rel=3Dsubsection href=3D"ch-sec-tools.en.html#s8.5.1"><LINK=20
+title=3D"10.1.1 Tracking security vulnerabilities" rel=3Dsubsection=20
+href=3D"ch10.en.html#s-track-vulns"><LINK=20
+title=3D"10.1.2 Continuously update the system" rel=3Dsubsection=20
+href=3D"ch10.en.html#s-keep-up-to-date"><LINK=20
+title=3D"10.1.2.1 Manually checking which security updates are =
+available"=20
+rel=3Dsubsection href=3D"ch10.en.html#s10.1.2.1"><LINK=20
+title=3D"10.1.2.2 Checking for updates at the Desktop" rel=3Dsubsection=20
+href=3D"ch10.en.html#s-update-desktop"><LINK=20
+title=3D"10.1.2.3 Automatically checking for updates with cron-apt" =
+rel=3Dsubsection=20
+href=3D"ch10.en.html#s-cron-apt"><LINK=20
+title=3D"10.1.2.4 Automatically checking for security issues with =
+debsecan"=20
+rel=3Dsubsection href=3D"ch10.en.html#s-debsecan"><LINK=20
+title=3D"10.1.2.5 Other methods for security updates" rel=3Dsubsection=20
+href=3D"ch10.en.html#s10.1.2.5"><LINK=20
+title=3D"10.1.3 Avoid using the unstable branch" rel=3Dsubsection=20
+href=3D"ch10.en.html#s10.1.3"><LINK=20
+title=3D"10.1.4 Security support for the testing branch" =
+rel=3Dsubsection=20
+href=3D"ch10.en.html#s-security-support-testing"><LINK=20
+title=3D"10.1.5 Automatic updates in a Debian GNU/Linux system" =
+rel=3Dsubsection=20
+href=3D"ch10.en.html#s10.1.5"><LINK=20
+title=3D"10.3.1 Network based intrusion detection" rel=3Dsubsection=20
+href=3D"ch10.en.html#s10.3.1"><LINK title=3D"10.3.2 Host based intrusion =
+detection"=20
+rel=3Dsubsection href=3D"ch10.en.html#s10.3.2"><LINK=20
+title=3D"10.4.1 Loadable Kernel Modules (LKM)" rel=3Dsubsection=20
+href=3D"ch10.en.html#s-LKM"><LINK title=3D"10.4.2 Detecting root-kits"=20
+rel=3Dsubsection href=3D"ch10.en.html#s10.4.2"><LINK=20
+title=3D"10.4.2.1 Proactive defense" rel=3Dsubsection=20
+href=3D"ch10.en.html#s-proactive"><LINK title=3D"10.4.2.2 Reactive =
+defense"=20
+rel=3Dsubsection href=3D"ch10.en.html#s10.4.2.2"><LINK=20
+title=3D"10.5.1 Building a honeypot" rel=3Dsubsection=20
+href=3D"ch10.en.html#s10.5.1"><LINK title=3D"11.4.1 Analysis of malware" =
+
+rel=3Dsubsection href=3D"ch-after-compromise.en.html#s11.4.1"><LINK=20
+title=3D"12.1.1 Is Debian more secure than X?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.1"><LINK=20
+title=3D"12.1.1.1 Is Debian more secure than other Linux distributions =
+(such as Red Hat, SuSE...)?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.1.1"><LINK=20
+title=3D"12.1.2 There are many Debian bugs in Bugtraq. Does this mean =
+that it is very vulnerable?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.2"><LINK=20
+title=3D"12.1.3 Does Debian have any certification related to security?" =
+
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.3"><LINK=20
+title=3D"12.1.4 Are there any hardening programs for Debian?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.4"><LINK=20
+title=3D"12.1.5 I want to run XYZ service, which one should I choose?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.5"><LINK=20
+title=3D"12.1.6 How can I make service XYZ more secure in Debian?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.6"><LINK=20
+title=3D"12.1.7 How can I remove all the banners for services?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.7"><LINK title=3D"12.1.8 Are all Debian =
+packages safe?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.8"><LINK=20
+title=3D"12.1.9 Why are some log files/configuration files =
+world-readable, isn't this insecure?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.9"><LINK=20
+title=3D"12.1.10 Why does /root/ (or UserX) have 755 permissions?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.10"><LINK=20
+title=3D"12.1.11 After installing a grsec/firewall, I started receiving =
+many console messages! How do I remove them?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.11"><LINK=20
+title=3D"12.1.12 Operating system users and groups" rel=3Dsubsection=20
+href=3D"ch12.en.html#s-faq-os-users"><LINK=20
+title=3D"12.1.12.1 Are all system users necessary?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.12.1"><LINK=20
+title=3D"12.1.12.2 I removed a system user! How can I recover?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.12.2"><LINK=20
+title=3D"12.1.12.3 What is the difference between the adm and the staff =
+group?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.12.3"><LINK=20
+title=3D"12.1.13 Why is there a new group when I add a new user? (or Why =
+does Debian give each user one group?)"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.13"><LINK=20
+title=3D"12.1.14 Questions regarding services and open ports" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.14"><LINK=20
+title=3D"12.1.14.1 Why are all services activated upon installation?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.14.1"><LINK=20
+title=3D"12.1.14.2 Can I remove <code>inetd</code>?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.14.2"><LINK=20
+title=3D"12.1.14.3 Why do I have port 111 open?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.14.3"><LINK=20
+title=3D"12.1.14.4 What use is <code>identd</code> (port 113) for?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.14.4"><LINK=20
+title=3D"12.1.14.5 I have services using port 1 and 6, what are they and =
+how can I remove them?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.14.5"><LINK=20
+title=3D"12.1.14.6 I found the port XYZ open, can I close it?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.14.6"><LINK=20
+title=3D"12.1.14.7 Will removing services from =
+<code>/etc/services</code> help secure my box?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.14.7"><LINK=20
+title=3D"12.1.15 Common security issues" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.1.15"><LINK=20
+title=3D"12.1.15.1 I have lost my password and cannot access the =
+system!"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.15.1"><LINK=20
+title=3D"12.1.16 How do I accomplish setting up a service for my users =
+without giving out shell accounts?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.1.16"><LINK=20
+title=3D"12.2.1 Vulnerability assessment scanner X says my Debian system =
+is vulnerable!"=20
+rel=3Dsubsection href=3D"ch12.en.html#s-vulnasses-false-positive"><LINK=20
+title=3D"12.2.2 I've seen an attack in my system's logs. Is my system =
+compromised?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.2"><LINK=20
+title=3D"12.2.3 I have found strange 'MARK' lines in my logs: Am I =
+compromised?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.3"><LINK=20
+title=3D"12.2.4 I found users using 'su' in my logs: Am I compromised?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.4"><LINK=20
+title=3D"12.2.5 I have found 'possible SYN flooding' in my logs: Am I =
+under attack?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.5"><LINK=20
+title=3D"12.2.6 I have found strange root sessions in my logs: Am I =
+compromised?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.6"><LINK=20
+title=3D"12.2.7 I have suffered a break-in, what do I do?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.2.7"><LINK title=3D"12.2.8 How can I trace an =
+attack?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.8"><LINK=20
+title=3D"12.2.9 Program X in Debian is vulnerable, what do I do?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.2.9"><LINK=20
+title=3D"12.2.10 The version number for a package indicates that I am =
+still running a vulnerable version!"=20
+rel=3Dsubsection href=3D"ch12.en.html#s-version-backport"><LINK=20
+title=3D"12.2.11 Specific software" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.2.11"><LINK=20
+title=3D"12.2.11.1 <code>proftpd</code> is vulnerable to a Denial of =
+Service attack."=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.11.1"><LINK=20
+title=3D"12.2.11.2 After installing <code>portsentry</code>, there are a =
+lot of ports open."=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.2.11.2"><LINK=20
+title=3D"12.3.1 What is a Debian Security Advisory (DSA)?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.1"><LINK=20
+title=3D"12.3.2 The signature on Debian advisories does not verify =
+correctly!"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.2"><LINK=20
+title=3D"12.3.3 How is security handled in Debian?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.3"><LINK=20
+title=3D"12.3.4 Why are you fiddling with an old version of that =
+package?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.4"><LINK=20
+title=3D"12.3.5 What is the policy for a fixed package to appear in =
+security.debian.org?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.5"><LINK=20
+title=3D'12.3.6 What does "local (remote)" mean?' rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.6"><LINK=20
+title=3D"12.3.7 The version number for a package indicates that I am =
+still running a vulnerable version!"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.7"><LINK=20
+title=3D"12.3.8 How is security handled for <samp>testing</samp> and =
+<samp>unstable</samp>?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s-sec-unstable"><LINK=20
+title=3D"12.3.9 I use an older version of Debian, is it supported by the =
+Debian Security Team?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s-sec-older"><LINK=20
+title=3D"12.3.10 How does <em>testing</em> get security updates?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.10"><LINK=20
+title=3D"12.3.11 How is security handled for contrib and non-free?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.11"><LINK=20
+title=3D"12.3.12 Why are there no official mirrors for =
+security.debian.org?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.12"><LINK=20
+title=3D"12.3.13 I've seen DSA 100 and DSA 102, now where is DSA 101?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.13"><LINK=20
+title=3D"12.3.14 I tried to download a package listed in one of the =
+security advisories, but I got a `file not found' error."=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.14"><LINK=20
+title=3D"12.3.15 How can I reach the security team?" rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.15"><LINK=20
+title=3D"12.3.16 What difference is there between security@debian.org =
+and debian-security@lists.debian.org?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.16"><LINK=20
+title=3D"12.3.17 I guess I found a security problem, what should I do?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.17"><LINK=20
+title=3D"12.3.18 How can I contribute to the Debian security team?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.18"><LINK=20
+title=3D"12.3.19 Who is the Security Team composed of?" rel=3Dsubsection =
+
+href=3D"ch12.en.html#s12.3.19"><LINK=20
+title=3D"12.3.20 Does the Debian Security team check every new package =
+in Debian?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.20"><LINK=20
+title=3D"12.3.21 How much time will it take Debian to fix vulnerability =
+XXXX?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.21"><LINK=20
+title=3D"12.3.22 How long will security updates be provided?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.22"><LINK=20
+title=3D"12.3.23 How can I check the integrity of packages?" =
+rel=3Dsubsection=20
+href=3D"ch12.en.html#s12.3.23"><LINK=20
+title=3D"12.3.24 What to do if a random package breaks after a security =
+update?"=20
+rel=3Dsubsection href=3D"ch12.en.html#s12.3.24"><LINK=20
+title=3D"G.1.1 Using <code>libpam-chroot</code>" rel=3Dsubsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.1.1"><LINK=20
+title=3D"G.1.2 Patching the <code>ssh</code> server" rel=3Dsubsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.1.2"><LINK=20
+title=3D"G.2.1 Setup a minimal system (the really easy way)" =
+rel=3Dsubsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.2.1"><LINK=20
+title=3D"G.2.2 Automatically making the environment (the easy way)" =
+rel=3Dsubsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.2.2"><LINK=20
+title=3D"G.2.3 Manually creating the environment (the hard way)" =
+rel=3Dsubsection=20
+href=3D"ap-chroot-ssh-env.en.html#sG.2.3"><LINK title=3D"H.1.1 =
+Licensing"=20
+rel=3Dsubsection href=3D"ap-chroot-apache-env.en.html#sH.1.1">
+<META name=3DGENERATOR content=3D"MSHTML 8.00.6001.19154"></HEAD>
+<BODY>
+<P><A name=3Dap-chroot-ssh-env></A></P>
+<HR>
+
+<P>[ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-fw-sec=
+urity-update.en.html">previous</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/index.en.=
+html#contents">Contents</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch1.en.ht=
+ml">1</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch2.en.ht=
+ml">2</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch3.en.ht=
+ml">3</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.ht=
+ml">4</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-sec-se=
+rvices.en.html">5</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-automa=
+tic-harden.en.html">6</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch7.en.ht=
+ml">7</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-sec-to=
+ols.en.html">8</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch9.en.ht=
+ml">9</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch10.en.h=
+tml">10</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-after-=
+compromise.en.html">11</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch12.en.h=
+tml">12</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-harden=
+-step.en.html">A</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-checkl=
+ist.en.html">B</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-snort-=
+box.en.html">C</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-bridge=
+-fw.en.html">D</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-bind-c=
+huser.en.html">E</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-fw-sec=
+urity-update.en.html">F</A>=20
+] [ G ] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-chroot=
+-apache-env.en.html">H</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-chroot=
+-apache-env.en.html">next</A>=20
+] </P>
+<HR>
+
+<H1>Securing Debian Manual <BR>Appendix G - <CODE>Chroot</CODE> =
+environment for=20
+<CODE>SSH</CODE></H1>
+<HR>
+
+<P>Creating a restricted environment for <CODE>SSH</CODE> is a tough job =
+due to=20
+its dependencies and the fact that, unlike other servers, =
+<CODE>SSH</CODE>=20
+provides a remote shell to users. Thus, you will also have to consider =
+the=20
+applications users will be allowed to use in the environment. </P>
+<P>You have two options to setup a restricted remote shell: </P>
+<UL>
+  <LI>
+  <P>Chrooting the ssh users, by properly configuring the ssh daemon you =
+can ask=20
+  it to chroot a user after authentication just before it is provided a =
+shell.=20
+  Each user can have their own environment. </P></LI></UL>
+<UL>
+  <LI>
+  <P>Chrooting the ssh server, since you chroot the ssh application =
+itself all=20
+  users are chrooted to the defined environment. </P></LI></UL>
+<P>The first option has the advantage of making it possible to have both =
+
+non-chrooted and chrooted users, if you don't introduce any setuid =
+application=20
+in the user's chroots it is more difficult to break out of it. However, =
+you=20
+might need to setup individual chroots for each user and it is more =
+difficult to=20
+setup (as it requires cooperation from the SSH server). The second =
+option is=20
+more easy to setup, and protects from an exploitation of the ssh server =
+itself=20
+(since it's also in the chroot) but it will have the limitation that all =
+users=20
+will share the same chroot environment (you cannot setup a per-user =
+chroot=20
+environment). </P>
+<HR>
+
+<H2><A name=3DsG.1></A>G.1 Chrooting the ssh users</H2>
+<P>You can setup the ssh server so that it will chroot a set of defined =
+users=20
+into a shell with a limited set of applications available. </P>
+<HR>
+
+<H3><A name=3DsG.1.1></A>G.1.1 Using <CODE>libpam-chroot</CODE></H3>
+<P>Probably the easiest way is to use the <CODE>libpam-chroot</CODE> =
+package=20
+provided in Debian. Once you install it you need to: </P>
+<UL>
+  <LI>
+  <P>Modify <CODE>/etc/pam.d/ssh</CODE> to use this PAM module, add as =
+its last=20
+  line[<A=20
+  =
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/footnotes=
+.en.html#f86"=20
+  name=3Dfr86>86</A>]: </P><PRE>     session    required   pam_chroot.so
+</PRE></LI></UL>
+<UL>
+  <LI>
+  <P>set a proper chroot environment for the user. You can try using the =
+scripts=20
+  available at <CODE>/usr/share/doc/libpam-chroot/examples/</CODE>, use =
+the=20
+  <CODE>makejail</CODE> [<A=20
+  =
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/footnotes=
+.en.html#f87"=20
+  name=3Dfr87>87</A>] program or setup a minimum Debian environment with =
+
+  <CODE>debootstrap</CODE>. Make sure the environment includes the =
+needed=20
+  devices [<A=20
+  =
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/footnotes=
+.en.html#f88"=20
+  name=3Dfr88>88</A>]. </P></LI></UL>
+<UL>
+  <LI>
+  <P>Configure <CODE>/etc/security/chroot.conf</CODE> so that the users =
+you=20
+  determine are chrooted to the directory you setup previously. You =
+might want=20
+  to have independent directories for different users so that they will =
+not be=20
+  able to see neither the whole system nor each other's. </P></LI></UL>
+<UL>
+  <LI>
+  <P>Configure SSH: Depending on your OpenSSH version the chroot =
+environment=20
+  might work straight of the box or not. Since 3.6.1p2 the=20
+  <EM>do_pam_session()</EM> function is called after sshd has dropped=20
+  privileges, since chroot() needs root priviledges it will not work =
+with=20
+  Privilege separation on. In newer OpenSSH versions, however, the PAM =
+code has=20
+  been modified and do_pam_session is called before dropping priviledges =
+so it=20
+  will work even with Privilege separation is on. If you have to disable =
+it=20
+  modify <CODE>/etc/ssh/sshd_config</CODE> like this: </P><PRE>     =
+UsePrivilegeSeparation no
+</PRE>
+  <P>Notice that this will lower the security of your system since the =
+OpenSSH=20
+  server will then run as <EM>root</EM> user. This means that if a =
+remote attack=20
+  is found against OpenSSH an attacker will get <EM>root</EM> privileges =
+instead=20
+  of <EM>sshd</EM>, thus compromising the whole system. [<A=20
+  =
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/footnotes=
+.en.html#f89"=20
+  name=3Dfr89>89</A>] </P></LI></UL>
+<P>If you don't disable <EM>Privilege Separation</EM> you will need an=20
+<CODE>/etc/passwd</CODE> which includes the user's UID inside the chroot =
+for=20
+<EM>Privilege Separation</EM> to work properly. </P>
+<P>If you have <EM>Privilege Separation</EM> set to <STRONG>yes</STRONG> =
+and=20
+your OpenSSH version does not behave properly you will need to disable =
+it. If=20
+you don't, users that try to connect to your server and would be =
+chrooted by=20
+this module will see this: </P><PRE>     $ ssh -l user server
+     user@server's password:
+     Connection to server closed by remote host.
+     Connection to server closed.
+</PRE>
+<P>This is because the ssh daemon, which is running as 'sshd', is not be =
+able to=20
+make the chroot() system call. To disable Privilege separation you have =
+to=20
+modify the <CODE>/etc/ssh/sshd_config</CODE> configuration file as =
+described=20
+above. </P>
+<P>Notice that if any of the following is missing the users will not be =
+able to=20
+logon to the chroot: </P>
+<UL>
+  <LI>
+  <P>The <CODE>/proc</CODE> filesystem needs to be mounted in the users' =
+chroot.=20
+  </P></LI></UL>
+<UL>
+  <LI>
+  <P>The necessary <CODE>/dev/pts/</CODE> devices need to exist. If the =
+files=20
+  are generated by your running kernel automatically then you have to =
+manually=20
+  create them on the chroot's <CODE>/dev/</CODE>. </P></LI></UL>
+<UL>
+  <LI>
+  <P>The user's home directory has to exist in the chroot, otherwise the =
+ssh=20
+  daemon will not continue. </P></LI></UL>
+<P>You can debug all these issues if you use the <EM>debug</EM> keyword =
+in the=20
+<CODE>/etc/pam.d/ssh</CODE> PAM definition. If you encounter issues you =
+might=20
+find it useful to enable the debugging mode on the ssh client too. </P>
+<P>Note: This information is also available (and maybe more up to date) =
+in=20
+<CODE>/usr/share/doc/libpam-chroot/README.Debian.gz</CODE>, please =
+review it for=20
+updated information before taking the above steps. </P>
+<HR>
+
+<H3><A name=3DsG.1.2></A>G.1.2 Patching the <CODE>ssh</CODE> server</H3>
+<P>Debian's <CODE>sshd</CODE> does not allow restriction of a user's =
+movement=20
+through the server, since it lacks the <CODE>chroot</CODE> function that =
+the=20
+commercial program <CODE>sshd2</CODE> includes (using 'ChrootGroups' or=20
+'ChrootUsers', see <CODE>sshd2_config(5)</CODE>). However, there is a =
+patch=20
+available to add this functionality available from <CODE><A=20
+href=3D"http://chrootssh.sourceforge.net/">ChrootSSH project</A></CODE> =
+(requested=20
+and available in <CODE><A href=3D"http://bugs.debian.org/139047">Bug=20
+#139047</A></CODE> in Debian). The patch may be included in future =
+releases of=20
+the OpenSSH package. Emmanuel Lacour has <CODE>ssh</CODE> deb packages =
+for=20
+<EM>sarge</EM> with this feature. They are available at <CODE><A=20
+href=3D"http://debian.home-dn.net/sarge/ssh/">http://debian.home-dn.net/s=
+arge/ssh/</A></CODE>.=20
+Notice that those might not be up to date so completing the compilation =
+step is=20
+recommended. </P>
+<P>After applying the patch, modify <CODE>/etc/passwd</CODE> by changing =
+the=20
+home path of the users (with the special <SAMP>/./</SAMP> token): =
+</P><PRE>       joeuser:x:1099:1099:Joe Random =
+User:/home/joe/./:/bin/bash
+</PRE>
+<P>This will restrict <EM>both</EM> remote shell access, as well as =
+remote copy=20
+through the <CODE>ssh</CODE> channel. </P>
+<P>Make sure to have all the needed binaries and libraries in the=20
+<CODE>chroot</CODE>'ed path for users. These files should be owned by =
+root to=20
+avoid tampering by the user (so as to exit the <CODE>chroot</CODE>'ed =
+jailed). A=20
+sample might include: </P><PRE>     ./bin:
+     total 660
+     drwxr-xr-x    2 root     root         4096 Mar 18 13:36 .
+     drwxr-xr-x    8 guest    guest        4096 Mar 15 16:53 ..
+     -r-xr-xr-x    1 root     root       531160 Feb  6 22:36 bash
+     -r-xr-xr-x    1 root     root        43916 Nov 29 13:19 ls
+     -r-xr-xr-x    1 root     root        16684 Nov 29 13:19 mkdir
+     -rwxr-xr-x    1 root     root        23960 Mar 18 13:36 more
+     -r-xr-xr-x    1 root     root         9916 Jul 26  2001 pwd
+     -r-xr-xr-x    1 root     root        24780 Nov 29 13:19 rm
+     lrwxrwxrwx    1 root     root            4 Mar 30 16:29 sh -&gt; =
+bash
+</PRE><PRE>     ./etc:
+     total 24
+     drwxr-xr-x    2 root     root         4096 Mar 15 16:13 .
+     drwxr-xr-x    8 guest    guest        4096 Mar 15 16:53 ..
+     -rw-r--r--    1 root     root           54 Mar 15 13:23 group
+     -rw-r--r--    1 root     root          428 Mar 15 15:56 hosts
+     -rw-r--r--    1 root     root           44 Mar 15 15:53 passwd
+     -rw-r--r--    1 root     root           52 Mar 15 13:23 shells
+</PRE><PRE>     ./lib:
+     total 1848
+     drwxr-xr-x    2 root     root         4096 Mar 18 13:37 .
+     drwxr-xr-x    8 guest    guest        4096 Mar 15 16:53 ..
+     -rwxr-xr-x    1 root     root        92511 Mar 15 12:49 =
+ld-linux.so.2
+     -rwxr-xr-x    1 root     root      1170812 Mar 15 12:49 libc.so.6
+     -rw-r--r--    1 root     root        20900 Mar 15 13:01 =
+libcrypt.so.1
+     -rw-r--r--    1 root     root         9436 Mar 15 12:49 libdl.so.2
+     -rw-r--r--    1 root     root       248132 Mar 15 12:48 =
+libncurses.so.5
+     -rw-r--r--    1 root     root        71332 Mar 15 13:00 libnsl.so.1
+     -rw-r--r--    1 root     root        34144 Mar 15 16:10
+     libnss_files.so.2
+     -rw-r--r--    1 root     root        29420 Mar 15 12:57 libpam.so.0
+     -rw-r--r--    1 root     root       105498 Mar 15 12:51 =
+libpthread.so.0
+     -rw-r--r--    1 root     root        25596 Mar 15 12:51 librt.so.1
+     -rw-r--r--    1 root     root         7760 Mar 15 12:59 =
+libutil.so.1
+     -rw-r--r--    1 root     root        24328 Mar 15 12:57 =
+libwrap.so.0
+</PRE><PRE>     ./usr:
+     total 16
+     drwxr-xr-x    4 root     root         4096 Mar 15 13:00 .
+     drwxr-xr-x    8 guest    guest        4096 Mar 15 16:53 ..
+     drwxr-xr-x    2 root     root         4096 Mar 15 15:55 bin
+     drwxr-xr-x    2 root     root         4096 Mar 15 15:37 lib
+</PRE><PRE>     ./usr/bin:
+     total 340
+     drwxr-xr-x    2 root     root         4096 Mar 15 15:55 .
+     drwxr-xr-x    4 root     root         4096 Mar 15 13:00 ..
+     -rwxr-xr-x    1 root     root        10332 Mar 15 15:55 env
+     -rwxr-xr-x    1 root     root        13052 Mar 15 13:13 id
+     -r-xr-xr-x    1 root     root        25432 Mar 15 12:40 scp
+     -rwxr-xr-x    1 root     root        43768 Mar 15 15:15 sftp
+     -r-sr-xr-x    1 root     root       218456 Mar 15 12:40 ssh
+     -rwxr-xr-x    1 root     root         9692 Mar 15 13:17 tty
+</PRE><PRE>     ./usr/lib:
+     total 852
+     drwxr-xr-x    2 root     root         4096 Mar 15 15:37 .
+     drwxr-xr-x    4 root     root         4096 Mar 15 13:00 ..
+     -rw-r--r--    1 root     root       771088 Mar 15 13:01
+     libcrypto.so.0.9.6
+     -rw-r--r--    1 root     root        54548 Mar 15 13:00 libz.so.1
+     -rwxr-xr-x    1 root     root        23096 Mar 15 15:37 sftp-server
+</PRE>
+<HR>
+
+<H2><A name=3DsG.2></A>G.2 Chrooting the ssh server</H2>
+<P>If you create a chroot which includes the SSH server files in, for =
+example=20
+<CODE>/var/chroot/ssh</CODE>, you would start the <CODE>ssh</CODE> =
+server=20
+<CODE>chroot</CODE>'ed with this command: </P><PRE>       # chroot =
+/var/chroot/ssh /sbin/sshd -f /etc/sshd_config
+</PRE>
+<P>That would make startup the <CODE>sshd</CODE> daemon inside the =
+chroot. In=20
+order to do that you have to first prepare the contents of the=20
+<CODE>/var/chroot/ssh</CODE> directory so that it includes both the SSH =
+server=20
+and all the utilities that the users connecting to that server might =
+need. If=20
+you are doing this you should make certain that OpenSSH uses =
+<EM>Privilege=20
+Separation</EM> (which is the default) having the following line in the=20
+configuration file <CODE>/etc/ssh/sshd_config</CODE>: </P><PRE>     =
+UsePrivilegeSeparation yes
+</PRE>
+<P>That way the remote daemon will do as few things as possible as the =
+root user=20
+so even if there is a bug in it it will not compromise the chroot. =
+Notice that,=20
+unlike the case in which you setup a per-user chroot, the ssh daemon is =
+running=20
+in the same chroot as the users so there is at least one potential =
+process=20
+running as root which could break out of the chroot. </P>
+<P>Notice, also, that in order for SSH to work in that location, the =
+partition=20
+where the chroot directory resides cannot be mounted with the =
+<EM>nodev</EM>=20
+option. If you use that option, then you will get the following error: =
+<EM>PRNG=20
+is not seeded</EM>, because <CODE>/dev/urandom</CODE> does not work in =
+the=20
+chroot. </P>
+<HR>
+
+<H3><A name=3DsG.2.1></A>G.2.1 Setup a minimal system (the really easy =
+way)</H3>
+<P>You can use <CODE>debootstrap</CODE> to setup a minimal environment =
+that just=20
+includes the ssh server. In order to do this you just have to create a =
+chroot as=20
+described in the <CODE><A=20
+href=3D"http://www.debian.org/doc/manuals/reference/ch09#_chroot_system">=
+chroot=20
+section of the Debian Reference</A></CODE> document. This method is =
+bound to=20
+work (you will get all the necessary componentes for the chroot) but at =
+the cost=20
+of disk space (a minimal installation of Debian will amount to several =
+hundred=20
+megabytes). This minimal system might also include setuid files that a =
+user in=20
+the chroot could use to break out of the chroot if any of those could be =
+use for=20
+a privilege escalation. </P>
+<HR>
+
+<H3><A name=3DsG.2.2></A>G.2.2 Automatically making the environment (the =
+easy=20
+way)</H3>
+<P>You can easily create a restricted environment with the =
+<CODE>makejail</CODE>=20
+package, since it automatically takes care of tracing the server daemon =
+(with=20
+<CODE>strace</CODE>), and makes it run under the restricted environment. =
+</P>
+<P>The advantage of programs that automatically generate =
+<CODE>chroot</CODE>=20
+environments is that they are capable of copying any package to the=20
+<CODE>chroot</CODE> environment (even following the package's =
+dependencies and=20
+making sure it's complete). Thus, providing user applications is easier. =
+</P>
+<P>To set up the environment using <CODE>makejail</CODE>'s provided =
+examples,=20
+just create <CODE>/var/chroot/sshd</CODE> and use the command: </P><PRE> =
+      # makejail /usr/share/doc/makejail/examples/sshd.py
+</PRE>
+<P>This will setup the chroot in the <CODE>/var/chroot/sshd</CODE> =
+directory.=20
+Notice that this chroot will not fully work unless you: </P>
+<UL>
+  <LI>
+  <P>Mount the <EM>procfs</EM> filesystem in =
+<CODE>/var/chroot/sshd/proc</CODE>.=20
+  <CODE>Makejail</CODE> will mount it for you but if the system reboots =
+you need=20
+  to remount it running: </P><PRE>     # mount -t proc proc =
+/var/chroot/sshd/proc
+</PRE>
+  <P>You can also have it be mounted automatically by editing=20
+  <CODE>/etc/fstab</CODE> and including this line: </P><PRE>     =
+proc-ssh /var/chroot/sshd/proc  proc none 0 0
+</PRE></LI></UL>
+<UL>
+  <LI>
+  <P>Have syslog listen to the device <CODE>/dev/log</CODE> inside the =
+chroot.=20
+  In order to do this you have modify <CODE>/etc/default/syslogd</CODE> =
+and add=20
+  <EM>-a /var/chroot/sshd/dev/log</EM> to the <STRONG>SYSLOGD</STRONG> =
+variable=20
+  definition. </P></LI></UL>
+<P>Read the sample file to see what other changes need to be made to the =
+
+environment. Some of these changes, such as copying user's home =
+directories,=20
+cannot be done automatically. Also, limit the exposure of sensitive =
+information=20
+by only copying the data from a given number of users from the files=20
+<CODE>/etc/shadow</CODE> or <CODE>/etc/group</CODE>. Notice that if you =
+are=20
+using Privilege Separation the <EM>sshd</EM> user needs to exist in =
+those files.=20
+</P>
+<P>The following sample environment has been (slightly) tested in Debian =
+3.0 and=20
+is built with the configuration file provided in the package and =
+includes the=20
+<CODE>fileutils</CODE> package: </P><PRE>     .
+     |-- bin
+     |   |-- ash
+     |   |-- bash
+     |   |-- chgrp
+     |   |-- chmod
+     |   |-- chown
+     |   |-- cp
+     |   |-- csh -&gt; /etc/alternatives/csh
+     |   |-- dd
+     |   |-- df
+     |   |-- dir
+     |   |-- fdflush
+     |   |-- ksh
+     |   |-- ln
+     |   |-- ls
+     |   |-- mkdir
+     |   |-- mknod
+     |   |-- mv
+     |   |-- rbash -&gt; bash
+     |   |-- rm
+     |   |-- rmdir
+     |   |-- sh -&gt; bash
+     |   |-- sync
+     |   |-- tcsh
+     |   |-- touch
+     |   |-- vdir
+     |   |-- zsh -&gt; /etc/alternatives/zsh
+     |   `-- zsh4
+     |-- dev
+     |   |-- null
+     |   |-- ptmx
+     |   |-- pts
+     |   |-- ptya0
+     (...)
+     |   |-- tty
+     |   |-- tty0
+     (...)
+     |   `-- urandom
+     |-- etc
+     |   |-- alternatives
+     |   |   |-- csh -&gt; /bin/tcsh
+     |   |   `-- zsh -&gt; /bin/zsh4
+     |   |-- environment
+     |   |-- hosts
+     |   |-- hosts.allow
+     |   |-- hosts.deny
+     |   |-- ld.so.conf
+     |   |-- localtime -&gt; /usr/share/zoneinfo/Europe/Madrid
+     |   |-- motd
+     |   |-- nsswitch.conf
+     |   |-- pam.conf
+     |   |-- pam.d
+     |   |   |-- other
+     |   |   `-- ssh
+     |   |-- passwd
+     |   |-- resolv.conf
+     |   |-- security
+     |   |   |-- access.conf
+     |   |   |-- chroot.conf
+     |   |   |-- group.conf
+     |   |   |-- limits.conf
+     |   |   |-- pam_env.conf
+     |   |   `-- time.conf
+     |   |-- shadow
+     |   |-- shells
+     |   `-- ssh
+     |       |-- moduli
+     |       |-- ssh_host_dsa_key
+     |       |-- ssh_host_dsa_key.pub
+     |       |-- ssh_host_rsa_key
+     |       |-- ssh_host_rsa_key.pub
+     |       `-- sshd_config
+     |-- home
+     |   `-- userX
+     |-- lib
+     |   |-- ld-2.2.5.so
+     |   |-- ld-linux.so.2 -&gt; ld-2.2.5.so
+     |   |-- libc-2.2.5.so
+     |   |-- libc.so.6 -&gt; libc-2.2.5.so
+     |   |-- libcap.so.1 -&gt; libcap.so.1.10
+     |   |-- libcap.so.1.10
+     |   |-- libcrypt-2.2.5.so
+     |   |-- libcrypt.so.1 -&gt; libcrypt-2.2.5.so
+     |   |-- libdl-2.2.5.so
+     |   |-- libdl.so.2 -&gt; libdl-2.2.5.so
+     |   |-- libm-2.2.5.so
+     |   |-- libm.so.6 -&gt; libm-2.2.5.so
+     |   |-- libncurses.so.5 -&gt; libncurses.so.5.2
+     |   |-- libncurses.so.5.2
+     |   |-- libnsl-2.2.5.so
+     |   |-- libnsl.so.1 -&gt; libnsl-2.2.5.so
+     |   |-- libnss_compat-2.2.5.so
+     |   |-- libnss_compat.so.2 -&gt; libnss_compat-2.2.5.so
+     |   |-- libnss_db-2.2.so
+     |   |-- libnss_db.so.2 -&gt; libnss_db-2.2.so
+     |   |-- libnss_dns-2.2.5.so
+     |   |-- libnss_dns.so.2 -&gt; libnss_dns-2.2.5.so
+     |   |-- libnss_files-2.2.5.so
+     |   |-- libnss_files.so.2 -&gt; libnss_files-2.2.5.so
+     |   |-- libnss_hesiod-2.2.5.so
+     |   |-- libnss_hesiod.so.2 -&gt; libnss_hesiod-2.2.5.so
+     |   |-- libnss_nis-2.2.5.so
+     |   |-- libnss_nis.so.2 -&gt; libnss_nis-2.2.5.so
+     |   |-- libnss_nisplus-2.2.5.so
+     |   |-- libnss_nisplus.so.2 -&gt; libnss_nisplus-2.2.5.so
+     |   |-- libpam.so.0 -&gt; libpam.so.0.72
+     |   |-- libpam.so.0.72
+     |   |-- libpthread-0.9.so
+     |   |-- libpthread.so.0 -&gt; libpthread-0.9.so
+     |   |-- libresolv-2.2.5.so
+     |   |-- libresolv.so.2 -&gt; libresolv-2.2.5.so
+     |   |-- librt-2.2.5.so
+     |   |-- librt.so.1 -&gt; librt-2.2.5.so
+     |   |-- libutil-2.2.5.so
+     |   |-- libutil.so.1 -&gt; libutil-2.2.5.so
+     |   |-- libwrap.so.0 -&gt; libwrap.so.0.7.6
+     |   |-- libwrap.so.0.7.6
+     |   `-- security
+     |       |-- pam_access.so
+     |       |-- pam_chroot.so
+     |       |-- pam_deny.so
+     |       |-- pam_env.so
+     |       |-- pam_filter.so
+     |       |-- pam_ftp.so
+     |       |-- pam_group.so
+     |       |-- pam_issue.so
+     |       |-- pam_lastlog.so
+     |       |-- pam_limits.so
+     |       |-- pam_listfile.so
+     |       |-- pam_mail.so
+     |       |-- pam_mkhomedir.so
+     |       |-- pam_motd.so
+     |       |-- pam_nologin.so
+     |       |-- pam_permit.so
+     |       |-- pam_rhosts_auth.so
+     |       |-- pam_rootok.so
+     |       |-- pam_securetty.so
+     |       |-- pam_shells.so
+     |       |-- pam_stress.so
+     |       |-- pam_tally.so
+     |       |-- pam_time.so
+     |       |-- pam_unix.so
+     |       |-- pam_unix_acct.so -&gt; pam_unix.so
+     |       |-- pam_unix_auth.so -&gt; pam_unix.so
+     |       |-- pam_unix_passwd.so -&gt; pam_unix.so
+     |       |-- pam_unix_session.so -&gt; pam_unix.so
+     |       |-- pam_userdb.so
+     |       |-- pam_warn.so
+     |       `-- pam_wheel.so
+     |-- sbin
+     |   `-- start-stop-daemon
+     |-- usr
+     |   |-- bin
+     |   |   |-- dircolors
+     |   |   |-- du
+     |   |   |-- install
+     |   |   |-- link
+     |   |   |-- mkfifo
+     |   |   |-- shred
+     |   |   |-- touch -&gt; /bin/touch
+     |   |   `-- unlink
+     |   |-- lib
+     |   |   |-- libcrypto.so.0.9.6
+     |   |   |-- libdb3.so.3 -&gt; libdb3.so.3.0.2
+     |   |   |-- libdb3.so.3.0.2
+     |   |   |-- libz.so.1 -&gt; libz.so.1.1.4
+     |   |   `-- libz.so.1.1.4
+     |   |-- sbin
+     |   |   `-- sshd
+     |   `-- share
+     |       |-- locale
+     |       |   `-- es
+     |       |       |-- LC_MESSAGES
+     |       |       |   |-- fileutils.mo
+     |       |       |   |-- libc.mo
+     |       |       |   `-- sh-utils.mo
+     |       |       `-- LC_TIME -&gt; LC_MESSAGES
+     |       `-- zoneinfo
+     |           `-- Europe
+     |               `-- Madrid
+     `-- var
+         `-- run
+             |-- sshd
+             `-- sshd.pid
+    =20
+     27 directories, 733 files
+</PRE>
+<P>For Debian release 3.1 you have to make sure that the environment =
+includes=20
+also the common files for PAM. The following files need to be copied =
+over to the=20
+chroot if <CODE>makejail</CODE> did not do it for you: </P><PRE>     $ =
+ls /etc/pam.d/common-*
+     /etc/pam.d/common-account  /etc/pam.d/common-password
+     /etc/pam.d/common-auth     /etc/pam.d/common-session
+</PRE>
+<HR>
+
+<H3><A name=3DsG.2.3></A>G.2.3 Manually creating the environment (the =
+hard=20
+way)</H3>
+<P>It is possible to create an environment, using a trial-and-error =
+method, by=20
+monitoring the <CODE>sshd</CODE> server traces and log files in order to =
+
+determine the necessary files. The following environment, contributed by =
+Jos=E9=20
+Luis Ledesma, is a sample listing of files in a <CODE>chroot</CODE> =
+environment=20
+for <CODE>ssh</CODE> in Debian woody (3.0): [<A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/footnotes=
+.en.html#f90"=20
+name=3Dfr90>90</A>] </P><PRE>     .:
+     total 36
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ./
+     drwxr-xr-x 11 root root 4096 Jun 3 13:43 ../
+     drwxr-xr-x 2 root root 4096 Jun 4 12:13 bin/
+     drwxr-xr-x 2 root root 4096 Jun 4 12:16 dev/
+     drwxr-xr-x 4 root root 4096 Jun 4 12:35 etc/
+     drwxr-xr-x 3 root root 4096 Jun 4 12:13 lib/
+     drwxr-xr-x 2 root root 4096 Jun 4 12:35 sbin/
+     drwxr-xr-x 2 root root 4096 Jun 4 12:32 tmp/
+     drwxr-xr-x 2 root root 4096 Jun 4 12:16 usr/
+     ./bin:
+     total 8368
+     drwxr-xr-x 2 root root 4096 Jun 4 12:13 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     -rwxr-xr-x 1 root root 109855 Jun 3 13:45 a2p*
+     -rwxr-xr-x 1 root root 387764 Jun 3 13:45 bash*
+     -rwxr-xr-x 1 root root 36365 Jun 3 13:45 c2ph*
+     -rwxr-xr-x 1 root root 20629 Jun 3 13:45 dprofpp*
+     -rwxr-xr-x 1 root root 6956 Jun 3 13:46 env*
+     -rwxr-xr-x 1 root root 158116 Jun 3 13:45 fax2ps*
+     -rwxr-xr-x 1 root root 104008 Jun 3 13:45 faxalter*
+     -rwxr-xr-x 1 root root 89340 Jun 3 13:45 faxcover*
+     -rwxr-xr-x 1 root root 441584 Jun 3 13:45 faxmail*
+     -rwxr-xr-x 1 root root 96036 Jun 3 13:45 faxrm*
+     -rwxr-xr-x 1 root root 107000 Jun 3 13:45 faxstat*
+     -rwxr-xr-x 1 root root 77832 Jun 4 11:46 grep*
+     -rwxr-xr-x 1 root root 19597 Jun 3 13:45 h2ph*
+     -rwxr-xr-x 1 root root 46979 Jun 3 13:45 h2xs*
+     -rwxr-xr-x 1 root root 10420 Jun 3 13:46 id*
+     -rwxr-xr-x 1 root root 4528 Jun 3 13:46 ldd*
+     -rwxr-xr-x 1 root root 111386 Jun 4 11:46 less*
+     -r-xr-xr-x 1 root root 26168 Jun 3 13:45 login*
+     -rwxr-xr-x 1 root root 49164 Jun 3 13:45 ls*
+     -rwxr-xr-x 1 root root 11600 Jun 3 13:45 mkdir*
+     -rwxr-xr-x 1 root root 24780 Jun 3 13:45 more*
+     -rwxr-xr-x 1 root root 154980 Jun 3 13:45 pal2rgb*
+     -rwxr-xr-x 1 root root 27920 Jun 3 13:46 passwd*
+     -rwxr-xr-x 1 root root 4241 Jun 3 13:45 pl2pm*
+     -rwxr-xr-x 1 root root 2350 Jun 3 13:45 pod2html*
+     -rwxr-xr-x 1 root root 7875 Jun 3 13:45 pod2latex*
+     -rwxr-xr-x 1 root root 17587 Jun 3 13:45 pod2man*
+     -rwxr-xr-x 1 root root 6877 Jun 3 13:45 pod2text*
+     -rwxr-xr-x 1 root root 3300 Jun 3 13:45 pod2usage*
+     -rwxr-xr-x 1 root root 3341 Jun 3 13:45 podchecker*
+     -rwxr-xr-x 1 root root 2483 Jun 3 13:45 podselect*
+     -r-xr-xr-x 1 root root 82412 Jun 4 11:46 ps*
+     -rwxr-xr-x 1 root root 36365 Jun 3 13:45 pstruct*
+     -rwxr-xr-x 1 root root 7120 Jun 3 13:45 pwd*
+     -rwxr-xr-x 1 root root 179884 Jun 3 13:45 rgb2ycbcr*
+     -rwxr-xr-x 1 root root 20532 Jun 3 13:45 rm*
+     -rwxr-xr-x 1 root root 6720 Jun 4 10:15 rmdir*
+     -rwxr-xr-x 1 root root 14705 Jun 3 13:45 s2p*
+     -rwxr-xr-x 1 root root 28764 Jun 3 13:46 scp*
+     -rwxr-xr-x 1 root root 385000 Jun 3 13:45 sendfax*
+     -rwxr-xr-x 1 root root 67548 Jun 3 13:45 sendpage*
+     -rwxr-xr-x 1 root root 88632 Jun 3 13:46 sftp*
+     -rwxr-xr-x 1 root root 387764 Jun 3 13:45 sh*
+     -rws--x--x 1 root root 744500 Jun 3 13:46 slogin*
+     -rwxr-xr-x 1 root root 14523 Jun 3 13:46 splain*
+     -rws--x--x 1 root root 744500 Jun 3 13:46 ssh*
+     -rwxr-xr-x 1 root root 570960 Jun 3 13:46 ssh-add*
+     -rwxr-xr-x 1 root root 502952 Jun 3 13:46 ssh-agent*
+     -rwxr-xr-x 1 root root 575740 Jun 3 13:46 ssh-keygen*
+     -rwxr-xr-x 1 root root 383480 Jun 3 13:46 ssh-keyscan*
+     -rwxr-xr-x 1 root root 39 Jun 3 13:46 ssh_europa*
+     -rwxr-xr-x 1 root root 107252 Jun 4 10:14 strace*
+     -rwxr-xr-x 1 root root 8323 Jun 4 10:14 strace-graph*
+     -rwxr-xr-x 1 root root 158088 Jun 3 13:46 thumbnail*
+     -rwxr-xr-x 1 root root 6312 Jun 3 13:46 tty*
+     -rwxr-xr-x 1 root root 55904 Jun 4 11:46 useradd*
+     -rwxr-xr-x 1 root root 585656 Jun 4 11:47 vi*
+     -rwxr-xr-x 1 root root 6444 Jun 4 11:45 whoami*
+     ./dev:
+     total 8
+     drwxr-xr-x 2 root root 4096 Jun 4 12:16 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     crw-r--r-- 1 root root 1, 9 Jun 3 13:43 urandom
+     ./etc:
+     total 208
+     drwxr-xr-x 4 root root 4096 Jun 4 12:35 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     -rw------- 1 root root 0 Jun 4 11:46 .pwd.lock
+     -rw-r--r-- 1 root root 653 Jun 3 13:46 group
+     -rw-r--r-- 1 root root 242 Jun 4 11:33 host.conf
+     -rw-r--r-- 1 root root 857 Jun 4 12:04 hosts
+     -rw-r--r-- 1 root root 1050 Jun 4 11:29 ld.so.cache
+     -rw-r--r-- 1 root root 304 Jun 4 11:28 ld.so.conf
+     -rw-r--r-- 1 root root 235 Jun 4 11:27 ld.so.conf~
+     -rw-r--r-- 1 root root 88039 Jun 3 13:46 moduli
+     -rw-r--r-- 1 root root 1342 Jun 4 11:34 nsswitch.conf
+     drwxr-xr-x 2 root root 4096 Jun 4 12:02 pam.d/
+     -rw-r--r-- 1 root root 28 Jun 4 12:00 pam_smb.conf
+     -rw-r--r-- 1 root root 2520 Jun 4 11:57 passwd
+     -rw-r--r-- 1 root root 7228 Jun 3 13:48 profile
+     -rw-r--r-- 1 root root 1339 Jun 4 11:33 protocols
+     -rw-r--r-- 1 root root 274 Jun 4 11:44 resolv.conf
+     drwxr-xr-x 2 root root 4096 Jun 3 13:43 security/
+     -rw-r----- 1 root root 1178 Jun 4 11:51 shadow
+     -rw------- 1 root root 80 Jun 4 11:45 shadow-
+     -rw-r----- 1 root root 1178 Jun 4 11:48 shadow.old
+     -rw-r--r-- 1 root root 161 Jun 3 13:46 shells
+     -rw-r--r-- 1 root root 1144 Jun 3 13:46 ssh_config
+     -rw------- 1 root root 668 Jun 3 13:46 ssh_host_dsa_key
+     -rw-r--r-- 1 root root 602 Jun 3 13:46 ssh_host_dsa_key.pub
+     -rw------- 1 root root 527 Jun 3 13:46 ssh_host_key
+     -rw-r--r-- 1 root root 331 Jun 3 13:46 ssh_host_key.pub
+     -rw------- 1 root root 883 Jun 3 13:46 ssh_host_rsa_key
+     -rw-r--r-- 1 root root 222 Jun 3 13:46 ssh_host_rsa_key.pub
+     -rw-r--r-- 1 root root 2471 Jun 4 12:15 sshd_config
+     ./etc/pam.d:
+     total 24
+     drwxr-xr-x 2 root root 4096 Jun 4 12:02 ./
+     drwxr-xr-x 4 root root 4096 Jun 4 12:35 ../
+     lrwxrwxrwx 1 root root 4 Jun 4 12:02 other -&gt; sshd
+     -rw-r--r-- 1 root root 318 Jun 3 13:46 passwd
+     -rw-r--r-- 1 root root 546 Jun 4 11:36 ssh
+     -rw-r--r-- 1 root root 479 Jun 4 12:02 sshd
+     -rw-r--r-- 1 root root 370 Jun 3 13:46 su
+     ./etc/security:
+     total 32
+     drwxr-xr-x 2 root root 4096 Jun 3 13:43 ./
+     drwxr-xr-x 4 root root 4096 Jun 4 12:35 ../
+     -rw-r--r-- 1 root root 1971 Jun 3 13:46 access.conf
+     -rw-r--r-- 1 root root 184 Jun 3 13:46 chroot.conf
+     -rw-r--r-- 1 root root 2145 Jun 3 13:46 group.conf
+     -rw-r--r-- 1 root root 1356 Jun 3 13:46 limits.conf
+     -rw-r--r-- 1 root root 2858 Jun 3 13:46 pam_env.conf
+     -rw-r--r-- 1 root root 2154 Jun 3 13:46 time.conf
+     ./lib:
+     total 8316
+     drwxr-xr-x 3 root root 4096 Jun 4 12:13 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     -rw-r--r-- 1 root root 1024 Jun 4 11:51 cracklib_dict.hwm
+     -rw-r--r-- 1 root root 214324 Jun 4 11:51 cracklib_dict.pwd
+     -rw-r--r-- 1 root root 11360 Jun 4 11:51 cracklib_dict.pwi
+     -rwxr-xr-x 1 root root 342427 Jun 3 13:46 ld-linux.so.2*
+     -rwxr-xr-x 1 root root 4061504 Jun 3 13:46 libc.so.6*
+     lrwxrwxrwx 1 root root 15 Jun 4 12:11 libcrack.so -&gt; =
+libcrack.so.2.7*
+     lrwxrwxrwx 1 root root 15 Jun 4 12:11 libcrack.so.2 -&gt; =
+libcrack.so.2.7*
+     -rwxr-xr-x 1 root root 33291 Jun 4 11:39 libcrack.so.2.7*
+     -rwxr-xr-x 1 root root 60988 Jun 3 13:46 libcrypt.so.1*
+     -rwxr-xr-x 1 root root 71846 Jun 3 13:46 libdl.so.2*
+     -rwxr-xr-x 1 root root 27762 Jun 3 13:46 libhistory.so.4.0*
+     lrwxrwxrwx 1 root root 17 Jun 4 12:12 libncurses.so.4 -&gt; =
+libncurses.so.4.2*
+     -rwxr-xr-x 1 root root 503903 Jun 3 13:46 libncurses.so.4.2*
+     lrwxrwxrwx 1 root root 17 Jun 4 12:12 libncurses.so.5 -&gt; =
+libncurses.so.5.0*
+     -rwxr-xr-x 1 root root 549429 Jun 3 13:46 libncurses.so.5.0*
+     -rwxr-xr-x 1 root root 369801 Jun 3 13:46 libnsl.so.1*
+     -rwxr-xr-x 1 root root 142563 Jun 4 11:49 libnss_compat.so.1*
+     -rwxr-xr-x 1 root root 215569 Jun 4 11:49 libnss_compat.so.2*
+     -rwxr-xr-x 1 root root 61648 Jun 4 11:34 libnss_dns.so.1*
+     -rwxr-xr-x 1 root root 63453 Jun 4 11:34 libnss_dns.so.2*
+     -rwxr-xr-x 1 root root 63782 Jun 4 11:34 libnss_dns6.so.2*
+     -rwxr-xr-x 1 root root 205715 Jun 3 13:46 libnss_files.so.1*
+     -rwxr-xr-x 1 root root 235932 Jun 3 13:49 libnss_files.so.2*
+     -rwxr-xr-x 1 root root 204383 Jun 4 11:33 libnss_nis.so.1*
+     -rwxr-xr-x 1 root root 254023 Jun 4 11:33 libnss_nis.so.2*
+     -rwxr-xr-x 1 root root 256465 Jun 4 11:33 libnss_nisplus.so.2*
+     lrwxrwxrwx 1 root root 14 Jun 4 12:12 libpam.so.0 -&gt; =
+libpam.so.0.72*
+     -rwxr-xr-x 1 root root 31449 Jun 3 13:46 libpam.so.0.72*
+     lrwxrwxrwx 1 root root 19 Jun 4 12:12 libpam_misc.so.0 -&gt;
+     libpam_misc.so.0.72*
+     -rwxr-xr-x 1 root root 8125 Jun 3 13:46 libpam_misc.so.0.72*
+     lrwxrwxrwx 1 root root 15 Jun 4 12:12 libpamc.so.0 -&gt; =
+libpamc.so.0.72*
+     -rwxr-xr-x 1 root root 10499 Jun 3 13:46 libpamc.so.0.72*
+     -rwxr-xr-x 1 root root 176427 Jun 3 13:46 libreadline.so.4.0*
+     -rwxr-xr-x 1 root root 44729 Jun 3 13:46 libutil.so.1*
+     -rwxr-xr-x 1 root root 70254 Jun 3 13:46 libz.a*
+     lrwxrwxrwx 1 root root 13 Jun 4 12:13 libz.so -&gt; libz.so.1.1.3*
+     lrwxrwxrwx 1 root root 13 Jun 4 12:13 libz.so.1 -&gt; =
+libz.so.1.1.3*
+     -rwxr-xr-x 1 root root 63312 Jun 3 13:46 libz.so.1.1.3*
+     drwxr-xr-x 2 root root 4096 Jun 4 12:00 security/
+     ./lib/security:
+     total 668
+     drwxr-xr-x 2 root root 4096 Jun 4 12:00 ./
+     drwxr-xr-x 3 root root 4096 Jun 4 12:13 ../
+     -rwxr-xr-x 1 root root 10067 Jun 3 13:46 pam_access.so*
+     -rwxr-xr-x 1 root root 8300 Jun 3 13:46 pam_chroot.so*
+     -rwxr-xr-x 1 root root 14397 Jun 3 13:46 pam_cracklib.so*
+     -rwxr-xr-x 1 root root 5082 Jun 3 13:46 pam_deny.so*
+     -rwxr-xr-x 1 root root 13153 Jun 3 13:46 pam_env.so*
+     -rwxr-xr-x 1 root root 13371 Jun 3 13:46 pam_filter.so*
+     -rwxr-xr-x 1 root root 7957 Jun 3 13:46 pam_ftp.so*
+     -rwxr-xr-x 1 root root 12771 Jun 3 13:46 pam_group.so*
+     -rwxr-xr-x 1 root root 10174 Jun 3 13:46 pam_issue.so*
+     -rwxr-xr-x 1 root root 9774 Jun 3 13:46 pam_lastlog.so*
+     -rwxr-xr-x 1 root root 13591 Jun 3 13:46 pam_limits.so*
+     -rwxr-xr-x 1 root root 11268 Jun 3 13:46 pam_listfile.so*
+     -rwxr-xr-x 1 root root 11182 Jun 3 13:46 pam_mail.so*
+     -rwxr-xr-x 1 root root 5923 Jun 3 13:46 pam_nologin.so*
+     -rwxr-xr-x 1 root root 5460 Jun 3 13:46 pam_permit.so*
+     -rwxr-xr-x 1 root root 18226 Jun 3 13:46 pam_pwcheck.so*
+     -rwxr-xr-x 1 root root 12590 Jun 3 13:46 pam_rhosts_auth.so*
+     -rwxr-xr-x 1 root root 5551 Jun 3 13:46 pam_rootok.so*
+     -rwxr-xr-x 1 root root 7239 Jun 3 13:46 pam_securetty.so*
+     -rwxr-xr-x 1 root root 6551 Jun 3 13:46 pam_shells.so*
+     -rwxr-xr-x 1 root root 55925 Jun 4 12:00 pam_smb_auth.so*
+     -rwxr-xr-x 1 root root 12678 Jun 3 13:46 pam_stress.so*
+     -rwxr-xr-x 1 root root 11170 Jun 3 13:46 pam_tally.so*
+     -rwxr-xr-x 1 root root 11124 Jun 3 13:46 pam_time.so*
+     -rwxr-xr-x 1 root root 45703 Jun 3 13:46 pam_unix.so*
+     -rwxr-xr-x 1 root root 45703 Jun 3 13:46 pam_unix2.so*
+     -rwxr-xr-x 1 root root 45386 Jun 3 13:46 pam_unix_acct.so*
+     -rwxr-xr-x 1 root root 45386 Jun 3 13:46 pam_unix_auth.so*
+     -rwxr-xr-x 1 root root 45386 Jun 3 13:46 pam_unix_passwd.so*
+     -rwxr-xr-x 1 root root 45386 Jun 3 13:46 pam_unix_session.so*
+     -rwxr-xr-x 1 root root 9726 Jun 3 13:46 pam_userdb.so*
+     -rwxr-xr-x 1 root root 6424 Jun 3 13:46 pam_warn.so*
+     -rwxr-xr-x 1 root root 7460 Jun 3 13:46 pam_wheel.so*
+     ./sbin:
+     total 3132
+     drwxr-xr-x 2 root root 4096 Jun 4 12:35 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     -rwxr-xr-x 1 root root 178256 Jun 3 13:46 choptest*
+     -rwxr-xr-x 1 root root 184032 Jun 3 13:46 cqtest*
+     -rwxr-xr-x 1 root root 81096 Jun 3 13:46 dialtest*
+     -rwxr-xr-x 1 root root 1142128 Jun 4 11:28 ldconfig*
+     -rwxr-xr-x 1 root root 2868 Jun 3 13:46 lockname*
+     -rwxr-xr-x 1 root root 3340 Jun 3 13:46 ondelay*
+     -rwxr-xr-x 1 root root 376796 Jun 3 13:46 pagesend*
+     -rwxr-xr-x 1 root root 13950 Jun 3 13:46 probemodem*
+     -rwxr-xr-x 1 root root 9234 Jun 3 13:46 recvstats*
+     -rwxr-xr-x 1 root root 64480 Jun 3 13:46 sftp-server*
+     -rwxr-xr-x 1 root root 744412 Jun 3 13:46 sshd*
+     -rwxr-xr-x 1 root root 30750 Jun 4 11:46 su*
+     -rwxr-xr-x 1 root root 194632 Jun 3 13:46 tagtest*
+     -rwxr-xr-x 1 root root 69892 Jun 3 13:46 tsitest*
+     -rwxr-xr-x 1 root root 43792 Jun 3 13:46 typetest*
+     ./tmp:
+     total 8
+     drwxr-xr-x 2 root root 4096 Jun 4 12:32 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     ./usr:
+     total 8
+     drwxr-xr-x 2 root root 4096 Jun 4 12:16 ./
+     drwxr-xr-x 9 root root 4096 Jun 5 10:05 ../
+     lrwxrwxrwx 1 root root 7 Jun 4 12:14 bin -&gt; ../bin//
+     lrwxrwxrwx 1 root root 7 Jun 4 11:33 lib -&gt; ../lib//
+     lrwxrwxrwx 1 root root 8 Jun 4 12:13 sbin -&gt; ../sbin//
+</PRE>
+<HR>
+
+<P>[ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-fw-sec=
+urity-update.en.html">previous</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/index.en.=
+html#contents">Contents</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch1.en.ht=
+ml">1</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch2.en.ht=
+ml">2</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch3.en.ht=
+ml">3</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.ht=
+ml">4</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-sec-se=
+rvices.en.html">5</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-automa=
+tic-harden.en.html">6</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch7.en.ht=
+ml">7</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-sec-to=
+ols.en.html">8</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch9.en.ht=
+ml">9</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch10.en.h=
+tml">10</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch-after-=
+compromise.en.html">11</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch12.en.h=
+tml">12</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-harden=
+-step.en.html">A</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-checkl=
+ist.en.html">B</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-snort-=
+box.en.html">C</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-bridge=
+-fw.en.html">D</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-bind-c=
+huser.en.html">E</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-fw-sec=
+urity-update.en.html">F</A>=20
+] [ G ] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-chroot=
+-apache-env.en.html">H</A>=20
+] [ <A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ap-chroot=
+-apache-env.en.html">next</A>=20
+] </P>
+<HR>
+
+<P>Securing Debian Manual </P>
+<ADDRESS>Version: 3.13, Sun, 09 Oct 2011 13:15:05 +0000<BR><BR>Javier=20
+Fern=E1ndez-Sanguino Pe=F1a <CODE><A=20
+href=3D"mailto:jfs@debian.org">jfs@debian.org</A></CODE><BR><A=20
+href=3D"http://www.debian.org/doc/manuals/securing-debian-howto/ch1.en.ht=
+ml#s-authors">Authors,=20
+Section 1.1</A><BR><BR></ADDRESS>
+<HR>
+</BODY></HTML>
